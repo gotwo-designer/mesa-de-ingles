@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mesa de inglês</title>
+<meta name="theme-color" content="#0a4a31">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mesa de inglês">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --wash:#eef8f1; --felt:#0f7b4f; --felt-deep:#0a4a31; --ink:#14211b; --muted:#5b6b63;
+  --line:#d6e6dc; --token:#f2b705; --stop:#c8372d; --r-s:8px; --r-l:16px;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;line-height:1.15;margin:0}
+h1{font-size:clamp(1.6rem,4.5vw,2.4rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.3rem;font-weight:700;margin-bottom:.6rem}
+h3{font-size:1.02rem;font-weight:500}
+p{margin:.3rem 0}
+.wrap{max-width:1040px;margin:0 auto;padding:1.25rem 1rem 3rem}
+header.top{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:flex-end;justify-content:space-between;margin-bottom:1.25rem}
+.sub{color:var(--muted);max-width:60ch}
+.sync{font-size:.82rem;color:var(--muted);margin-top:.35rem}
+.who input{width:132px;font-weight:600}
+.who .row{gap:.5rem}
+
+/* trilha de tabuleiro: o único elemento chamativo */
+.track{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 1.25rem;padding:10px;background:var(--felt);border-radius:var(--r-l)}
+.sq{position:relative;background:var(--paper);border-radius:10px;padding:.6rem .6rem .7rem;min-height:92px;border:2px solid transparent}
+.sq.done{background:#d9efe2}
+.sq.cur{border-color:var(--token);box-shadow:0 0 0 3px rgba(242,183,5,.35)}
+.sq .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.5rem;color:var(--felt-deep)}
+.sq .lv{font-size:.8rem;color:var(--muted)}
+.sq .t{font-size:.86rem;font-weight:500}
+.pawn{position:absolute;right:8px;top:8px;width:20px;height:26px}
+
+
+nav.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:1.25rem;overflow-x:auto}
+nav.tabs button{font:inherit;font-weight:600;background:none;border:0;padding:.6rem .95rem;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--felt-deep);border-bottom-color:var(--felt)}
+:focus-visible{outline:3px solid var(--token);outline-offset:2px}
+
+.grid{display:grid;gap:1rem}
+@media(min-width:760px){.g2{grid-template-columns:1.15fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+.panel{border:1px solid var(--line);border-radius:var(--r-l);padding:1rem 1.1rem}
+.panel.soft{background:var(--wash);border-color:transparent}
+.big{font-size:2rem;font-weight:700;color:var(--felt-deep)}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:.4rem 0}
+.bar i{display:block;height:100%;background:var(--felt);border-radius:99px}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:.6rem 0}
+.day{border:1px solid var(--line);border-radius:var(--r-s);padding:.45rem .2rem;text-align:center;font-size:.8rem;color:var(--muted)}
+.day b{display:block;font-size:1rem;color:var(--ink);font-family:"Bricolage Grotesque",sans-serif}
+.day.on{background:var(--felt);border-color:var(--felt);color:#dff3e7}.day.on b{color:#fff}
+.day.today{border-color:var(--felt-deep);border-width:2px}
+
+button.btn,a.btn{font:inherit;font-weight:600;display:inline-block;text-decoration:none;border-radius:var(--r-s);padding:.55rem .9rem;border:1.5px solid var(--felt);background:var(--felt);color:#fff;cursor:pointer}
+button.btn.ghost,a.btn.ghost{background:transparent;color:var(--felt-deep)}
+button.btn:disabled{opacity:.45;cursor:not-allowed}
+button.link{font:inherit;background:none;border:0;color:var(--stop);cursor:pointer;padding:0;text-decoration:underline;font-size:.84rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4rem 0}
+.chip{font:inherit;font-size:.88rem;border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:.3rem .75rem;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--felt-deep);border-color:var(--felt-deep);color:#fff}
+input,select{font:inherit;border:1.5px solid var(--line);border-radius:var(--r-s);padding:.45rem .55rem;background:#fff;color:var(--ink);max-width:100%}
+label{font-size:.86rem;color:var(--muted);display:block;margin-bottom:.15rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-end}
+ul.clean{list-style:none;margin:0;padding:0}
+ul.clean li{padding:.5rem 0;border-bottom:1px solid var(--line)}
+ul.clean li:last-child{border-bottom:0}
+
+.game{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem .8rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
+.game .meta{font-size:.84rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.76rem;border-radius:6px;padding:.05rem .4rem;background:var(--wash);color:var(--felt-deep);margin-right:4px}
+.tag.warn{background:#fdf1cf;color:#6b4e00}
+.game .links a{font-size:.84rem;color:var(--felt-deep);margin-right:.7rem}
+.game .ctl{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.game .ctl input{width:92px}
+@media(max-width:560px){.game{grid-template-columns:1fr}.game .ctl{justify-content:flex-start}}
+.next{border-left:4px solid var(--token);padding-left:.7rem}
+
+.score{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.pl{text-align:center;border:1px solid var(--line);border-radius:var(--r-l);padding:1rem .6rem}
+.pl .pts{font-family:"Bricolage Grotesque",sans-serif;font-size:3rem;font-weight:700;color:var(--felt-deep);line-height:1}
+.pl .adds{display:flex;gap:6px;justify-content:center;margin-top:.6rem;flex-wrap:wrap}
+.pl .adds button{min-width:52px}
+label.check{display:flex;gap:.55rem;align-items:flex-start;color:var(--ink);font-size:.95rem;padding:.35rem 0;cursor:pointer}
+label.check input{margin-top:.25rem;width:18px;height:18px;accent-color:var(--felt)}
+details{border-top:1px solid var(--line);padding:.6rem 0}
+summary{cursor:pointer;font-weight:600}
+
+
+.btn.neg{border-color:var(--line);color:var(--stop)}
+.pl .adds .btn{font-size:.88rem;padding:.5rem .6rem}
+.drow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem 1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid var(--line)}
+@media(max-width:560px){.drow{grid-template-columns:1fr}}
+#tleft{min-width:2.5ch}
+
+details.stg{border:1px solid var(--line);border-radius:var(--r-l);padding:.2rem 1rem;margin-bottom:.6rem}
+details.stg[open]{background:#fff;border-color:var(--felt)}
+details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif;font-size:1.05rem}
+.sn{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:8px;background:var(--felt);color:#fff;font-weight:700;margin-right:.35rem}
+.stgb{padding:0 0 1rem;max-width:80ch}
+.chip.has{background:var(--wash);border-color:var(--felt);color:var(--felt-deep)}
+ul.ok{margin:.2rem 0 .6rem;padding-left:1.2rem}
+.fix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:.3rem 1rem;padding:.6rem 0;border-top:1px solid var(--line)}
+.fix .sym{font-weight:600;color:var(--stop)}
+@media(max-width:620px){.fix{grid-template-columns:1fr}}
+
+.gstep{display:flex;gap:.6rem;align-items:flex-start;justify-content:space-between;border-top:1px solid #cfe6d8;padding:.25rem 0}
+.gstep .chip{flex:none;margin-top:.3rem;font-size:.8rem}
+ol.rules{margin:0;padding-left:1.2rem}ol.rules li{padding:.35rem 0}
+.how{border-top:1px solid var(--line);padding:.9rem 0;max-width:78ch}
+.how h3{margin-bottom:.3rem}
+.phr .ph{display:flex;justify-content:space-between;gap:.6rem;align-items:center;padding:.3rem 0}
+.phr .ph span{font-weight:500}
+.phr .chip{font-size:.78rem;padding:.15rem .6rem;flex:none}
+@media(min-width:760px){.phr.two{columns:2;column-gap:1.5rem}.phr.two .ph{break-inside:avoid}}
+
+.ts{display:none}
+body{overflow-wrap:break-word}
+.row>div{min-width:0}
+@media(max-width:640px){
+  .wrap{padding:.75rem .75rem 2.5rem}
+  header.top{margin-bottom:.8rem;gap:.5rem}
+  .sub{display:none}
+  h1{font-size:1.45rem}
+  .who{width:100%}
+  .who .row>div{flex:1}
+  .who input{width:100%}
+  /* trilha compacta: cabe na tela, sem rolagem lateral */
+  .track{gap:4px;padding:6px;border-radius:12px;margin-bottom:.8rem}
+  .sq{min-height:0;padding:.35rem .25rem .4rem;text-align:center;border-radius:8px}
+  .sq .n{font-size:1.15rem}
+  .sq .t{display:none}
+  .sq .lv{font-size:.66rem;line-height:1.2}
+  .sq.cur .t{display:none}
+  .pawn{width:12px;height:16px;right:3px;top:3px}
+
+  h2{font-size:1.15rem}
+  .panel{padding:.85rem .85rem;border-radius:12px}
+  .big{font-size:1.6rem}
+  /* alvos de toque */
+  .chip{min-height:40px;padding:.4rem .8rem}
+  button.btn,a.btn{min-height:44px;padding:.6rem .9rem}
+  button.link{padding:.4rem 0;font-size:.9rem}
+  input,select{min-height:44px}
+  input[type=checkbox],input[type=file]{min-height:0}
+  label.check{padding:.5rem 0}
+  label.check input{width:22px;height:22px}
+  details summary{padding:.6rem 0}
+  /* semana */
+  .week{gap:4px}.day{padding:.4rem 0;font-size:.72rem}.day b{font-size:.95rem}
+  /* resumo de compras */
+  .g3.stats{grid-template-columns:repeat(3,1fr);gap:6px}
+  .g3.stats .panel{padding:.55rem .4rem;text-align:center}
+  .g3.stats .big{font-size:1.05rem;display:block}
+  .g3.stats .small{font-size:.72rem;line-height:1.2;display:block}
+  /* lista de jogos */
+  .game .ctl select{flex:1;min-width:0}
+  .game .ctl input{width:104px}
+  .game .links a{display:inline-block;padding:.45rem 0;margin-right:1rem;font-size:.92rem}
+  /* placar: os dois jogadores lado a lado, botões empilhados */
+  .score{gap:8px}
+  .pl{padding:.7rem .4rem;border-radius:12px}
+  .pl .pts{font-size:2.4rem}
+  .pl .adds{flex-direction:column;gap:6px;margin-top:.5rem}
+  .pl .adds .btn{width:100%;min-height:46px;font-size:.86rem;padding:.4rem .3rem}
+  .phr .chip{min-height:38px;padding:.3rem .8rem;font-size:.84rem}
+  .phr .ph{padding:.45rem 0}
+  .gstep{flex-wrap:wrap}
+  .gstep .chip{margin:0 0 .4rem 2rem}
+  details.stg{padding:.1rem .75rem;border-radius:12px}
+  details.stg summary{font-size:.98rem}
+  .sn{width:1.6rem;height:1.6rem}
+}
+@media(max-width:360px){.pl .adds .btn{font-size:.8rem}}
+
+nav.tabs button{display:flex;align-items:center;gap:.4rem}
+button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
+.intro{margin:0 0 1rem;max-width:70ch}
+.intro h2{font-size:1.5rem;margin-bottom:.2rem}
+.intro p{color:var(--muted)}
+.cta{background:var(--felt-deep);color:#fff;border-radius:var(--r-l);padding:1.1rem 1.2rem}
+.cta h3{font-size:1.3rem;font-weight:700;margin:.1rem 0 .3rem;color:#fff}
+.cta .small{color:#bfe3cf}
+.cta p{color:#e6f4ec;max-width:60ch}
+.btn.inv{background:#fff;color:var(--felt-deep);border-color:#fff;margin-top:.7rem}
+.steph{display:flex;gap:.7rem;align-items:flex-start;margin:1.6rem 0 .6rem}
+.steph h3{font-size:1.3rem;font-weight:700}
+.panel h2{font-size:1.12rem}
+.steph .sn{flex:none;width:2.1rem;height:2.1rem;font-size:1.1rem;margin:0}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--felt-deep);border-radius:12px;overflow:hidden;margin:.2rem 0 .8rem;max-width:480px}
+.seg button{font:inherit;font-weight:600;border:0;background:#fff;color:var(--felt-deep);padding:.7rem .5rem;cursor:pointer;min-height:46px}
+.seg button[aria-pressed="true"]{background:var(--felt-deep);color:#fff}
+.okmsg{background:var(--wash);border-left:4px solid var(--felt);padding:.6rem .8rem;border-radius:8px;margin:0 0 1rem;font-weight:500}
+.clean li .chip{margin-left:.4rem;font-size:.8rem}
+@media(max-width:640px){
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;background:#fff;border-top:1px solid var(--line);border-bottom:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;overflow:visible;padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 14px -10px rgba(10,74,49,.4)}
+  nav.tabs button{flex-direction:column;gap:2px;justify-content:center;border:0;margin:0;padding:.35rem 0;font-size:.72rem;min-height:54px;border-radius:10px;color:var(--muted)}
+  nav.tabs button[aria-selected="true"]{background:var(--wash);color:var(--felt-deep);border:0}
+  .wrap{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .intro h2{font-size:1.3rem}
+  .cta{padding:.95rem 1rem;border-radius:12px}
+  .steph{margin-top:1.3rem}
+  .seg{max-width:none}
+  button.sq{text-align:center}
+  #trackcap{margin-top:-.4rem !important}
+}
+
+.exbox{background:var(--wash);border-radius:12px;padding:.8rem .9rem;margin-top:.8rem}
+.exrow{display:flex;gap:.6rem;align-items:flex-start;padding:.3rem 0}
+.pt{flex:none;display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;color:#fff}
+.pt.p1{background:var(--felt)}.pt.p2{background:var(--felt-deep)}
+.sline{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.6rem;margin:.4rem 0}
+.sline>div{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:12px;border:2px solid transparent}
+.sline>div:last-child{justify-content:flex-end}
+.sline>div.on{border-color:var(--token);background:#fff8dc}
+.sline b{font-size:2.2rem;color:var(--felt-deep);line-height:1}
+.sline span{font-weight:600}
+.sline i{font-style:normal;color:var(--muted)}
+.turn{font-size:1.05rem;margin:.6rem 0}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.big3 button{font:inherit;cursor:pointer;border-radius:14px;padding:.9rem .5rem;min-height:84px;display:flex;flex-direction:column;gap:.2rem;align-items:center;justify-content:center;text-align:center;border:2px solid}
+.big3 button b{font-size:1rem;line-height:1.2}.big3 button span{font-size:.85rem;opacity:.85}
+.big3 .b0{background:#fff;border-color:var(--line);color:var(--stop)}
+.big3 .b1{background:var(--wash);border-color:var(--felt);color:var(--felt-deep)}
+.big3 .b2{background:var(--felt-deep);border-color:var(--felt-deep);color:#fff}
+.endbox{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;justify-content:space-between;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.endbox.hot{background:#fff8dc;border:2px solid var(--token);border-radius:12px;padding:1rem}
+@media(max-width:640px){.big3{grid-template-columns:1fr}.big3 button{min-height:62px;flex-direction:row;justify-content:space-between;padding:.7rem 1rem}.sline b{font-size:1.9rem}.sline>div{padding:.4rem .5rem;gap:.4rem}.sline span{font-size:.9rem}}
+
+.star{color:var(--token);font-size:.8em}
+
+.gate{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:1.2rem;background:var(--felt-deep)}
+.gatebox{width:100%;max-width:380px;background:#fff;border-radius:18px;padding:1.6rem 1.4rem}
+.gatebox h1{margin-bottom:.3rem}
+.gatebox .btn{margin-top:.6rem;min-height:48px}
+.lerr{color:var(--stop);font-weight:500;margin:.3rem 0 0}
+.lerr:empty{display:none}
+#acct button{font:inherit;font-size:.82rem;background:none;border:0;color:var(--felt-deep);text-decoration:underline;cursor:pointer;padding:.2rem 0}
+[hidden]{display:none !important}
+@media(prefers-reduced-motion:no-preference){.bar i{transition:width .4s ease}}
+
+/* ---- flashcard instrução com audio ---- */
+.fc-instr{display:flex;gap:.6rem;align-items:start;background:var(--wash);border-radius:8px;padding:.7rem .8rem;margin-bottom:.6rem}
+.fc-instr .play-btn{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:none;background:var(--felt-deep);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s}
+.fc-instr .play-btn:hover{background:#083d26}
+.fc-instr .play-btn:active{transform:scale(.92)}
+.fc-instr .play-btn.speaking{background:var(--stop);animation:pulse-ring 1s infinite}
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(200,55,45,.4)}50%{box-shadow:0 0 0 8px rgba(200,55,45,0)}}
+.fc-instr .fc-text{font-size:.88rem;color:var(--felt-deep);line-height:1.5}
+.fc-instr .fc-text b{color:var(--ink)}
+.fc-instr .fc-text .fc-step{display:block;margin-top:.3rem}
+.fc-instr .fc-text .pts-line{display:inline-flex;align-items:center;gap:.3rem}
+.fc-instr .fc-text .dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fc-instr .fc-text .dot.g{background:var(--felt-deep)}
+.fc-instr .fc-text .dot.b{background:#1a6b4a}
+.fc-instr .fc-text .dot.r{background:var(--stop)}
+
+/* ---- game chips (jogo de caixa) ---- */
+.game-grid{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.game-chip{font:inherit;font-size:.82rem;font-weight:600;padding:.4rem .7rem;border-radius:20px;border:1.5px solid var(--line);background:var(--paper);color:var(--muted);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.game-chip:hover{border-color:var(--felt-deep);color:var(--felt-deep)}
+.game-chip[aria-pressed="true"]{background:var(--felt-deep);color:#fff;border-color:var(--felt-deep)}
+.game-chip .rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.game-chip .rdot.A{background:var(--token)}.game-chip .rdot.P{background:var(--felt-deep)}.game-chip .rdot.C{background:#5b8def}
+.game-chip[aria-pressed="true"] .rdot.P{background:#fff}
+.role-legend{display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap}
+.role-legend span{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)}
+.role-legend .rld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.role-legend .rld.A{background:var(--token)}.role-legend .rld.P{background:var(--felt-deep)}.role-legend .rld.C{background:#5b8def}
+
+/* ---- regra de hoje card ---- */
+.regra-card{background:linear-gradient(135deg,var(--felt-deep),#062e1d);color:#fff;border-radius:16px;padding:1.25rem;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.regra-card::before{content:"";position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06)}
+.regra-card .rtag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.18);padding:.15rem .5rem;border-radius:10px}
+.regra-card h3{font-size:1rem;margin:.4rem 0 .3rem}
+.regra-card p{font-size:.92rem;line-height:1.55;margin:0;opacity:.92}
+.regra-card .rex{margin-top:.6rem;background:rgba(255,255,255,.12);border-radius:8px;padding:.55rem .7rem}
+.regra-card .rex-label{font-size:.78rem;opacity:.7;margin:0 0 .2rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.regra-card .rex-text{font-size:.92rem;margin:0;font-style:italic}
+.regra-card .rbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;color:#fff;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);margin-top:.7rem;transition:transform .1s}
+.regra-card .rbtn:active{transform:scale(.95)}
+.regra-card .rbtn.speaking{background:var(--stop)!important;border-color:var(--stop)!important;animation:pulse-ring 1s infinite}
+.sess-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;font-weight:600;background:rgba(255,255,255,.15);color:#fff;padding:.2rem .6rem;border-radius:10px}
+.sess-badge .sn{background:#fff;color:var(--felt-deep);width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem}
+
+/* ---- phrase items (jogo de caixa) ---- */
+.phr-list{list-style:none;padding:0;margin:0}
+.phr-item{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.55rem 0;border-bottom:1px solid var(--line)}
+.phr-item:last-child{border-bottom:none}
+.phr-item .en{font-weight:600;font-size:.92rem;color:var(--ink)}
+.phr-item .lbtn{flex-shrink:0;font:inherit;font-size:.78rem;font-weight:600;padding:.25rem .6rem;border-radius:14px;border:1.5px solid var(--felt-deep);background:transparent;color:var(--felt-deep);cursor:pointer;transition:all .15s}
+.phr-item .lbtn:hover{background:var(--felt-deep);color:#fff}
+.phr-item .lbtn.speaking{background:var(--stop);color:#fff;border-color:var(--stop)}
+
+/* ---- accordion fundo branco ---- */
+.acc-box{border:none;border-radius:16px;margin-top:.6rem;overflow:hidden;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12)}
+.acc-box+.acc-box{margin-top:.5rem}
+.acc-box summary{font:inherit;font-size:.88rem;font-weight:600;padding:.75rem 1rem;cursor:pointer;color:var(--felt-deep);background:var(--wash);list-style:none;display:flex;align-items:center;gap:.4rem}
+.acc-box summary::before{content:"▸";transition:transform .2s;font-size:.9rem}
+.acc-box[open] summary::before{transform:rotate(90deg)}
+.acc-box .acc-inner{padding:.75rem 1rem;font-size:.88rem;background:#fff;color:var(--ink)}
+.acc-box .acc-inner ol{margin:0;padding-left:1.2rem}
+.acc-box .acc-inner ol li{margin-bottom:.5rem}
+.acc-box .acc-inner ol li b{color:var(--felt-deep)}
+.acc-box .acc-inner .phr-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.acc-box .acc-inner .phr-grid .phr-item{padding:.4rem .3rem}
+@media(max-width:640px){.game-chip{min-height:40px;padding:.4rem .8rem}.fc-instr .play-btn{width:42px;height:42px}}
+</style>
+</head>
+<body>
+<div id="gate" class="gate" hidden>
+  <div class="gatebox">
+    <h1>Mesa de inglês</h1>
+    <p class="muted">Entre com o seu e-mail e a sua senha.</p>
+    <label for="lem">E-mail</label><input id="lem" type="email" autocomplete="username" inputmode="email" style="width:100%">
+    <label for="lpw" style="margin-top:.7rem">Senha</label><input id="lpw" type="password" autocomplete="current-password" style="width:100%">
+    <label class="check" style="margin-top:.4rem"><input type="checkbox" id="lshow"><span>Mostrar a senha</span></label>
+    <p id="lerr" class="lerr" role="alert"></p>
+    <button class="btn" id="lgo" style="width:100%">Entrar</button>
+  </div>
+</div>
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div>
+      <h1>Mesa de inglês</h1>
+      <p class="sub">Do zero à fluência jogando: o que comprar, quando jogar, quando trocar de jogo e quando subir de fase.</p>
+    </div>
+    <div class="who"><div class="row" id="players"></div><div class="sync"><span id="sync" role="status">Carregando seus dados…</span> <span id="acct"></span></div></div>
+  </header>
+  <div class="track" id="track" aria-label="Trilha das cinco fases"></div>
+  <p class="small muted" id="trackcap" style="margin:-.7rem 0 1rem"></p>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="view"></main>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO: cole aqui os 2 valores do seu projeto Supabase
+   (Supabase > Project Settings > API). Veja o README.
+   Em branco, o painel funciona em modo local, sem login.
+   ============================================================ */
+const SUPABASE_URL = "https://ifunrlaapzaombhyuzxp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_11nnojZ4vGdx-9M8n_J03A_cdTpVQxP";   // chave "anon public" ou "publishable". Nunca a service_role.
+
+/* ---------- dados fixos ---------- */
+const PH=[
+ {n:1,lv:"Zero → A1",t:"Nomear coisas",h:100,band:"A1 (EF SET até 30)",gate:["Nomeio 8 de cada 10 cartas do baralho básico sem pensar","Jogo Guess Who inteiro só com perguntas em inglês","Entendo números, cores e família quando o celular fala a palavra","Me apresento em 5 frases (I am…, I have…, I like…)"]},
+ {n:2,lv:"A1 → A2",t:"Montar frases",h:200,band:"A2 (EF SET 31 a 40)",gate:["Jogo uma partida de Monopoly usando só as frases da colinha","Respondo as cartas de Perguntas para Iniciantes com frase completa","Conto o que fiz ontem em 5 frases no passado","Entendo o professor falando devagar, sem tradução"]},
+ {n:3,lv:"A2 → B1",t:"Descrever e explicar",h:400,band:"B1 (EF SET 41 a 50)",gate:["Descrevo uma palavra no Taboo sem travar mais de 5 segundos","Conto uma história de 2 minutos com as cartas de história","Faço uma sessão inteira sem recorrer ao português","Converso 20 minutos com o professor sobre meu dia e meu trabalho"]},
+ {n:4,lv:"B1 → B2",t:"Negociar e argumentar",h:600,band:"B2 (EF SET 51 a 60)",gate:["Negocio e argumento no Catan sem preparar frases","Leio um caso do Sherlock sem dicionário a cada linha","Explico e defendo uma opinião por 3 minutos","Entendo nativos em velocidade normal em vídeo"]},
+ {n:5,lv:"B2 → C1",t:"Jogar com nativos",h:800,band:"C1 (EF SET 61 a 70)",gate:["Jogo com nativos sem que adaptem a fala para mim","Entendo piada e ironia na mesa","Trabalho em inglês sem apoio"]}
+];
+const ROLE={A:"Aquecimento",P:"Jogo principal",C:"Conversa"};
+const SRC={P:"Play to Learn",E:"ELI",C:"Comercial",F:"Flashcards",T:"Temu"};
+const PTL={m:"https://www.playtolearn.com.br/jogo-da-memoria-vocabulario",e:"https://www.playtolearn.com.br/estrutura-da-lingua",c:"https://www.playtolearn.com.br/conversação-fluência",l:"https://www.playtolearn.com.br/loja"};
+/* id|nome|fase|papel|fonte|precisa ser em inglês (1/0)|busca ou link|nota */
+const RAW=`f-super1|Flashcards SuperMente, kit de vocabulário (7 caixas)|1|A|F|1|https://www.supermente.com.br/ingles/flashcards-de-ingles-kit-c-5-caixas-1-alfabeto-2-numeros-3-cores-e-formas-geometricas-4-membros-da-familia-e-5-frases-explore-outras-culturas-atraves-da-lingua-inglesa|Imagem na frente, palavra e tradução no verso. Base do jogo de flashcards com placar.
+f-1000|1000 palavras mais comuns (Flashcardo, PDF grátis para imprimir)|1|A|F|1|https://flashcardo.com/pt/cartoes-didaticos-em-ingles/|Imprima em papel 250 g numa gráfica e corte. É o caminho mais barato para ter 1000 cartas físicas.
+t-talk|Talking Flash Cards: leitor de cartas que fala (Temu)|1|A|T|1|talking flash cards english|Você encaixa a carta e o aparelho fala a palavra. Resolve a falta de voz nativa na mesa. Existem kits de 112 cartas (224 palavras) e de 255 cartas (510 palavras). É brinquedo infantil: confira se o anúncio diz English e teste a voz antes de confiar.
+t-sight|Sight Words: 220 palavras mais frequentes em cartas (Temu)|1|A|T|1|sight words flash cards 220|Cartas só com texto, das palavras que mais aparecem em inglês. Boa alternativa pronta ao PDF das 1000 palavras.
+p-fruits|Fruits and Vegetables (memória)|1|A|P|1|m|
+p-family|Family Members (memória)|1|A|P|1|m|
+p-shapes|Shapes, Numbers and Colors (memória)|1|A|P|1|m|
+p-tobe|Verbo to Be|1|P|P|1|e|Primeiro jogo de estrutura. Tudo na fase 1 gira em torno dele.
+e-picbingo|Picture Bingo (ELI)|1|P|E|1|ELI Picture Bingo english|100 palavras básicas, imagem de um lado e palavra do outro.
+e-verbbingo|Verb Bingo (ELI)|1|P|E|1|ELI Verb Bingo english|
+e-prep|Preposition Island (ELI)|1|P|E|1|ELI Preposition Island|
+e-numbers|The Great Game of Numbers (ELI)|1|A|E|1|ELI Great Game of Numbers|
+c-guesswho|Guess Who? ou Cara a Cara|1|P|C|0|jogo Guess Who Cara a Cara|Qualquer edição serve: as perguntas saem da sua boca, não da caixa.
+c-zingo|Zingo (bingo de imagem e palavra)|1|A|C|1|Zingo ThinkFun english|
+c-battleship|Batalha Naval|1|A|C|0|jogo batalha naval|Qualquer edição. Treina letras e números: "B seven. Hit! Miss!"
+c-dobble|Dobble|1|A|C|0|jogo Dobble|Qualquer edição. Quem fala o nome do objeto em inglês primeiro leva a carta.
+c-uno|Uno|1|A|C|0|jogo Uno|Qualquer edição. Cores, números, "draw two", "skip", "reverse".
+f-super2|Flashcards SuperMente, kit gramática e frases (3 caixas)|2|A|F|1|https://www.supermente.com.br/ingles/ingles-kit-2|Caixa de frases: português na frente, inglês no verso. Vale 2 pontos no placar.
+f-sent|1,000 English Sentence Flash Cards (importado)|2|A|F|1|1000 English sentence flash cards|Tiras de frases simples por tema. Só importado (Amazon).
+p-do|Simple Present: Do and Does|2|P|P|1|e|
+p-cont|Present Continuous|2|P|P|1|e|
+p-can|Can Abilities|2|P|P|1|e|
+p-goingto|Going to|2|P|P|1|e|
+p-did|Simple Past: Did|2|P|P|1|e|
+p-was|The Verb Be in the Past|2|P|P|1|e|
+p-begq|Perguntas para Iniciantes|2|C|P|1|c|Primeiro jogo em que vocês conversam de verdade.
+e-travel|Travel Talk (ELI)|2|P|E|1|ELI Travel Talk game|
+e-quartet|The Quartet Game (ELI)|2|P|E|1|ELI Quartet Game english|
+e-fullstop|Full Stop: Present Simple e Continuous (ELI)|2|P|E|1|ELI Full Stop JoEnglish|Montar frases com cartas.
+e-five|Five-Card Stories (ELI)|2|C|E|1|ELI Five-Card Stories|
+c-monopoly|Monopoly (edição em inglês)|2|P|C|1|Monopoly english edition|As cartas de Chance são o texto do jogo: compre em inglês.
+c-life|The Game of Life (edição em inglês)|2|P|C|1|Game of Life english edition|
+c-clue|Clue (edição em inglês)|2|P|C|1|Clue board game english|"I suggest it was… in the… with the…"
+c-hedbanz|Hedbanz|2|C|C|0|jogo Hedbanz quem sou eu|Qualquer edição. "Am I an animal? Do I have four legs?"
+t-spell|Jogo de soletrar com letras e figuras (Temu)|2|A|T|1|english word spelling game letters|Cartas com figura e letras soltas para montar a palavra. Treina soletrar em voz alta.
+t-sentence|Cartas ou dominó de montar frases (Temu)|2|P|T|1|sentence building cards english|Busca para tentar: o estoque da Temu muda muito. Procure kits com cartas coloridas por classe de palavra.
+c-banana|Bananagrams|2|A|C|1|Bananagrams|
+c-cubes|Story Cubes|2|C|C|0|Rory Story Cubes|Sem texto, qualquer edição. Uma frase por dado.
+p-pastcont|Past Continuous and Simple Past|3|P|P|1|e|
+p-perfect|Present Perfect|3|P|P|1|e|
+p-irreg|120 Listas Verbos Irregulares|3|A|P|1|l|
+p-conv|Conversation Cards|3|C|P|1|c|
+p-story|Can you tell a story?|3|C|P|1|c|
+p-countries|Countries of the World|3|C|P|1|c|
+e-emotions|The Emotions Game (ELI)|3|P|E|1|ELI Emotions Game|
+e-idioms|The Idioms Game (ELI)|3|P|E|1|ELI Idioms Game|
+e-sayit|Say It! (ELI)|3|P|E|1|ELI Say It word game|
+c-taboo|Taboo (edição em inglês)|3|P|C|1|Taboo game english Hasbro|
+c-duet|Codenames Duet (edição em inglês)|3|P|C|1|Codenames Duet english|Feito para 2 jogadores.
+c-justone|Just One (edição em inglês)|3|P|C|1|Just One game english|Melhor com 3 ou mais.
+c-scatter|Scattergories (edição em inglês)|3|P|C|1|Scattergories english|
+c-a2a|Apples to Apples|3|P|C|1|Apples to Apples game|Melhor com 3 ou mais.
+c-dixit|Dixit|3|C|C|0|jogo Dixit|Sem texto, qualquer edição.
+c-wordup|Word Up (feito para estudantes de inglês)|3|P|C|1|Word Up ESL board game|
+t-conv|Cartas de conversa em inglês (Temu)|3|C|T|1|conversation cards english questions|Busca para tentar. Procure conversation starters ou question cards em inglês. Evite os de tema romântico ou de festa, que usam gíria demais para esta fase.
+p-solve|Can you solve this problem?|4|C|P|1|c|
+p-adv|Questions for Advanced Students|4|C|P|1|c|
+p-biz|Questions for Business English|4|C|P|1|c|
+c-catan|Catan|4|P|C|0|jogo Catan|Qualquer edição. O inglês está na negociação. Melhor com 3 ou mais.
+c-balder|Balderdash (edição em inglês)|4|P|C|1|Balderdash game english|
+c-sherlock|Sherlock Holmes Consulting Detective (em inglês)|4|P|C|1|Sherlock Holmes Consulting Detective english|Cooperativo, ótimo a dois, muita leitura.
+c-unlock|Unlock! ou Exit (em inglês)|4|P|C|1|Unlock escape adventures english|
+c-trivial|Trivial Pursuit (edição em inglês)|4|A|C|1|Trivial Pursuit english|
+c-once|Once Upon a Time (em inglês)|4|C|C|1|Once Upon a Time storytelling card game|
+c-dnd|Dungeons and Dragons Starter Set (em inglês)|5|P|C|1|Dungeons Dragons Starter Set english|
+c-heavy|Um jogo pesado em texto à sua escolha (em inglês)|5|P|C|1|board game english edition|`;
+const CAT=RAW.split("\n").map(l=>{const a=l.split("|");return{id:a[0],name:a[1],ph:+a[2],role:a[3],src:a[4],en:a[5]==="1",q:a[6],note:a[7]||""}});
+const ST=["","lista","comprado","tenho","dominado"], STL={"":"Não tenho","lista":"Na lista","comprado":"Comprado, a caminho","tenho":"Tenho","dominado":"Dominado"};
+
+
+/* ---------- como jogar ---------- */
+const RULES=[
+ ["Mesa só em inglês","Tudo que se fala durante a partida é em inglês. Na fase 1 vale pedir socorro com a frase pronta: How do you say ... in English? Da fase 2 em diante, português custa 1 ponto."],
+ ["Frase completa sempre","Resposta de uma palavra não pontua. Apple vira It's an apple. É isso que transforma vocabulário em fala."],
+ ["Narre a sua jogada","Fale o que está fazendo: I roll the dice. I move five spaces. I draw a card. Parece bobo e é o treino de fala mais barato que existe."],
+ ["O celular é o juiz de pronúncia","Ninguém chuta como se fala. Toque no botão de ouvir, escutem e repitam os dois. Sem isso vocês fixam o erro um do outro."],
+ ["Pote de palavras","Faltou uma palavra no meio do jogo? Escreva numa carta em branco e jogue no pote. No fim da sessão ela entra no baralho de flashcards. Os jogos geram as suas cartas."],
+ ["Suba a régua no mesmo jogo","Sessões 1 e 2: palavra e frase curta. Sessões 3 e 4: frase mais pergunta para o outro. Sessões 5 e 6: com relógio, 10 segundos por jogada. Depois disso o jogo vira aquecimento."],
+ ["Dois minutos finais","Da fase 2 em diante, cada um fecha a sessão com 3 frases no passado sobre a partida: I won. You had bad luck. I bought four houses."]
+];
+const TABLE=["It's your turn.","It's my turn.","Whose turn is it?","Roll the dice.","Shuffle the cards.","Deal the cards.","Draw a card.","I pass.","Wait a second.","Good move!","That's cheating!","I win!","You win.","Let's play again.","How do you say this in English?","What does this mean?","Can you repeat, please?","I don't understand."];
+const TPL={
+ mem:{how:"Ao virar cada carta, diga a palavra em voz alta, mesmo quando não forma par. Achou o par? Só leva se disser uma frase com a palavra. Régua: primeiro It's an apple, depois I like apples, depois uma pergunta para o outro: Do you like apples?",say:["It's a...","I found a pair!","It's not a match.","Do you like...?","I have three pairs."]},
+ struct:{how:"Siga a regra da caixa, mas toda resposta sai em frase completa e em voz alta. Depois de cada carta, o outro jogador transforma a frase: afirmativa vira negativa, negativa vira pergunta. Da terceira sessão em diante, 10 segundos por carta."},
+ conv:{how:"Quem tira a carta pergunta, o outro responde com no mínimo 2 frases na fase 2, 4 frases na fase 3 e 1 minuto na fase 4. Quem perguntou é obrigado a fazer uma pergunta de continuação. Depois invertam. A frase que faltou vai para o pote de palavras e para o professor.",say:["Why?","Tell me more.","What about you?","I think...","In my opinion...","I agree because...","I disagree because..."]},
+ bingo:{how:"Quem canta é o celular ou um jogador lendo o verso da carta. Marcou na cartela? Diga a palavra numa frase. Variação: o cantador descreve em vez de falar a palavra (It's yellow. It's a fruit.). No Verb Bingo, o cantador faz mímica e o outro fala a frase: You are swimming.",say:["I have it!","I don't have it.","Bingo!","Say it again, please.","What's this in English?"]},
+ eli:{how:"Baixe o manual do jogo no site da ELI e siga a regra da caixa. Por cima dela, valem as regras da mesa: frase completa, narrar a jogada e pergunta para o outro a cada rodada."},
+ flash:{how:"Abra a aba Placar de flashcards e selecione este baralho: as instruções, as frases e a pontuação mudam conforme o tipo de baralho (com imagem, sem imagem, frases) e o modo da rodada.",say:["What's this?","It's a...","How do you spell it?","Can you use it in a sentence?","Next card."]}
+};
+const HOW={
+ "f-super1":{t:"flash"},"f-1000":{t:"flash"},
+ "f-super2":{how:"Um lê a frase em português, o outro fala em inglês. Acertou: +2. Depois quem respondeu troca uma palavra da frase e fala de novo (I like coffee vira I like tea). Isso ensina o molde da frase, não a frase decorada.",say:["How do you say this?","Say it again, slowly.","Now change one word.","Almost!","That's right."]},
+ "f-sent":{how:"Leiam a tira em voz alta, confiram a pronúncia no celular e transformem: troquem o sujeito, passem para negativa, virem pergunta. Três transformações por tira.",say:["Read it aloud.","Make it negative.","Make it a question.","Change the subject."]},
+ "t-talk":{how:"O aparelho vira o cantador nativo da mesa. Jogo 1, ouvir: espalhem 12 cartas com a figura para cima, um encaixa uma carta igual escondida e o outro bate na figura certa. Jogo 2, falar: veja a figura, diga a palavra e só depois encaixe a carta para conferir a pronúncia. Se a sua saiu diferente, conta como erro. Use o placar de flashcards com este baralho.",say:["Listen.","What did it say?","Say it again.","It's a...","Let me check."]},
+ "t-sight":{t:"flash"},
+ "t-spell":{how:"Um mostra a figura, o outro monta a palavra com as letras e soletra em voz alta enquanto monta. Depois fala uma frase com ela. Letra dita com som de português conta como erro: A soa ei, E soa i, I soa ai.",say:["How do you spell it?","D, O, G.","Is that right?","Use it in a sentence."]},
+ "t-sentence":{how:"Cada um compra cartas e monta a frase mais longa que conseguir. Leu em voz alta e está correta: 1 ponto por palavra. O outro transforma a frase em negativa ou pergunta para roubar metade dos pontos.",say:["My sentence is...","Is it correct?","Make it negative.","Make it a question."]},
+ "t-conv":{t:"conv"},
+ "p-fruits":{t:"mem"},"p-family":{t:"mem",say:["This is my mother.","She is my sister.","Do you have a brother?","I have two cousins.","I found a pair!"]},"p-shapes":{t:"mem",say:["It's a red circle.","It's number twelve.","What color is it?","How many?","It's not a match."]},
+ "p-tobe":{t:"struct",say:["I am...","She is...","Are you...?","He isn't...","We are...","Yes, I am. / No, I'm not."]},
+ "p-do":{t:"struct",say:["Do you...?","Does she...?","I don't...","She doesn't...","Yes, I do. / No, I don't."]},
+ "p-cont":{t:"struct",say:["I am playing.","What are you doing?","She isn't working.","Are they sleeping?"]},
+ "p-can":{t:"struct",say:["I can swim.","Can you cook?","I can't dance, but I can sing.","Yes, I can. / No, I can't."]},
+ "p-goingto":{t:"struct",say:["I'm going to travel.","Are you going to buy it?","What are you going to do tomorrow?","I'm not going to work."]},
+ "p-did":{t:"struct",say:["Did you...?","I didn't...","Yes, I did. / No, I didn't.","What did you do yesterday?"]},
+ "p-was":{t:"struct",say:["I was at home.","Were you tired?","There was a problem.","It wasn't easy."]},
+ "p-pastcont":{t:"struct",say:["I was cooking when you called.","What were you doing at eight?","While I was working, she was sleeping."]},
+ "p-perfect":{t:"struct",say:["Have you ever...?","I have never...","I've already done it.","Not yet.","How long have you...?"]},
+ "p-irreg":{how:"Duelo rápido: um fala o infinitivo, o outro responde passado e particípio e fecha com uma frase no passado. Go: went, gone. I went to the beach. Errou, a carta volta para o monte.",say:["Go, went, gone.","Buy, bought, bought.","What's the past of...?","Use it in a sentence."]},
+ "p-begq":{t:"conv"},"p-conv":{t:"conv"},"p-adv":{t:"conv"},
+ "p-biz":{t:"conv",how:"Mesma dinâmica das cartas de conversa, mas responda com a sua operação real: campanhas, produtos, clientes. É o vocabulário que você vai usar de verdade. Mínimo de 1 minuto por resposta e uma pergunta de continuação do outro.",say:["In my business, we...","Our main challenge is...","Could you explain that?","What do you mean by...?","Let me give you an example."]},
+ "p-story":{how:"Conte a história usando as cartas e ligando as frases com conectores. Fase 2 no presente, fase 3 no passado. No fim, o outro faz 2 perguntas sobre a história e depois reconta em 3 frases.",say:["Once upon a time...","And then...","Suddenly...","Because...","In the end...","What happened next?"]},
+ "p-countries":{how:"Além da regra da caixa, cada país tirado rende 3 frases: onde fica, que língua falam e se você iria. O outro pergunta por quê.",say:["It's in South America.","They speak Spanish.","The capital is...","I'd like to go there because...","Have you ever been to...?"]},
+ "p-solve":{how:"Um lê o problema em voz alta, o outro dá 2 conselhos diferentes. Depois o primeiro diz qual conselho prefere e por quê. Invertam.",say:["You should...","If I were you, I would...","Why don't you...?","Have you tried...?","That's a good idea, but..."]},
+ "e-picbingo":{t:"bingo"},"e-verbbingo":{t:"bingo"},
+ "e-prep":{t:"eli",say:["Where is the...?","It's under the table.","It's next to the...","It's between the... and the...","Is it on the...?"]},
+ "e-numbers":{t:"eli",how:"Todo número se fala em voz alta. Treinem os pares traiçoeiros (thirteen e thirty, fifteen e fifty): a diferença está na sílaba forte. Variação: ditem um telefone ou um preço para o outro anotar.",say:["Thirteen. Thirty.","It costs twenty-five dollars.","My number is...","How much is it?","What number is this?"]},
+ "e-travel":{t:"eli",say:["I'd like a ticket to...","Where is the station?","How much is it?","Can I see your passport?","Have a nice trip!"]},
+ "e-quartet":{t:"eli",say:["Do you have the...?","Yes, here you are.","No, sorry.","I have a set!","It's your turn to ask."]},
+ "e-fullstop":{how:"Monte a frase com as cartas, leia em voz alta e ponha o ponto final. O outro transforma: negativa ou pergunta. Frase errada que o adversário corrigir dá o ponto para ele.",say:["My sentence is...","Is it correct?","Make it negative.","Make it a question.","Full stop!"]},
+ "e-five":{t:"eli",how:"Com as 5 cartas, conte uma história curta ligando as imagens. O outro recontar em 3 frases vale ponto extra.",say:["First...","Then...","After that...","Finally...","What happened next?"]},
+ "e-emotions":{t:"eli",say:["I feel...","I felt nervous when...","How do you feel about...?","It makes me happy.","Why?"]},
+ "e-idioms":{t:"eli",how:"Além da regra da caixa, cada expressão acertada só pontua se você usar numa frase verdadeira sobre a sua vida.",say:["It means...","For example...","It's a piece of cake.","I'm under the weather."]},
+ "e-sayit":{t:"eli"},
+ "c-guesswho":{how:"Só valem perguntas completas em inglês. Na fase 1 usem os moldes abaixo. Da fase 2 em diante, troquem a regra: em vez de perguntar, descreva a sua pessoa em 3 frases e o outro adivinha.",say:["Does your person have glasses?","Is your person a woman?","Does he have blond hair?","Is she wearing a hat?","Yes, he does. / No, she doesn't.","Is it...?"]},
+ "c-zingo":{how:"Pegou a peça, fale a palavra. Da segunda sessão em diante, só leva a peça quem disser uma frase com ela.",say:["I need the...","I have it!","It's mine!","Zingo!"]},
+ "c-battleship":{how:"Coordenadas sempre em inglês. É o melhor treino de alfabeto que existe: A, E e I confundem todo brasileiro. Na dúvida, o celular fala a letra.",say:["B seven.","Hit!","Miss!","You sank my battleship!","Say the letter again, please."]},
+ "c-dobble":{how:"Grite o nome do objeto em inglês. Não sabe o nome? Aponte, pergunte, confira no celular e a carta vai para o pote de palavras. Em uma semana o baralho inteiro está na boca.",say:["Anchor!","What's this in English?","I said it first!","It's mine."]},
+ "c-uno":{how:"Toda carta jogada é anunciada. Quem jogar calado compra uma carta.",say:["Red seven.","Draw two.","Skip.","Reverse.","I change the color to blue.","I don't have it, I'll draw.","Uno!"]},
+ "c-monopoly":{how:"O banqueiro só fala inglês. Cartas de Chance e Community Chest são lidas em voz alta por quem tirou e o outro resume o que aconteceu. Da quarta sessão em diante, liberem negociação livre: é onde sai o inglês de verdade.",say:["I'll buy it.","How much is it?","You owe me two hundred dollars.","Pay the rent.","Go to jail.","I'll trade you this for that.","Deal! / No deal."]},
+ "c-life":{how:"Narre a sua vida em primeira pessoa a cada casa. No fim, cada um conta a própria vida no passado em 1 minuto.",say:["I got a job.","I'm a doctor.","I got married.","I have two kids.","I bought a house.","I retired."]},
+ "c-clue":{how:"Sugestões e acusações só com a frase inteira. O molde fixo do jogo faz você repetir pessoa, lugar e objeto dezenas de vezes por partida.",say:["I suggest it was Miss Scarlett, in the kitchen, with the knife.","I can disprove that.","I can't help you.","I accuse...","Were you in the library?"]},
+ "c-hedbanz":{how:"Só perguntas de sim ou não, completas. Na fase 3, quem responde não pode dizer só yes ou no: tem que dar uma pista em frase.",say:["Am I an animal?","Am I bigger than a dog?","Do I live in water?","Can I fly?","Do people eat me?","Am I a...?"]},
+ "c-banana":{how:"Toda palavra formada tem que ser lida e usada numa frase no fim da rodada, senão volta para o monte. Palavra que ninguém conhece vai para o pote.",say:["Split!","Peel!","Bananas!","Is that a real word?","What does it mean?"]},
+ "c-cubes":{how:"Uma frase por dado. Fase 2 no presente (There is a...), fase 3 no passado com conectores. O outro fecha a história com uma frase final.",say:["There is a...","Once upon a time...","And then...","But suddenly...","Because...","The end."]},
+ "c-taboo":{how:"Comecem no modo fácil: cada um pode usar 2 palavras proibidas por carta. Depois de 4 sessões, regra oficial. Os moldes abaixo resolvem quase toda carta e são os mesmos que salvam você numa conversa real quando a palavra some.",say:["It's a thing that...","It's a place where...","It's a person who...","You use it to...","It's the opposite of...","It's similar to..."]},
+ "c-duet":{how:"Dica de uma palavra e um número, como na regra. O ganho de inglês vem depois de cada rodada: quem deu a dica explica o raciocínio em voz alta.",say:["My clue is ocean, two.","I said that because...","I'm not sure about this one.","Let's pass.","That was the assassin!"]},
+ "c-justone":{how:"Depois de revelar as dicas, cada um explica a sua em uma frase. Melhor com 3 ou mais pessoas.",say:["My clue was...","I wrote that because...","We wrote the same word!","My guess is..."]},
+ "c-scatter":{how:"Cada resposta é lida numa frase e pode ser contestada. A discussão sobre se vale ou não vale é o melhor treino do jogo.",say:["A fruit with B: banana.","That doesn't count because...","Yes, it does!","We have the same answer.","Time's up!"]},
+ "c-a2a":{how:"Antes de o juiz escolher, cada um defende a sua carta por 20 segundos. Melhor com 3 ou mais pessoas.",say:["I chose this because...","Mine is the best match.","That makes no sense!","The winner is..."]},
+ "c-dixit":{how:"A pista tem que ser uma frase completa, não uma palavra. Depois da revelação, cada um explica por que escolheu a carta que escolheu.",say:["My clue is...","I voted for this one because...","It reminds me of...","It looks like..."]},
+ "c-wordup":{how:"Usem as cartas do nível de vocês e subam de nível quando acertarem 8 de cada 10. Toda resposta em frase completa.",say:["The answer is...","Can you repeat the question?","I'm not sure, but I think...","Correct!"]},
+ "c-catan":{how:"Todo o inglês está na troca. Proibido trocar em silêncio: tem que pedir, oferecer, recusar e reclamar. Precisa de 3 ou mais pessoas para render.",say:["Does anyone have brick?","I'll give you two sheep for one ore.","No way.","That's a bad deal.","Can I build here?","I move the robber."]},
+ "c-balder":{how:"Escrevam as definições falsas em inglês, leiam em voz alta e defendam a sua como se fosse a verdadeira.",say:["I think it means...","That sounds fake.","I vote for number two.","The real definition is..."]},
+ "c-sherlock":{how:"Leiam o caso em voz alta, um parágrafo cada. Teorias só em inglês. Palavra desconhecida: tentem pelo contexto, só depois o celular, e ela vai para o pote. Um caso rende 2 a 3 sessões.",say:["I think the killer is... because...","Let's visit...","That doesn't make sense.","What if...?","We need more evidence."]},
+ "c-unlock":{how:"Pensem em voz alta o tempo todo. O cronômetro força a fala rápida, sem tempo de montar a frase perfeita.",say:["Let's combine this with that.","Try the code...","What does this mean?","Look at this card.","We're running out of time!"]},
+ "c-trivial":{how:"Quem pergunta lê em voz alta, quem responde usa frase completa. Errar o fato não importa, o que conta é entender a pergunta.",say:["I think it's...","I have no idea.","My guess is...","Can you read it again?","Correct!"]},
+ "c-once":{how:"Contem a história com conectores e interrompam de verdade, como manda a regra. Interromper em inglês exige ouvir com atenção total.",say:["Once upon a time...","Wait, that reminds me...","Meanwhile...","And they lived happily ever after."]},
+ "c-dnd":{how:"Descreva suas ações em primeira pessoa e pergunte tudo ao mestre. O ideal é uma mesa online com mestre nativo: são 3 horas de conversa real por sessão.",say:["I want to...","I search the room.","I try to persuade the guard.","What do I see?","Can I roll for that?"]},
+ "c-heavy":{how:"A primeira sessão é ler o manual em inglês juntos, em voz alta, e explicar as regras um para o outro. Só isso já é uma aula inteira.",say:["How does this work?","According to the rules...","So, on my turn I can...","Let me check the rulebook."]}
+};
+function howOf(g){const h=HOW[g.id]||{};const t=TPL[h.t]||{};return{how:h.how||t.how||"Siga a regra da caixa com as regras da mesa por cima: frase completa, narrar a jogada e uma pergunta para o outro a cada rodada.",say:h.say||t.say||[]}}
+const canSpeak=(()=>{try{return "speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined"}catch(e){return false}})();
+function speak(t){if(!canSpeak)return;try{const u=new SpeechSynthesisUtterance(t.replace(/\.\.\./g," "));u.lang="en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+let _speakingPT=false;
+function speakPT(t,btn){if(!canSpeak)return;try{speechSynthesis.cancel();if(_speakingPT&&btn){_speakingPT=false;document.querySelectorAll('.play-btn').forEach(b=>b.classList.remove('speaking'));return}const u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";u.rate=.92;if(btn){btn.classList.add('speaking');_speakingPT=true}u.onend=u.onerror=()=>{_speakingPT=false;if(btn)btn.classList.remove('speaking')};speechSynthesis.speak(u)}catch(e){_speakingPT=false}}
+function phrase(t){return `<li class="ph"><span lang="en">${esc(t)}</span>${canSpeak?`<button class="chip" data-act="say" data-v="${esc(t)}" aria-label="Ouvir: ${esc(t)}">Ouvir</button>`:""}</li>`}
+const LADDER_EXAMPLES={
+ "t-talk":["Diga só a palavra: Apple.",'Fale uma frase: "It\'s an apple." E pergunte: "Do you like apples?"','Igual, mas com 10 segundos para responder.'],
+ "c-uno":['Anuncie a carta: "Red seven." ou "Draw two."','Fale a frase completa: "I play a red seven." E pergunte: "Do you have any red cards?"','Igual, mas com 10 segundos para jogar e falar.'],
+ "c-guesswho":['Pergunte simples: "Glasses?" ou "Woman?"','Pergunta completa: "Does your person have glasses?" E siga com: "Is your person a man?"','Igual, mas com 10 segundos para formular cada pergunta.'],
+ "c-monopoly":['Fale o básico: "Buy." ou "Pay rent."','Frase completa: "I want to buy this property." E pergunte: "How much is the rent?"','Igual, mas com 10 segundos para cada fala.'],
+ "c-dobble":['Grite o nome: "Anchor!"','Fale na frase: "I see an anchor!" E pergunte: "What did you see?"','Igual, mas com relógio — quem fala primeiro leva.'],
+ "c-battleship":['Diga a coordenada: "B seven."','Frase completa: "I attack B seven." E pergunte: "Did I hit your ship?"','Igual, mas com 10 segundos por jogada.'],
+ "e-picbingo":['Diga a palavra: "Dog!"','Fale na frase: "I have a dog on my card!" E pergunte: "Do you have this one?"','Igual, mas com 10 segundos para responder.']
+};
+function ladder(g){const n=plays(g.id);if(g.src==="F")return null;const ex=LADDER_EXAMPLES[g.id]||LADDER_EXAMPLES["c-uno"];if(n<2)return{rule:"Pode falar palavras soltas e frases curtas. Sem relógio.",goal:"O objetivo é só aprender a regra do jogo em inglês.",example:ex[0],level:1,n:n};if(n<4)return{rule:"Agora toda fala tem que ser frase completa + uma pergunta para o jogador.",goal:"Isso força você a montar frases de verdade, não só palavras.",example:ex[1],level:2,n:n};if(n<6)return{rule:"Mesmas regras, mas agora com relógio: 10 segundos por jogada.",goal:"Treina a velocidade — pensar em inglês sem traduzir do português.",example:ex[2],level:3,n:n};return{rule:"Esse jogo já ficou fácil. Use como aquecimento de 5 minutos.",goal:"Abra o próximo jogo da lista para continuar evoluindo.",example:null,level:4,n:n}}
+function vComo(){
+  const ph=ui.hPhase||S.phase;
+  const pick=ui.hGame&&all().find(g=>g.id===ui.hGame);const list=pick?[pick]:all().filter(g=>g.ph===ph&&(!ui.hOwned||owned(g.id)));const mine=all().filter(g=>owned(g.id)),rest=all().filter(g=>!owned(g.id));
+  return `<div class="grid g2"><section class="panel soft"><h2>As 7 regras da mesa</h2><ol class="rules">${RULES.map(r=>`<li><b>${r[0]}.</b> ${esc(r[1])}</li>`).join("")}</ol></section>
+  <section class="panel"><h2>Frases de mesa, para qualquer jogo</h2><p class="small muted">Imprima ou deixe aberto no celular. Com estas 18 frases vocês já jogam uma partida inteira sem português.</p><ul class="clean phr two">${TABLE.map(phrase).join("")}</ul></section></div>
+  <h2 style="margin-top:1.5rem">Como jogar cada jogo</h2>
+  <div class="row" style="margin-bottom:.5rem"><div style="flex:1;min-width:240px;max-width:460px"><label for="hg">Jogo na mesa agora</label><select id="hg" data-chg="hgame" style="width:100%"><option value="">Ver todos da fase</option>${mine.length?`<optgroup label="Os que eu tenho">${mine.map(g=>`<option value="${esc(g.id)}" ${ui.hGame===g.id?"selected":""}>${esc(g.name)}</option>`).join("")}</optgroup>`:""}<optgroup label="Os outros">${rest.map(g=>`<option value="${esc(g.id)}" ${ui.hGame===g.id?"selected":""}>${esc(g.name)}</option>`).join("")}</optgroup></select></div></div>
+  <div class="chips" ${pick?'hidden':''}>${PH.map(p=>`<button class="chip" aria-pressed="${ph===p.n}" data-act="hph" data-v="${p.n}">Fase ${p.n}</button>`).join("")}<button class="chip" aria-pressed="${!!ui.hOwned}" data-act="hown">Só os que eu tenho</button></div>
+  ${list.map(g=>{const h=howOf(g),lad=ladder(g);return `<article class="how"><h3>${esc(g.name)} <span class="tag">${ROLE[g.role]}</span></h3>${lad?`<p class="next small"><b>Hoje — Sessão ${lad.n+1}.</b> ${esc(lad.rule)} ${esc(lad.goal)}${lad.example?` Exemplo: ${esc(lad.example)}`:""}</p>`:""}<p>${esc(h.how)}</p>${h.say.length?`<ul class="clean phr">${h.say.map(phrase).join("")}</ul>`:""}</article>`}).join("")||`<p class="muted">Nenhum jogo desta fase marcado como "Tenho". Desligue o filtro ou marque os jogos na aba de compras.</p>`}`;
+}
+
+
+/* ---------- as 13 fases e o diagnóstico ---------- */
+const CHECK5=[
+ ["Dose","Foram pelo menos 4 sessões por semana nas últimas 4 semanas? Se não, o problema é dose, não método. Não mude nada além disso."],
+ ["Mesa em inglês","A partida foi mesmo em inglês ou virou jogo em português com cartas em inglês? Sem a regra da mesa, o jogo ensina só leitura."],
+ ["Áudio nativo","Teve voz nativa na semana? Celular cantando cartas, clipes, professor. Dois iniciantes sozinhos não constroem ouvido."],
+ ["Alguém fluente corrigindo","Sem correção, o erro vira hábito. Uma aula de conversa por semana já resolve."],
+ ["Repetição","O mesmo jogo foi para a mesa 6 vezes ou mais? Trocar de jogo toda semana diverte e não automatiza nada."]
+];
+const STG=[
+ {n:0,t:"O idioma parece um barulho contínuo",lv:"A0 → A1",ph:1,
+  goal:"Juntar as primeiras 300 a 500 palavras de altíssima frequência e umas 10 estruturas inteiras (I want..., Can I...?, Where is...?), ligando a palavra direto à coisa, sem passar pelo português.",
+  g:["f-super1","e-picbingo","c-dobble","c-uno","c-zingo","p-fruits","p-family","p-shapes"],
+  extra:["Bingo cantado pelo celular","Tapa-certo: o celular fala, quem bater primeiro na carta leva"],
+  play:"Use sempre a figura, nunca lista em português. No placar, modo imagem → inglês e uma rodada de ouvir por sessão. Toda palavra nova é ouvida no celular antes de ser falada.",
+  ok:["Nomeia 8 de cada 10 cartas em menos de 3 segundos","Reconhece as mesmas palavras quando o celular fala, sem ver a carta","Usa 5 frases de mesa sem olhar a colinha"],
+  fix:[["Esquece tudo de uma sessão para a outra","Cartas novas demais. Máximo de 5 novas por rodada, e troque 2 sessões longas por rodadas de 10 minutos todo dia."],["Sabe lendo, mas não reconhece ouvindo","Falta o modo ouvir. Bingo cantado e tapa-certo em toda sessão, antes do jogo principal."],["Continua traduzindo palavra por palavra","Tire o português de cena: tampe o verso das cartas e jogue só imagem → inglês. Tradução só quando a figura não resolver."],["Acha o vocabulário infantil e perde a vontade","Crie um baralho com as palavras da sua vida e do seu trabalho. O pote de palavras existe para isso."]]},
+ {n:1,t:"Conhece palavras, mas não monta frases",lv:"A1",ph:1,
+  goal:"Trocar palavras soltas por blocos prontos: I think that..., Do you have...?, I don't think so. O bloco sai inteiro, sem montagem.",
+  g:["p-tobe","c-guesswho","e-prep","e-verbbingo","f-super2","c-battleship"],
+  extra:["Go Fish com qualquer baralho: Do you have a...? Yes, here you are. No, go fish.","As 18 frases de mesa"],
+  play:"Escolha jogos de molde fixo, em que a mesma frase se repete dezenas de vezes por partida. No baralho de frases, acertou, troca uma palavra e fala de novo: é isso que ensina o molde.",
+  ok:["Faz as perguntas do Guess Who sem montar palavra por palavra","Usa 15 frases de mesa sem colinha","Apresenta-se em 5 frases sem travar"],
+  fix:[["Monta a frase palavra por palavra","Você está jogando baralho de palavras demais. Inverta a proporção: 2 rodadas de frases para cada rodada de palavras."],["Sabe o bloco no jogo, mas ele some fora do jogo","Use o mesmo bloco em 3 jogos diferentes na mesma semana e feche toda sessão com os 2 minutos finais."],["Um fala e o outro fica calado","Regra nova: quem jogar calado compra uma carta ou perde a vez. Narrar a jogada passa a ser obrigatório."]]},
+ {n:2,t:"Forma frases, mas fala devagar",lv:"A1 → A2",ph:2,
+  goal:"Automaticidade. Encontrar as mesmas estruturas centenas de vezes até não precisar mais calcular a gramática.",
+  g:["p-do","p-cont","p-can","p-goingto","p-did","p-was","c-monopoly","c-life","c-clue","e-fullstop","c-cubes","p-begq"],
+  extra:["Relógio de 10 segundos do placar"],
+  play:"Um jogo de estrutura por vez, 6 sessões cada, e o anterior vira aquecimento. Da terceira sessão em diante entra o relógio. No Monopoly e no Game of Life, narre tudo no passado no fim da partida.",
+  ok:["As frases do jogo saem em menos de 3 segundos","Conta o que fez ontem em 5 frases, sem pausa longa","Usa passado e futuro sem parar para pensar na regra"],
+  fix:[["Continua calculando gramática a cada frase","Trocou de jogo cedo demais. Volte e fique 6 sessões no mesmo. Nesta fase repetição vale mais que variedade."],["Trava quando o relógio entra","Comece com 20 segundos, depois 15, depois 10. O relógio tem que apertar, não paralisar."],["Erra sempre a mesma estrutura","O jogo daquela estrutura volta como aquecimento por 2 semanas, e o erro vai para o professor."],["Muitas pausas com uh","Aprenda 4 frases para ganhar tempo: Well..., Let me think, You know, How can I say this? Pausa preenchida em inglês também é fluência."]]},
+ {n:3,t:"Consegue falar, mas não entende as pessoas",lv:"A2",ph:2,
+  goal:"Construir o vocabulário auditivo: reconhecer no som o que você já conhece no papel, com redução e ligação entre palavras (gonna, wanna, whaddaya).",
+  g:["e-travel","c-hedbanz","c-guesswho"],
+  extra:["Jogo do clipe: toquem 5 a 10 segundos de uma série ou vídeo, cada um escreve o que ouviu, revelem a legenda em inglês, 1 ponto por palavra certa","Baralho de reduções: gonna, wanna, gotta, lemme, kinda, dunno, whaddaya. Frente como se fala, verso como se escreve","Guess Who e Hedbanz com o professor, por vídeo, em velocidade normal"],
+  play:"Aviso honesto: tabuleiro entre dois iniciantes não resolve esta fase, porque falta voz nativa. A mesa precisa de áudio real. Todo baralho novo entra primeiro no modo ouvir, e o jogo do clipe vira o jogo principal por algumas semanas.",
+  ok:["Entende o professor em ritmo normal em assuntos conhecidos","Reconhece gonna, wanna e gotta sem legenda","Faz 6 pontos ou mais em 10 no jogo do clipe com vídeos para estudantes"],
+  fix:[["Entende lendo a legenda, mas não sem ela","Seu vocabulário visual está muito à frente do auditivo. Por um mês, baralho novo só entra pelo modo ouvir."],["Entende o professor, mas não vídeo","O professor adapta a fala para você. Peça velocidade normal e use clipes de gente real, não de aula."],["Pega palavras soltas e perde a frase","Dite frases curtas inteiras no jogo do clipe, não palavras. Repitam o mesmo clipe 3 vezes antes de revelar."],["Nada disso move o ponteiro","Esta fase é de volume. Some 15 minutos por dia de áudio fácil no carro ou no banho. Não é estudo, é exposição, e sem ela o ouvido não fecha."]]},
+ {n:4,t:"Começa a entender sem traduzir",lv:"A2 → B1",ph:3,
+  goal:"Entender direto, em blocos, e começar a antecipar o fim da frase antes de ela terminar.",
+  g:["c-taboo","c-duet","e-five","p-conv","p-story","c-hedbanz","e-sayit"],
+  extra:["Complete a frase: um lê o começo de uma carta de frase (I don't know what you're...), o outro completa. Completou de um jeito natural, 2 pontos","Dobble de frases: só leva a carta quem disser uma frase com o objeto"],
+  play:"Jogos rápidos demais para dar tempo de traduzir. A partir daqui o modo inglês → português sai do placar de vez: ele mantém o português no meio do caminho.",
+  ok:["Entende as frases de mesa e do professor sem passar pelo português","Completa começos de frase comuns","Descreve uma carta do Taboo no modo fácil"],
+  fix:[["Ainda traduz tudo na cabeça","Aperte o relógio e corte o português dos baralhos. Tradução é hábito de velocidade baixa: some quando não dá tempo."],["Não consegue antecipar nada","Falta ver os mesmos padrões repetidos. Reassista aos mesmos clipes e episódios em vez de sempre buscar coisa nova."],["Entende, mas responde em português na cabeça","Narre a jogada em voz alta o tempo todo. Fala contínua puxa o pensamento para o inglês."]]},
+ {n:5,t:"Conversa, mas só dentro da zona de conforto",lv:"B1",ph:3,
+  goal:"Ampliar os assuntos e trocar o inglês correto porém estranho pelo inglês natural.",
+  g:["p-conv","p-countries","c-scatter","c-a2a","c-dixit","c-justone","p-story","c-wordup","e-idioms"],
+  extra:["Tema sorteado: 20 temas difíceis num saquinho, sorteia um, 2 minutos falando, o outro faz 2 perguntas","Pote de frases naturais: make a decision, take a break, it depends on..."],
+  play:"Nos jogos de defender e contestar (Scattergories, Apples to Apples), a discussão vale mais que a resposta. Todo mês, grave 2 minutos falando e mande para o professor com a pergunta: como um nativo diria isso?",
+  ok:["Sustenta 20 minutos num tema novo, contornando as palavras que faltam","O professor corrige mais naturalidade do que gramática","Faz uma sessão inteira sem português"],
+  fix:[["Só fala dos mesmos assuntos","Tema repetido na mesma semana fica proibido. O saquinho de temas decide, não vocês."],["Frases corretas, mas que soam estranhas","Isso só se resolve com alguém fluente corrigindo. Aumente as aulas de conversa e guarde cada correção no pote de frases naturais."],["Acomodou e parou de evoluir","É o platô do intermediário. Traga uma terceira pessoa para a mesa e suba um degrau nos jogos, mesmo com desconforto."]]},
+ {n:6,t:"O problema passa a ser velocidade",lv:"B1 → B2",ph:4,
+  goal:"Acompanhar conversa real: rápida, imprevisível, com interrupção, humor e mudança de assunto.",
+  g:["c-catan","c-unlock","c-taboo","c-balder","c-once","c-trivial"],
+  extra:["Mesas com 3 ou mais pessoas, presenciais ou online com voz","Jogo do clipe com conversa espontânea: podcast de bate-papo, talk show, reality"],
+  play:"Mais gente na mesa significa várias vozes e interrupções de verdade. Taboo na regra oficial, Unlock com o cronômetro correndo. É aqui que as horas de exposição real passam a pesar mais que qualquer jogo.",
+  ok:["Acompanha conversa de 3 pessoas perdendo pouco","Responde sem pedir para repetir","Entende 80% de um podcast de conversa sobre assunto conhecido"],
+  fix:[["Entende vídeo didático, mas não conversa espontânea","Troque a fonte dos clipes. Saia dos canais para estudantes e vá para gente conversando de verdade."],["Se perde quando interrompem ou mudam de assunto","Once Upon a Time e jogos de negociação treinam exatamente isso. Jogue com 3 ou mais."],["Os jogos estão em dia e o ouvido não acompanha","Falta volume. Esta fase pede perto de 1 hora por dia de inglês real nos ouvidos. Jogo sozinho não entrega essa quantidade."]]},
+ {n:7,t:"Começa a pensar em inglês",lv:"B2",ph:4,
+  goal:"A resposta nasce em inglês, e quando falta uma palavra você contorna: the thing you use to climb up to the roof.",
+  g:["c-taboo","c-justone","c-sherlock","c-duet","p-solve","p-adv"],
+  extra:["Sessão inteira em inglês, do oi ao tchau, uma vez por semana","Dicionário proibido durante a partida: só depois"],
+  play:"Taboo é literalmente o treino de contornar palavra que falta. Os moldes It's a thing that..., You use it to... têm que estar automáticos. No Sherlock, as teorias são discutidas só em inglês.",
+  ok:["A resposta a perguntas simples surge sem tradução","Descreve um objeto sem saber o nome e o outro entende","Quase não para a conversa por falta de palavra"],
+  fix:[["Trava sempre que falta uma palavra","Os moldes de descrição não estão automáticos. Duas semanas de Taboo como aquecimento diário."],["Na mesa pensa em inglês, fora dela volta ao português","Narre o que está fazendo por 5 minutos ao dia, em voz alta ou mentalmente. Não é estudo, é hábito."]]},
+ {n:8,t:"Conversa confortável, personalidade limitada",lv:"B2",ph:4,
+  goal:"Ser você em inglês: contar histórias, fazer piada, discordar com educação, persuadir, mudar o tom.",
+  g:["c-balder","c-once","c-a2a","c-dixit","c-cubes","p-biz","c-dnd"],
+  extra:["Baralho de reações: Fair enough. That makes sense. I see where you're coming from. I wouldn't necessarily say that. No way! You're kidding. Cada uma usada com naturalidade na partida vale 1 ponto","Jogos de blefe com grupo: The Resistance, Lobisomem","Debate sorteado: defender por 2 minutos o lado de que você discorda"],
+  play:"Jogos de blefe, persuasão e história obrigam a usar tom, ironia e discordância. No RPG, interpretar um personagem dá permissão para testar vozes e registros que você ainda não usa.",
+  ok:["Faz a mesa rir em inglês","Discorda sem soar grosseiro","Conta uma história de 3 minutos que prende quem ouve"],
+  fix:[["Soa robótico, só transmite informação","Baralho de reações em toda partida, até elas saírem sem pensar."],["Não consegue contar histórias","Use uma estrutura fixa: situação, problema, virada, fim. Story Cubes, 2 minutos, todo dia de jogo."],["Evita discordar ou interromper","Jogos de blefe e debate sorteado tiram a escolha: a regra obriga."]]},
+ {n:9,t:"O ouvido dá um salto",lv:"B2 → C1",ph:5,
+  goal:"Prever. O cérebro preenche o que não ouviu direito usando contexto e padrão, como um nativo em ambiente barulhento.",
+  g:["c-dnd","c-heavy","c-sherlock"],
+  extra:["Pause e preveja: pausa o vídeo no meio da frase, cada um aposta como ela termina, 1 ponto para quem chegar mais perto","Mesas com nativos, online com voz","Filmes e séries já vistos, agora sem legenda"],
+  play:"Esta fase é quase toda volume de exposição, centenas de horas. Os jogos servem para manter o hábito prazeroso e para treinar previsão de propósito.",
+  ok:["Séries em velocidade normal ficam confortáveis","Entende em ambiente com ruído","Acerta o fim da frase no pause e preveja na maioria das vezes"],
+  fix:[["Filmes ainda parecem rápidos","Falta quantidade. Não existe atalho aqui: mais horas, de preferência de conteúdo que você veria de qualquer jeito."],["Entende um sotaque só","Varie de propósito: americano, britânico, australiano, canadense."],["Depende da legenda","Escada: legenda em inglês, depois sem legenda em coisa já vista, depois sem legenda em coisa nova."]]},
+ {n:10,t:"Pronúncia vira ritmo",lv:"B2 → C1",ph:5,
+  goal:"Sair do som de cada palavra para stress, redução e ligação. I WANT to GO to the STORE: nem toda palavra tem a mesma força.",
+  g:["c-sherlock","c-once","c-dnd","c-monopoly"],
+  extra:["Duelo de shadowing: 10 segundos de fala nativa, cada um imita e grava, o outro ou o professor vota em quem chegou mais perto","Jogo das tônicas: leia uma carta batendo na mesa só nas palavras fortes","Ler cartas e casos em voz alta com voz de narrador"],
+  play:"Qualquer carta com texto vira treino de ritmo quando lida em voz alta com intenção. O duelo de shadowing é o jogo principal desta fase, e a gravação é o juiz.",
+  ok:["Nativos param de pedir para repetir","Sua gravação tem palavras fortes e fracas, não tudo igual","Reduz to, for, and, of sem pensar"],
+  fix:[["Pronuncia todas as palavras com a mesma força","Marque as tônicas nas cartas de frase e exagere no contraste. Parece teatral para você e soa normal para o nativo."],["Não percebe o próprio ritmo","Sem ouvido externo não anda. Aulas com foco em pronúncia, e gravar e comparar toda semana."]]},
+ {n:11,t:"Entende quase tudo, com alguns buracos",lv:"C1",ph:5,
+  goal:"Tapar buracos por área. Entender 100% de tudo não é meta: nem nativo entende.",
+  g:["c-trivial","c-heavy","p-biz","c-sherlock"],
+  extra:["Um baralho do pote por área: negócios, anúncios, saúde, finanças","Jogos temáticos pesados: economia, ciência, história"],
+  play:"Escolha jogos e conteúdos pela área onde o buraco apareceu. O pote de palavras passa a ser organizado por assunto.",
+  ok:["Os buracos são de área específica, não de palavra comum","Trabalha e faz reunião em inglês sem preparação"],
+  fix:[["Ainda faltam palavras comuns","Falta leitura. Livro e artigo longo trazem o vocabulário raro que conversa e jogo não trazem."],["Os buracos são sempre na mesma área","Monte o baralho daquela área e jogue 2 semanas só com ele."]]},
+ {n:12,t:"Fluência avançada",lv:"C1 / C2",ph:5,
+  goal:"O idioma deixa de ser o obstáculo. Reformular, argumentar, brincar com a língua, ajustar o registro.",
+  g:["c-dnd","c-heavy","c-balder"],
+  extra:["Mestrar uma mesa ou ensinar as regras de um jogo para nativos: é a prova final","Palavras cruzadas crípticas e jogos de trocadilho"],
+  play:"Manutenção prazerosa. A mesa com nativos vira parte da vida, não do plano de estudo.",
+  ok:["Explica regras complexas para nativos sem que eles adaptem a fala","Percebe ironia e muda de registro conforme a situação"],
+  fix:[["Sente que regrediu","É falta de uso, não de capacidade. Uma mesa por semana em inglês segura o nível."]]}
+];
+function gref(id){const g=all().find(x=>x.id===id);if(!g)return"";const o=owned(id);return `<span class="chip ${o?"has":""}" style="cursor:default">${esc(g.name)}${o?", tenho":""}</span>`}
+function vFases(){
+  return `<section class="panel soft"><h2>Antes de culpar a fase: 5 perguntas</h2>
+    <p class="small muted">Quase todo "não está funcionando" cai numa destas. Mude uma coisa por vez, mantenha por 2 semanas e só então reavalie. Se a dose estiver em dia por 8 a 12 semanas e ainda parecer que nada mudou, faça o EF SET: muitas vezes o progresso existe e só não é visível de dentro.</p>
+    <ol class="rules">${CHECK5.map(c=>`<li><b>${c[0]}.</b> ${esc(c[1])}</li>`).join("")}</ol></section>
+  <p class="small muted" style="margin:1rem 0 .4rem">As 13 fases do seu texto, agrupadas nas 5 fases do painel. As da fase atual abrem sozinhas.</p>
+  ${STG.map(x=>`<details class="stg" ${x.ph===S.phase?"open":""}><summary><span class="num sn">${x.n}</span> ${esc(x.t)} <span class="tag">${x.lv}</span> <span class="tag">painel: fase ${x.ph}</span></summary>
+    <div class="stgb"><p><b>O que está sendo construído.</b> ${esc(x.goal)}</p>
+    <p><b>Jogos.</b></p><div class="chips">${x.g.map(gref).join("")}</div>
+    ${x.extra.length?`<ul class="clean small">${x.extra.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`:""}
+    <p><b>Como jogar nesta fase.</b> ${esc(x.play)}</p>
+    <p><b>Sinais de que funcionou.</b></p><ul class="ok">${x.ok.map(o=>`<li>${esc(o)}</li>`).join("")}</ul>
+    <p><b>Se não funcionou.</b></p><div class="fixes">${x.fix.map(f=>`<div class="fix"><div class="sym">${esc(f[0])}</div><div>${esc(f[1])}</div></div>`).join("")}</div></div></details>`).join("")}`;
+}
+
+
+/* ---------- guia de uso ---------- */
+const GSTART=[
+ ["Confira os nomes no topo","Raí e Raiana já estão lá. Para trocar, digite e clique fora do campo.",""],
+ ["Marque o que você já comprou","Na tela Comprar, troque a situação de cada jogo para Comprado, a caminho ou Tenho, e digite quanto pagou.","comprar"],
+ ["Registre seu ponto de partida","Faça o EF SET Quick Check de 15 minutos e anote o resultado em Evoluir, Minhas provas.","evoluir"],
+ ["Leia as 7 regras da mesa com a Raiana","Ficam em Jogar, passo 2, Jogo de caixa. São elas que transformam a partida em inglês falado. Leva 3 minutos.","jogar"],
+ ["Jogue a primeira rodada de flashcards","Em Jogar, passo 2, Flashcards: escolha o baralho, e a cada carta toque em Errou, Acertou ou Acertou com bônus. A vez passa sozinha.","jogar"],
+ ["Registre a sessão","Em Jogar, passo 3: dia, duração e o que vocês jogaram. É isso que alimenta todo o resto do painel.","jogar"]
+];
+const GTABS=[
+ ["hoje","Hoje","Abrir antes e depois de cada sessão.","Responde duas perguntas: o que jogamos hoje e como está a nossa semana.",
+  ["Antes de jogar, olhe a Mesa de hoje. Ela monta a sessão em 3 partes (aquecimento, jogo principal, fechamento) e sempre puxa o jogo que está há mais tempo parado.","Depois de jogar, vá em Registrar uma sessão: escolha o dia, toque na duração e toque em cada jogo que foi para a mesa. Eles ficam escuros quando selecionados. Depois toque em Registrar sessão.","A semana no alto pinta de verde os dias jogados. A meta de sessões por semana você escolhe ali mesmo.","Próximos passos avisa qual jogo estrear, qual comprar e quando é hora de abrir um jogo novo (quando o principal passou de 6 sessões).","Horas na mesa soma tudo e mostra quanto falta para a referência da fase. É estimativa, não regra.","Registrou errado? Em Últimas sessões tem o botão apagar."]],
+ ["jogos","Jogos e compras","Abrir quando for comprar ou quando um jogo chegar.","É a sua lista de compras com controle de estoque.",
+  ["Cada jogo tem links de busca para Mercado Livre, Shopee e Amazon. Os da Play to Learn e da SuperMente abrem a loja deles. São buscas, então o preço você confere na hora.","A etiqueta amarela comprar em inglês significa que o texto da caixa é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Troque a situação conforme o jogo anda: Na lista, Comprado a caminho, Tenho, Dominado. Só jogos em Tenho ou Dominado aparecem na Mesa de hoje e no registro de sessão.","Digite o valor pago. O total investido aparece no alto.","Use os filtros Fase e Só o que falta para ver a próxima compra. Compre 3 a 4 jogos por fase, não tudo de uma vez.","Marque Dominado quando o jogo ficou fácil. Ele passa a ser sugerido como aquecimento.","Comprou algo fora da lista? Adicione no fim da página."]],
+ ["fases","Fases e diagnóstico","Abrir uma vez por mês, ou quando sentir que travou.","Explica as 13 fases do aprendizado, o que jogar em cada uma e o que ajustar quando não funcionou.",
+  ["Comece pelas 5 perguntas do alto. Quase todo travamento é dose, mesa em português, falta de áudio, falta de correção ou falta de repetição.","As fases do seu nível atual abrem sozinhas. Toque em qualquer outra para abrir.","Em cada fase: leia Sinais de que funcionou. Se você se reconhece neles, siga em frente. Se não, procure o seu sintoma em Se não funcionou e aplique só aquele ajuste por 2 semanas.","Os jogos que você já tem aparecem em verde."]],
+ ["como","Como jogar","Deixar aberta no celular durante a partida.","Diz como tirar o máximo de inglês de cada jogo e dá as frases prontas, com áudio.",
+  ["Em Jogo na mesa agora, escolha o jogo. A tela mostra só ele: a instrução, a regra de hoje e as frases.","A linha Hoje muda sozinha conforme as sessões registradas daquele jogo: sessões 1 e 2 palavra e frase curta, 3 e 4 frase mais pergunta, 5 e 6 com relógio, depois vira aquecimento.","Toque em Ouvir ao lado de qualquer frase para o celular falar com pronúncia americana. Os dois repetem. Esse botão é o juiz de pronúncia da mesa.","As 18 frases de mesa servem para qualquer jogo. Vale imprimir.","Se o botão Ouvir não aparecer, o navegador não tem voz em inglês instalada. Abra o painel no Chrome."]],
+ ["placar","Placar de flashcards","Abrir em toda rodada de flashcards.","Conta pontos, acertos e erros por jogador, por baralho e por modo, e diz quando um baralho está pronto para cartas novas.",
+  ["Escolha o Baralho na mesa. As caixas da SuperMente, as 1000 palavras, as 1000 frases, os jogos de memória e o Picture Bingo já vêm configurados. Nos baralhos grandes, escolha também o bloco de 100 cartas.","Escolha o modo. Só aparecem os modos que fazem sentido para aquele baralho, e o primeiro da lista é o recomendado para cartas novas.","Leia Como jogar este baralho logo abaixo: a regra e a pontuação mudam conforme o tipo.","A cada carta, toque no botão do jogador que respondeu: Palavra +1, Frase +2, Frase própria +3, Errou, ou Falou português −1. Tocou errado? Desfazer último toque.","Relógio de 10 s é para as sessões com tempo.","No fim, digite quantas cartas foram aposentadas na rodada e toque em Encerrar rodada. Os pontos vão para o placar geral e as cartas para o progresso do baralho.","Meus baralhos mostra o acerto de cada um. Acima de 80% por 3 rodadas, coloque 5 cartas novas.","Crie baralhos seus no fim da página, por exemplo com as cartas de Chance do Monopoly."]],
+ ["nivel","Nível e prova","Abrir uma vez por mês e a cada prova.","Decide quando subir de fase e guarda os resultados das provas.",
+  ["O checklist tem coisas que dá para observar na mesa. Marque só o que já acontece sem esforço.","O botão Passar para a próxima fase só libera com todos os itens marcados. Subir de fase muda a Mesa de hoje, a próxima compra e as fases que abrem sozinhas.","Subiu cedo demais? Voltar uma fase desfaz.","A cada 3 meses, faça o EF SET de 50 minutos sem estudar para ele e registre o resultado em Minhas provas. Registre também o nível que o professor der para a sua fala."]]
+];
+const GROUT=[
+ ["Antes da sessão, 2 minutos","Abra Hoje e veja a Mesa de hoje. Separe os jogos. Abra Como jogar no jogo principal e leia a linha Hoje."],
+ ["Durante, 30 a 45 minutos","Celular na mesa com Como jogar aberto para o botão Ouvir. Na parte de flashcards, troque para Placar. Palavra que faltou vai para uma carta em branco, no pote."],
+ ["Depois, 1 minuto","Encerre a rodada no Placar. Volte em Hoje e registre a sessão com os jogos jogados."],
+ ["Uma vez por semana","Veja se a meta de sessões fechou. Se chegou caixa nova, marque Tenho em Jogos e compras."],
+ ["Uma vez por mês","Abra Nível e prova e atualize o checklist. Abra Fases e diagnóstico e confira os sinais da sua fase."],
+ ["A cada 3 meses","EF SET de 50 minutos e avaliação de fala com o professor. Registre os dois."]
+];
+function vGuia(){
+  const done=GSTART.filter((_,i)=>S.checks["g"+i]).length;
+  return `<section class="panel soft"><h2>Primeiros 10 minutos</h2>
+    <p class="small muted">Faça estes 6 passos uma vez, nesta ordem. ${done} de 6 feitos.</p>
+    ${GSTART.map((g,i)=>`<div class="gstep"><label class="check"><input type="checkbox" ${S.checks["g"+i]?"checked":""} data-chg="chk" data-v="g${i}"><span><b>${i+1}. ${g[0]}.</b> ${esc(g[1])}</span></label>${g[2]?`<button class="chip" data-act="tab" data-v="${g[2]}">Abrir a aba</button>`:""}</div>`).join("")}</section>
+  <h2 style="margin-top:1.5rem">A rotina, do dia ao trimestre</h2>
+  <div class="grid g3">${GROUT.map(r=>`<div class="panel"><h3>${r[0]}</h3><p class="small">${esc(r[1])}</p></div>`).join("")}</div>
+  <h2 style="margin-top:1.5rem">Aba por aba</h2>
+  ${GTABS.map(t=>`<details class="stg"><summary>${t[1]} <span class="tag">${t[2]}</span></summary><div class="stgb"><p>${esc(t[3])}</p><ol class="rules">${t[4].map(x=>`<li>${esc(x)}</li>`).join("")}</ol><button class="btn ghost" data-act="tab" data-v="${t[0]}">Abrir ${t[1]}</button></div></details>`).join("")}
+  <h2 style="margin-top:1.5rem">Dúvidas comuns</h2>
+  <details class="stg"><summary>Onde ficam salvos os meus dados?</summary><div class="stgb"><p>Na sua conta, junto com este painel. O aviso no canto superior direito mostra Salvo na sua conta a cada mudança. Abrindo o mesmo link no celular e no computador com o seu login, os dados são os mesmos.</p></div></details>
+  <details class="stg"><summary>A Raiana precisa de uma conta?</summary><div class="stgb"><p>Não. Vocês jogam na mesma mesa, então um aparelho só, com o seu login, resolve. O placar guarda os pontos dos dois.</p></div></details>
+  <details class="stg"><summary>Marquei ou registrei algo errado</summary><div class="stgb"><p>Sessões, rodadas e provas têm o botão apagar ao lado. Apagar uma rodada corrige os totais sozinho. No meio de uma rodada, use Desfazer último toque. Situação e preço de um jogo você simplesmente troca.</p></div></details>
+  <details class="stg"><summary>A Mesa de hoje está vazia</summary><div class="stgb"><p>Ela só usa jogos marcados como Tenho ou Dominado, da sua fase ou de fases anteriores. Marque os jogos em Jogos e compras.</p></div></details>
+  <details class="stg"><summary>Quero recomeçar o placar do zero</summary><div class="stgb"><p>No Placar de flashcards, em Placar geral, toque em Zerar placar geral e confirme. A pilha já sei de cada baralho continua: para zerar, digite 0 em Meus baralhos.</p></div></details>`;
+}
+
+
+/* ---------- telas reorganizadas: Início, Jogar, Comprar, Evoluir, Ajuda ---------- */
+const intro=(t,p)=>`<div class="intro"><h2>${t}</h2><p>${p}</p></div>`;
+const step=(n,t,h)=>`<div class="steph"><span class="sn num">${n}</span><div><h3>${t}</h3><p class="small muted">${h}</p></div></div>`;
+function msg(){if(!ui.msg)return"";const m=ui.msg;ui.msg="";return `<p class="okmsg" role="status">${esc(m)}</p>`}
+function nextAction(){
+  const have=all().filter(g=>owned(g.id)).length,played=S.sessions.some(x=>x.d===today()),sg=suggest(),nb=nextBuy();
+  if(!have)return{t:"Primeiro, diga ao painel quais jogos você já tem",p:"Sem isso ele não consegue montar a sua sessão. Na tela Comprar, mude a situação de cada jogo que já chegou para Tenho.",b:"Abrir Comprar",tab:"comprar"};
+  if(!played)return{t:"Jogar a sessão de hoje",p:sg.main?`Jogo principal sugerido: ${sg.main.name}. Na tela Jogar você vê o aquecimento, as instruções e as frases em inglês.`:"Na tela Jogar você vê a sugestão de hoje, as instruções e as frases em inglês.",b:"Abrir Jogar",tab:"jogar"};
+  return{t:"Sessão de hoje registrada",p:nb?`Próximo passo fora da mesa: comprar ${nb.name}.`:"Tudo desta fase já está comprado. Confira em Evoluir se já dá para subir de fase.",b:nb?"Abrir Comprar":"Abrir Evoluir",tab:nb?"comprar":"evoluir"};
+}
+function pWeek(){
+  const wd=weekDays(),set=new Set(S.sessions.map(x=>x.d)),done=wd.filter(d=>set.has(iso(d))).length,t=today(),names=["seg","ter","qua","qui","sex","sáb","dom"];
+  return `<section class="panel"><h3>Sua semana</h3><p class="small muted">Cada dia com sessão registrada fica verde. O dia de hoje tem borda escura.</p>
+    <p><span class="big num">${done}</span> de ${S.goal} sessões</p>
+    <div class="week">${wd.map((d,i)=>`<div class="day ${set.has(iso(d))?"on":""} ${iso(d)===t?"today":""}">${names[i]}<b>${d.getDate()}</b></div>`).join("")}</div>
+    <div class="row"><div><label for="goal">Minha meta de sessões por semana</label><select id="goal" data-chg="goal">${[3,4,5,6,7].map(n=>`<option ${n===S.goal?"selected":""}>${n}</option>`).join("")}</select></div></div></section>`;
+}
+function pSessions(){return `<details class="stg"><summary>Sessões registradas (${S.sessions.length})</summary><div class="stgb">${S.sessions.length?`<ul class="clean">${S.sessions.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,12).map(x=>`<li><b>${esc(x.d.split("-").reverse().join("/"))}</b>, ${+x.min} min${x.win===0||x.win===1?`, ${esc(S.players[x.win])} venceu o jogo de caixa`:""}<br><span class="small muted">${(x.g||[]).map(id=>{const g=all().find(y=>y.id===id);return g?esc(g.name):""}).filter(Boolean).join(", ")||"Sem jogos marcados"}</span> <button class="link" data-act="delsess" data-v="${esc(x.k)}">apagar</button></li>`).join("")}</ul>`:`<p class="muted">Nenhuma ainda. As sessões entram pelo passo 3 da tela Jogar.</p>`}</div></details>`}
+function vInicio(){
+  const a=nextAction(),p=PH[S.phase-1],h=hours(),base=S.phase>1?PH[S.phase-2].h:0,pct=Math.max(0,Math.min(100,Math.round((h-base)/(p.h-base)*100)));
+  const nb=nextBuy(),no=nextOpen();
+  return msg()+intro("Início","Aqui você vê como está a sua semana e qual é o próximo passo. Na dúvida sobre o que fazer, siga o cartão verde.")+
+  `<section class="cta"><p class="small">O que fazer agora</p><h3>${esc(a.t)}</h3><p>${esc(a.p)}</p><button class="btn inv" data-act="tab" data-v="${a.tab}">${a.b}</button></section>
+  ${pLeague()}
+  <div class="grid g2" style="margin-top:1rem">${pWeek()}
+  <div class="grid"><section class="panel"><h3>Próximos jogos</h3><p class="small muted">Um jogo novo por vez. O próximo só entra quando o principal atual passar de 6 sessões.</p>
+    ${readyForNew()?`<p class="next"><b>Hora de abrir um jogo novo.</b> Os jogos principais desta fase já passaram de 6 sessões.</p>`:""}
+    ${no?`<p class="next"><b>Já está em casa e ainda não estreou:</b> ${esc(no.name)}</p>`:""}
+    ${nb?`<p class="next"><b>Próxima compra:</b> ${esc(nb.name)}</p>`:`<p class="next">Tudo desta fase já está comprado ou em casa.</p>`}</section>
+  <section class="panel"><h3>Horas jogadas</h3><p><span class="big num">${h.toFixed(1).replace(".",",")}</span> h no total</p>
+    <div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+    <p class="small muted">${pct}% do caminho da fase ${p.n}. Referência: cerca de ${p.h} h acumuladas para fechar o nível ${p.lv.split("→")[1].trim()}. É estimativa, não regra.</p></section></div></div>
+  ${pSessions()}`;
+}
+function pCaixa(){
+  const games=all().filter(g=>g.src!=="F"),g=ui.hGame&&games.find(x=>x.id===ui.hGame),h=g&&howOf(g),lad=g&&ladder(g);
+  const levelNames=["","🟢 Nível 1 — Aprendendo","🔵 Nível 2 — Frase + pergunta","🟡 Nível 3 — Com relógio","⭐ Dominado"];
+  return `<section class="panel"><p class="small muted" style="margin-bottom:.4rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Qual jogo está na mesa?</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">${games.filter(x=>owned(x.id)).map(x=>`<button class="game-chip" aria-pressed="${ui.hGame===x.id}" data-act="selgame" data-v="${esc(x.id)}"><span class="rdot ${x.role}"></span>${esc(x.name)}</button>`).join("")}</div>
+    ${games.filter(x=>!owned(x.id)).length?`<details class="stg" style="margin-top:.5rem"><summary class="small muted">Jogos que ainda não tenho</summary><div style="display:flex;flex-wrap:wrap;gap:6px;padding-top:.4rem">${games.filter(x=>!owned(x.id)).map(x=>`<button class="game-chip" aria-pressed="${ui.hGame===x.id}" data-act="selgame" data-v="${esc(x.id)}"><span class="rdot ${x.role}"></span>${esc(x.name)}</button>`).join("")}</div></details>`:""}
+    <div style="display:flex;gap:1rem;margin-top:.6rem;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)"><span class="rdot A" style="width:8px;height:8px;border-radius:50;display:inline-block;background:var(--token)"></span> Aquecimento</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)"><span class="rdot P" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--felt-deep)"></span> Jogo principal</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)"><span class="rdot C" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:#5b8def"></span> Conversa</span></div></section>
+  ${g&&lad?`<div class="regra-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <span class="rtag">📋 Regra de hoje — Sessão ${lad.n+1}</span>
+      <span style="display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;font-weight:600;background:rgba(255,255,255,.15);padding:.2rem .6rem;border-radius:10px"><span style="background:#fff;color:var(--felt-deep);width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem">${lad.n}</span> jogadas</span>
+    </div>
+    <h3 style="margin-bottom:.3rem">${levelNames[lad.level]}</h3>
+    <p style="margin-bottom:.4rem"><b>${esc(lad.rule)}</b></p>
+    <p style="font-size:.85rem;opacity:.85">${esc(lad.goal)}</p>
+    ${lad.example?`<div class="rex"><p class="rex-label">Exemplo neste jogo:</p><p class="rex-text">${esc(lad.example)}</p></div>`:""}
+    <button class="rbtn" data-act="sayPT" data-v="${esc(lad.rule+' '+lad.goal+(lad.example?' Exemplo: '+lad.example:''))}" aria-label="Ouvir regra de hoje">▶ Ouvir regra</button>
+  </div>`:""}
+  ${g?`<section class="panel"><p class="small muted" style="margin-bottom:.4rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Como jogar para render inglês</p>
+    <div class="fc-instr"><button class="play-btn" data-act="sayPT" data-v="${esc(h.how)}" aria-label="Ouvir instrução">▶</button><div class="fc-text">${esc(h.how)}</div></div></section>`:""}
+  ${g&&h.say.length?`<section class="panel"><p class="small muted" style="margin-bottom:.4rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Frases deste jogo — toque para ouvir</p>
+    <ul class="phr-list">${h.say.map(s=>`<li class="phr-item"><span lang="en" style="font-weight:600;font-size:.92rem">${esc(s)}</span>${canSpeak?`<button class="chip" data-act="say" data-v="${esc(s)}" style="flex-shrink:0">Ouvir</button>`:""}</li>`).join("")}</ul></section>`:""}
+  ${!g?`<section class="panel"><div style="text-align:center;padding:1.5rem .5rem;color:var(--muted)"><p style="font-size:2rem;opacity:.5;margin:0 0 .5rem">🃏</p><p style="margin:.2rem 0">Escolha o jogo acima para ver:</p><p class="small muted" style="opacity:.8">A regra de hoje, como jogar para render inglês e as frases com áudio.</p></div></section>`:""}
+  <details class="acc-box" style="margin-top:.8rem"><summary>As 7 regras da mesa (valem para todo jogo)</summary><div class="acc-inner"><ol>${RULES.map(r=>`<li><b>${r[0]}.</b> ${esc(r[1])}</li>`).join("")}</ol></div></details>
+  <details class="acc-box"><summary>18 frases de mesa, com áudio</summary><div class="acc-inner"><div class="phr-grid">${TABLE.map(t=>`<div class="phr-item"><span lang="en" style="font-size:.82rem">${esc(t)}</span>${canSpeak?`<button class="chip" data-act="say" data-v="${esc(t)}" style="font-size:.72rem;padding:.2rem .45rem">▶</button>`:""}</div>`).join("")}</div></div></details>`;
+}
+function pRegister(){
+  const t=today(),can=all().filter(g=>owned(g.id)&&g.ph<=S.phase);if(!ui.sDate)ui.sDate=t;
+  return `<section class="panel"><div class="row" style="margin:.2rem 0 .6rem"><div><label for="sd">Dia</label><input type="date" id="sd" value="${esc(ui.sDate)}" max="${t}" data-chg="sdate"></div>
+    <div><label>Quanto tempo jogaram</label><div class="chips" style="margin:0">${[20,30,45,60,90].map(m=>`<button class="chip" aria-pressed="${ui.sMin===m}" data-act="smin" data-v="${m}">${m} min</button>`).join("")}</div></div></div>
+    <label>O que foi para a mesa (toque em todos os que jogaram)</label>
+    ${can.length?`<div class="chips">${can.map(g=>`<button class="chip" aria-pressed="${!!ui.sGames[g.id]}" data-act="sgame" data-v="${esc(g.id)}">${esc(g.name)}</button>`).join("")}</div>`:`<p class="muted small">Nenhum jogo marcado como Tenho. Marque na tela Comprar e eles aparecem aqui.</p>`}
+    <label style="margin-top:.4rem">Quem ganhou o jogo de caixa? Vale ${BOX} pontos na disputa da semana</label>
+    <div class="chips">${[[0,S.players[0]],[1,S.players[1]],[-1,"Empate, cooperativo ou não jogamos"]].map(o=>`<button class="chip" aria-pressed="${(ui.sWin==null?-1:ui.sWin)===o[0]}" data-act="swin" data-v="${o[0]}">${esc(o[1])}</button>`).join("")}</div>
+    <button class="btn" data-act="addsess">Registrar sessão</button></section>`;
+}
+function vJogar(){
+  const sg=suggest(),m=ui.jmode||"caixa";
+  const item=(lab,g,alt,nob)=>`<li><span class="muted small">${lab}</span><br><b>${g?esc(g.name):alt}</b> ${g&&g.src!=="F"?`<button class="chip" data-act="openg" data-v="${esc(g.id)}">Ver como jogar</button>`:(nob&&!g?"":`<button class="chip" data-act="openf">Abrir o placar</button>`)}</li>`;
+  return msg()+intro("Jogar","Deixe esta tela aberta no celular durante a partida. São 3 passos: escolher o que vai para a mesa, jogar com as instruções abertas e registrar a sessão no fim.")+
+  step(1,"Escolher o que vai para a mesa","A sugestão usa só os jogos que você marcou como Tenho e puxa o que está há mais tempo parado. É sugestão: pode trocar.")+
+  (sg.n?`<section class="panel soft"><ul class="clean">${item("5 min de aquecimento",sg.warm,"Rodada rápida de flashcards")}${item("25 a 30 min de jogo principal",sg.main,"Nenhum jogo principal desta fase em casa ainda",true)}${item("5 a 10 min de fechamento",sg.close,"Flashcards com placar")}</ul></section>`
+        :`<section class="panel soft"><p>Ainda não há jogos marcados como Tenho, então não dá para sugerir. Marque na tela Comprar. Enquanto isso, o Pote de palavras e os flashcards já funcionam no passo 2.</p><button class="btn ghost" data-act="tab" data-v="comprar">Abrir Comprar</button></section>`)+
+  step(2,"Jogar","Escolha o tipo do que está na mesa agora. Dá para alternar quantas vezes quiser durante a sessão.")+
+  `<div class="seg" role="group" aria-label="Tipo de jogo"><button aria-pressed="${m==="caixa"}" data-act="jmode" data-v="caixa">Jogo de caixa</button><button aria-pressed="${m==="flash"}" data-act="jmode" data-v="flash">Flashcards</button></div>
+  ${m==="caixa"?pCaixa():vPlacar()}`+
+  step(3,"Terminamos: registrar a sessão","Leva 20 segundos. É este registro que pinta a semana de verde, conta as horas e avisa quando trocar de jogo.")+pRegister();
+}
+function vComprar(){
+  if(ui.fPhase<0)ui.fPhase=S.phase;
+  return intro("Comprar","Sua lista de compras, separada por fase. Comece pela fase em que você está e compre 3 a 4 jogos por vez.")+
+  `<section class="panel" style="margin-bottom:1rem"><h3>O que significa cada situação</h3><ul class="clean small">
+    <li><b>Não tenho.</b> Ainda não decidi comprar.</li><li><b>Na lista.</b> Quero comprar.</li><li><b>Comprado, a caminho.</b> Já paguei, ainda não chegou.</li>
+    <li><b>Tenho.</b> Está em casa. Só estes aparecem nas sugestões da tela Jogar.</li><li><b>Dominado.</b> Ficou fácil. Passa a ser sugerido como aquecimento.</li></ul></section>`+vJogos();
+}
+function vEvoluir(){
+  const p=PH[S.phase-1];
+  return intro("Evoluir",`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Esta tela responde 3 perguntas: já posso subir de fase, como está o meu nível na prova, e o que ajustar se eu travei.`)+
+  step(1,"Já posso subir de fase? E a prova?","Marque no checklist só o que já acontece na mesa sem esforço. A prova é um termômetro a cada 3 meses, sem estudar para ela.")+vNivel()+
+  step(2,"Travei. O que eu ajusto?","Comece pelas 5 perguntas. Depois abra a fase em que você se reconhece e procure o seu sintoma. As do seu nível já vêm abertas.")+vFases();
+}
+const GTABS2=[
+ ["inicio","Início","Abra quando pegar o celular, antes de qualquer coisa.","Mostra a semana, as horas jogadas e um cartão verde com o próximo passo. Se você só abrir uma tela, abra esta.",
+  ["O cartão verde muda sozinho: primeiro pede para marcar os jogos que você tem, depois manda jogar a sessão do dia, depois mostra a próxima compra.","Primeiros passos aparece só até você concluir os 6 itens.","Disputa da semana soma os pontos das rodadas de flashcards de segunda a domingo, mais 5 pontos por vitória no jogo de caixa. Quem vence a semana ganha 1 estrela, e estrelas compram os prêmios que vocês cadastrarem. Dá para trocar na hora ou juntar.","Sua semana pinta de verde os dias com sessão. A meta semanal você escolhe ali.","Sessões registradas fica recolhido no fim. Abra para conferir ou apagar."]],
+ ["jogar","Jogar","Fica aberta no celular durante toda a partida.","Junta tudo o que se usa na mesa, em 3 passos numerados.",
+  ["Passo 1: veja a sugestão de aquecimento, jogo principal e fechamento. Toque em Ver como jogar para abrir as instruções daquele jogo.","Passo 2: escolha Jogo de caixa ou Flashcards. Em Jogo de caixa, selecione o jogo e leia a Regra de hoje e as frases. Toque em Ouvir para o celular falar a frase. Em Flashcards, escolha o baralho e o modo. A cada carta, toque em Errou (0), Acertou (1) ou Acertou com bônus (2). A vez passa sozinha e a rodada acaba depois de 20 cartas.","Passo 3: escolha o dia, a duração e toque em todos os jogos que foram para a mesa. Depois toque em Registrar sessão. Você volta para o Início com a semana atualizada.","Tocou errado no placar? Use Desfazer último toque. Rodada registrada errada? Abra Últimas rodadas e apague."]],
+ ["comprar","Comprar","Abra quando for comprar ou quando chegar uma caixa.","Lista de compras por fase, com links de busca e controle do que já está em casa.",
+  ["Ela abre filtrada na sua fase atual. Use os botões de fase para ver as outras.","Em cada jogo, mude a situação conforme ele anda. Só Tenho e Dominado entram nas sugestões da tela Jogar.","A etiqueta amarela comprar em inglês significa que o texto é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Digite o valor pago para acompanhar o total investido."]],
+ ["evoluir","Evoluir","Abra uma vez por mês, a cada prova, ou quando sentir que travou.","Decide quando subir de fase, guarda as provas e mostra o que ajustar em cada uma das 13 fases.",
+  ["Passo 1: marque o checklist. O botão de subir de fase só libera com tudo marcado. Registre cada prova em Minhas provas.","Passo 2: responda as 5 perguntas do diagnóstico. Depois abra a fase em que você se reconhece, leia os sinais de que funcionou e, se não bater, aplique um único ajuste por 2 semanas."]]
+];
+const GROUT2=[
+ ["Antes da sessão, 1 minuto","Abra Início e siga o cartão verde. Ele leva para Jogar."],
+ ["Durante, 30 a 45 minutos","Tela Jogar aberta no celular. Passo 1 para escolher, passo 2 para as instruções, o áudio e o placar."],
+ ["No fim, 20 segundos","Passo 3 da tela Jogar: registrar a sessão."],
+ ["Quando chegar uma caixa","Tela Comprar: mude a situação para Tenho."],
+ ["Uma vez por mês","Tela Evoluir: checklist da fase e diagnóstico."],
+ ["A cada 3 meses","EF SET de 50 minutos e nível de fala com o professor, registrados em Evoluir."]
+];
+function vAjuda(){
+  return intro("Ajuda","O painel tem 4 telas de uso e esta de ajuda. A ordem delas é a ordem do seu dia: ver o que fazer, jogar, comprar o próximo jogo, conferir a evolução.")+
+  `<h3>A rotina</h3><div class="grid g3" style="margin:.5rem 0 1.2rem">${GROUT2.map(r=>`<div class="panel"><h3>${r[0]}</h3><p class="small">${esc(r[1])}</p></div>`).join("")}</div>
+  <h3>Tela por tela</h3>${GTABS2.map(t=>`<details class="stg"><summary>${t[1]} <span class="tag">${t[2]}</span></summary><div class="stgb"><p>${esc(t[3])}</p><ol class="rules">${t[4].map(x=>`<li>${esc(x)}</li>`).join("")}</ol><button class="btn ghost" data-act="tab" data-v="${t[0]}">Abrir ${t[1]}</button></div></details>`).join("")}
+  <h3 style="margin-top:1.2rem">Dúvidas comuns</h3>
+  <details class="stg"><summary>Onde ficam salvos os meus dados?</summary><div class="stgb"><p>No seu banco Supabase, ligados ao seu login. O aviso no alto mostra Salvo na nuvem a cada mudança. Entrando com o mesmo login no celular e no computador, os dados são os mesmos. Sem internet, o painel guarda no aparelho e envia na próxima mudança.</p></div></details>
+  <details class="stg"><summary>A Raiana precisa de um login?</summary><div class="stgb"><p>Não. O placar dos dois fica numa conta só. Se ela quiser abrir no celular dela, use o mesmo e-mail e senha.</p></div></details>
+  <details class="stg"><summary>Cópia de segurança e troca de senha</summary><div class="stgb">
+    <div class="row"><button class="btn ghost" data-act="export">Baixar cópia dos dados</button><div><label for="impf">Importar uma cópia (arquivo .json)</label><input type="file" id="impf" accept="application/json,.json"></div></div>
+    <p class="small muted">Importar substitui os dados atuais pelos do arquivo.</p>
+    ${sb?`<div class="row" style="margin-top:.8rem"><div><label for="npw">Nova senha</label><input id="npw" type="password" autocomplete="new-password"></div><div><label for="npw2">Repita a nova senha</label><input id="npw2" type="password" autocomplete="new-password"></div><button class="btn" data-act="chpw">Trocar senha</button></div><p id="pwmsg" class="small" role="status"></p>`:""}
+  </div></details>
+  <details class="stg"><summary>A sugestão do passo 1 está vazia</summary><div class="stgb"><p>Ela só usa jogos com situação Tenho ou Dominado, da sua fase ou de fases anteriores. Marque na tela Comprar.</p></div></details>
+  <details class="stg"><summary>Registrei algo errado</summary><div class="stgb"><p>Sessões, rodadas e provas têm um botão apagar ao lado. Apagar uma rodada corrige os totais sozinho.</p></div></details>
+  <details class="stg"><summary>O botão Ouvir não aparece</summary><div class="stgb"><p>O navegador não tem voz em inglês disponível. Abra o painel no Chrome ou no Safari atualizados.</p></div></details>
+  <details class="stg"><summary>Quero zerar o placar</summary><div class="stgb"><p>Jogar, passo 2, Flashcards, Placar geral, Zerar placar geral. A pilha já sei de cada baralho continua: para zerar, digite 0 em Meus baralhos.</p></div></details>`;
+}
+
+
+/* ---------- disputa da semana, estrelas e prêmios ---------- */
+const BOX=5;
+function monOf(ds){const d=new Date(ds+"T12:00:00");d.setDate(d.getDate()-(d.getDay()+6)%7);return iso(d)}
+function weekPts(k){const p=[0,0];S.rounds.forEach(r=>{if(monOf(r.d)===k){p[0]+=r.pts[0];p[1]+=r.pts[1]}});S.sessions.forEach(x=>{if((x.win===0||x.win===1)&&monOf(x.d)===k)p[x.win]+=BOX});return p}
+function closeWeeks(){
+  const now=monOf(today()),c=new Date(now+"T12:00:00");c.setDate(c.getDate()-56);const cut=iso(c),keys=new Set();let ch=false;
+  S.rounds.forEach(r=>keys.add(monOf(r.d)));S.sessions.forEach(x=>{if(x.win===0||x.win===1)keys.add(monOf(x.d))});
+  keys.forEach(k=>{if(k>=now)return;const o=S.weeks[k];if(o&&k<cut)return;const q=weekPts(k);if(!o||o.pts[0]!==q[0]||o.pts[1]!==q[1]){S.weeks[k]={pts:q};ch=true}});
+  Object.keys(S.weeks).forEach(k=>{if(k>=cut&&!keys.has(k)){delete S.weeks[k];ch=true}});
+  if(!Array.isArray(S.prizes)){S.prizes=[{id:"z1",name:"Escolhe o próximo jogo que vai para a mesa",cost:1},{id:"z2",name:"O outro paga o lanche",cost:2},{id:"z3",name:"Jantar por conta do outro",cost:4}];ch=true}
+  return ch}
+function league(){const rows=[],earned=[0,0];let carry=0;Object.keys(S.weeks).sort().forEach(k=>{const q=S.weeks[k].pts;let w=-1,g=0;if(q[0]!==q[1]){w=q[0]>q[1]?0:1;g=1+carry;earned[w]+=g;carry=0}else if(q[0]+q[1]>0)carry++;rows.push({k,q,w,g})});
+  const spent=[0,0];S.redeem.forEach(r=>{spent[r.p]+=r.cost});return{rows,earned,carry,bal:[earned[0]-spent[0],earned[1]-spent[1]]}}
+const brd=ds=>ds.split("-").reverse().slice(0,2).join("/");
+const stars=n=>n===1?"1 estrela":n+" estrelas";
+function pLeague(){
+  const L=league(),k=monOf(today()),q=weekPts(k),left=6-(new Date().getDay()+6)%7,lead=q[0]===q[1]?-1:(q[0]>q[1]?0:1),prize=1+L.carry;
+  return `<section class="panel" style="margin-top:1rem" id="league"><h3>Disputa da semana</h3>
+    <p class="small muted">Somam aqui os pontos das rodadas de flashcards de segunda a domingo, mais ${BOX} pontos para quem vencer o jogo de caixa da sessão. No domingo, quem tiver mais pontos ganha 1 estrela. Empatou, a estrela acumula para a semana seguinte. Estrelas compram prêmios: dá para trocar na hora ou juntar para um prêmio maior.</p>
+    <div class="sline"><div class="${lead===0?"on":""}"><span>${esc(S.players[0])}</span><b class="num">${q[0]}</b></div><i>x</i><div class="${lead===1?"on":""}"><b class="num">${q[1]}</b><span>${esc(S.players[1])}</span></div></div>
+    <p>${lead<0?(q[0]?"Empatado.":"Ninguém pontuou ainda nesta semana."):`<b>${esc(S.players[lead])}</b> está na frente.`} ${left?`Faltam ${left} ${left===1?"dia":"dias"} para fechar.`:"A semana fecha hoje."} Esta semana vale <b>${stars(prize)}</b>${L.carry?", porque houve empate antes":""}.</p>
+    <div class="score" style="margin-top:.8rem">${[0,1].map(i=>`<div class="pl"><h3>${esc(S.players[i])}</h3><div class="pts num">${L.bal[i]} <span class="star" aria-hidden="true">★</span></div><div class="small muted">${stars(L.bal[i])} para gastar. Já ganhou ${L.earned[i]} no total.</div></div>`).join("")}</div>
+    <h3 style="margin-top:1.1rem">Prêmios</h3><p class="small muted">Os prêmios são de vocês: combinem os nomes e o preço em estrelas. O botão de trocar só libera para quem tem estrelas suficientes.</p>
+    ${S.prizes.length?S.prizes.map(z=>`<div class="drow"><div><b>${esc(z.name)}</b><br><span class="small muted">Custa ${stars(z.cost)} <button class="link" data-act="delprize" data-v="${esc(z.id)}">remover</button></span></div>
+      <div class="row" style="gap:.4rem">${[0,1].map(i=>`<button class="btn ghost" data-act="redeem" data-v="${esc(z.id)}" data-p="${i}" ${L.bal[i]>=z.cost?"":"disabled"}>${esc(S.players[i])} troca</button>`).join("")}</div></div>`).join(""):`<p class="muted">Nenhum prêmio cadastrado. Crie o primeiro abaixo.</p>`}
+    <div class="row" style="margin-top:.7rem"><div style="flex:1;min-width:200px"><label for="zn">Novo prêmio</label><input id="zn" style="width:100%" placeholder="ex.: Escolhe o filme do fim de semana"></div>
+      <div><label for="zc">Preço em estrelas</label><select id="zc">${[1,2,3,4,5,6,8,10].map(n=>`<option>${n}</option>`).join("")}</select></div><button class="btn" data-act="addprize">Criar prêmio</button></div>
+    <details class="stg" style="margin-top:1rem"><summary>Semanas fechadas (${L.rows.length})</summary><div class="stgb">${L.rows.length?`<ul class="clean">${L.rows.slice().reverse().map(r=>`<li><b>Semana de ${brd(r.k)}</b>: ${esc(S.players[0])} ${r.q[0]} x ${r.q[1]} ${esc(S.players[1])}<br><span class="small muted">${r.w<0?"Empate, a estrela acumulou":`${esc(S.players[r.w])} ganhou ${stars(r.g)}`}</span></li>`).join("")}</ul>`:`<p class="muted">A primeira semana fecha no domingo. O resultado aparece aqui na segunda.</p>`}</div></details>
+    <details class="stg"><summary>Prêmios já trocados (${S.redeem.length})</summary><div class="stgb">${S.redeem.length?`<ul class="clean">${S.redeem.slice().reverse().map(r=>`<li><b>${brd(r.d)}</b>, ${esc(S.players[r.p])}: ${esc(r.name)} <span class="small muted">(${stars(r.cost)})</span> <button class="link" data-act="delredeem" data-v="${esc(r.k)}">desfazer</button></li>`).join("")}</ul>`:`<p class="muted">Nenhuma troca ainda.</p>`}</div></details>
+  </section>`;
+}
+
+/* ---------- estado ---------- */
+let S={rev:0,players:["Raí","Raiana"],phase:1,goal:5,games:{},custom:[],sessions:[],score:[0,0],wins:[0,0],round:[0,0],retired:0,tests:[],checks:{},deckData:{},cdecks:[],rounds:[],cur:null,hits:[0,0],miss:[0,0],retLegacy:null,weeks:{},prizes:null,redeem:[]};
+const TABN={inicio:"Início",jogar:"Jogar",comprar:"Comprar",evoluir:"Evoluir",ajuda:"Ajuda"};
+const DKOF=id=>BASE.some(a=>a[3]===id);
+let ui={tab:"inicio",fPhase:-1,fMissing:false,sMin:30,sGames:{},sDate:""};
+let sb=null, uid=null, saving=Promise.resolve(), pending=false, timer=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10)};
+const today=()=>iso(new Date());
+const all=()=>CAT.concat(S.custom||[]);
+const st=id=>(S.games[id]&&S.games[id].s)||"";
+const owned=id=>st(id)==="tenho"||st(id)==="dominado";
+const plays=id=>S.sessions.filter(x=>(x.g||[]).includes(id)).length;
+const last=id=>{const x=S.sessions.filter(x=>(x.g||[]).includes(id)).map(x=>x.d).sort().pop();return x||""};
+const hours=()=>S.sessions.reduce((a,x)=>a+(+x.min||0),0)/60;
+
+function setSync(t){$("#sync").textContent=t}
+function save(){
+  S.rev=(S.rev||0)+1;
+  try{localStorage.setItem("mesa-ingles"+(uid?"-"+uid:""),JSON.stringify(S))}catch(e){}
+  if(!sb||!uid){setSync("Salvo neste aparelho");return}
+  pending=true;setSync("Salvando…");clearTimeout(timer);
+  timer=setTimeout(()=>{const body=JSON.parse(JSON.stringify(S));
+    saving=saving.then(()=>sb.from("mesa_state").upsert({user_id:uid,data:body,updated_at:new Date().toISOString()})).then(r=>{pending=false;if(r.error)throw r.error;setSync("Salvo na nuvem")}).catch(()=>{pending=false;setSync("Sem conexão: salvo no aparelho, envio na próxima mudança")});
+  },700);
+}
+function merge(d){if(!d)return;S=Object.assign(S,d);["games","checks","deckData","weeks"].forEach(k=>{if(!S[k]||typeof S[k]!=="object")S[k]={}});["custom","sessions","tests","cdecks","rounds","redeem"].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});if(!Array.isArray(S.players)||S.players.length!==2)S.players=["Raí","Raiana"];if(S.players[1]==="Dupla")S.players[1]="Raiana";["hits","miss","score","wins"].forEach(k=>{if(!Array.isArray(S[k])||S[k].length!==2)S[k]=[0,0]});if(S.retLegacy==null)S.retLegacy=+S.retired||0}
+async function pull(){
+  if(!sb||!uid||pending)return;
+  const r=await sb.from("mesa_state").select("data").eq("user_id",uid).maybeSingle();
+  if(r.error){setSync("Sem conexão: usando os dados do aparelho");return}
+  if(r.data&&r.data.data&&(r.data.data.rev||0)>=(S.rev||0)){merge(r.data.data);render()}
+  else if(S.rev>0)save();
+  setSync("Salvo na nuvem");
+}
+function showApp(on){$("#gate").hidden=on;$("#app").hidden=!on}
+async function enter(session){
+  uid=session.user.id;showApp(true);
+  $("#acct").innerHTML=`${esc(session.user.email||"")} <button data-act="logout">Sair</button>`;
+  try{const l=localStorage.getItem("mesa-ingles-"+uid);if(l)merge(JSON.parse(l))}catch(e){}
+  render();await pull();
+}
+async function login(){
+  const em=$("#lem").value.trim(),pw=$("#lpw").value,err=$("#lerr"),bt=$("#lgo");
+  if(!em||!pw){err.textContent="Preencha o e-mail e a senha.";return}
+  bt.disabled=true;bt.textContent="Entrando…";err.textContent="";
+  const r=await sb.auth.signInWithPassword({email:em,password:pw});
+  bt.disabled=false;bt.textContent="Entrar";
+  if(r.error){err.textContent=/invalid/i.test(r.error.message)?"E-mail ou senha incorretos.":"Não foi possível entrar agora. Confira a conexão e tente de novo.";return}
+  $("#lpw").value="";enter(r.data.session);
+}
+async function boot(){
+  if(!SUPABASE_URL||!SUPABASE_KEY||!window.supabase){
+    showApp(true);try{const l=localStorage.getItem("mesa-ingles");if(l)merge(JSON.parse(l))}catch(e){}
+    render();setSync("Modo local: salvo só neste aparelho");return}
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  $("#lgo").addEventListener("click",login);
+  $("#lpw").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+  $("#lshow").addEventListener("change",e=>{$("#lpw").type=e.target.checked?"text":"password"});
+  const r=await sb.auth.getSession();
+  if(r.data&&r.data.session)enter(r.data.session);else showApp(false);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)pull()});
+}
+async function logout(){try{await saving}catch(e){}await sb.auth.signOut();uid=null;location.reload()}
+async function changePw(){
+  const a=$("#npw").value,b2=$("#npw2").value,out=$("#pwmsg");
+  if(a.length<8){out.textContent="A senha precisa ter pelo menos 8 caracteres.";return}
+  if(a!==b2){out.textContent="As duas senhas não são iguais.";return}
+  const r=await sb.auth.updateUser({password:a});out.textContent=r.error?"Não foi possível trocar a senha agora.":"Senha trocada.";if(!r.error){$("#npw").value="";$("#npw2").value=""}
+}
+function exportData(){const bl=new Blob([JSON.stringify(S,null,1)],{type:"application/json"}),u=URL.createObjectURL(bl),l=document.createElement("a");l.href=u;l.download="mesa-ingles-backup-"+today()+".json";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}
+function importData(file){const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||typeof d!=="object"||Array.isArray(d))throw 0;const keep=S.rev||0;merge(d);S.rev=Math.max(keep,d.rev||0);save();ui.msg="Dados importados.";ui.tab="inicio";render()}catch(e){ui.msg="Esse arquivo não é um backup válido do painel.";render()}};fr.readAsText(file)}
+
+/* ---------- render ---------- */
+function players(){const el=$("#players");if(document.activeElement&&el.contains&&el.contains(document.activeElement))return;el.innerHTML=[0,1].map(i=>`<div><label for="pn${i}">Jogador ${i+1}</label><input id="pn${i}" maxlength="24" value="${esc(S.players[i])}" data-chg="pname" data-v="${i}"></div>`).join("")}
+function render(){if(closeWeeks())save();players();track();tabs();const v=$("#view");v.innerHTML=(({inicio:vInicio,jogar:vJogar,comprar:vComprar,evoluir:vEvoluir,ajuda:vAjuda})[ui.tab]||vInicio)();}
+function track(){
+  const p=PH[S.phase-1];
+  $("#track").innerHTML=PH.map(x=>`<button class="sq ${x.n<S.phase?"done":""} ${x.n===S.phase?"cur":""}" data-act="tab" data-v="evoluir" aria-label="Fase ${x.n}, ${x.t}, ${x.lv}${x.n===S.phase?", fase atual":""}">${x.n===S.phase?'<svg class="pawn" viewBox="0 0 20 26" aria-hidden="true"><circle cx="10" cy="6" r="5" fill="#f2b705"/><path d="M3 25c0-8 3-12 7-12s7 4 7 12z" fill="#f2b705"/></svg>':""}<div class="n">${x.n}</div><div class="t">${x.t}</div><div class="lv">${x.lv}</div></button>`).join("");
+  $("#trackcap").textContent=`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Toque na trilha para ver quando subir.`;
+}
+function tabs(){
+  const T=[["inicio","Início","M3 11l9-8 9 8v10h-6v-6H9v6H3z"],["jogar","Jogar","M4 4h16v16H4zM8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01"],["comprar","Comprar","M3 4h2l2.5 11h10L20 7H6.5M9 20h.01M17 20h.01"],["evoluir","Evoluir","M4 19h16M6 16l4-5 3 3 5-7"],["ajuda","Ajuda","M12 21a9 9 0 100-18 9 9 0 000 18zM9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1.1-1.5 2.2M12 17h.01"]];
+  $("#tabs").innerHTML=T.map(t=>`<button role="tab" aria-selected="${ui.tab===t[0]}" data-act="tab" data-v="${t[0]}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${t[2]}"/></svg><span>${t[1]}</span></button>`).join("");
+}
+function weekDays(){const d=new Date();const off=(d.getDay()+6)%7;const m=new Date(d);m.setDate(d.getDate()-off);return[...Array(7)].map((_,i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return x})}
+function suggest(){
+  const o=all().filter(g=>owned(g.id)&&g.ph<=S.phase);
+  const by=(a,b)=>last(a.id).localeCompare(last(b.id));
+  const warm=o.filter(g=>g.role==="A"||st(g.id)==="dominado").sort(by)[0];
+  const main=o.filter(g=>g.role==="P"&&g.ph===S.phase&&st(g.id)==="tenho").sort(by)[0]||o.filter(g=>g.role==="P"&&st(g.id)==="tenho").sort(by)[0];
+  const close=o.filter(g=>g.role==="C").sort(by)[0];
+  return{warm,main,close,n:o.length};
+}
+function nextBuy(){return all().filter(g=>g.ph===S.phase&&(st(g.id)===""||st(g.id)==="lista")).sort((a,b)=>"PAC".indexOf(a.role)-"PAC".indexOf(b.role))[0]}
+function nextOpen(){return all().find(g=>g.ph<=S.phase&&st(g.id)==="tenho"&&plays(g.id)===0)}
+function readyForNew(){const m=all().filter(g=>g.ph===S.phase&&g.role==="P"&&st(g.id)==="tenho");return m.length>0&&m.every(g=>plays(g.id)>=6)}
+
+function vHoje(){
+  const wd=weekDays(),set=new Set(S.sessions.map(x=>x.d)),done=wd.filter(d=>set.has(iso(d))).length,t=today();
+  const names=["seg","ter","qua","qui","sex","sáb","dom"];
+  const sg=suggest(),nb=nextBuy(),no=nextOpen(),p=PH[S.phase-1],h=hours();
+  const base=S.phase>1?PH[S.phase-2].h:0,pct=Math.max(0,Math.min(100,Math.round((h-base)/(p.h-base)*100)));
+  const can=all().filter(g=>owned(g.id)&&g.ph<=S.phase);
+  if(!ui.sDate)ui.sDate=t;
+  return `<div class="grid g2">
+  <section class="panel">
+    <h2>Esta semana</h2>
+    <p><span class="big num">${done}</span> de ${S.goal} sessões</p>
+    <div class="week">${wd.map((d,i)=>`<div class="day ${set.has(iso(d))?"on":""} ${iso(d)===t?"today":""}">${names[i]}<b>${d.getDate()}</b></div>`).join("")}</div>
+    <div class="row"><div><label for="goal">Meta de sessões por semana</label><select id="goal" data-chg="goal">${[3,4,5,6,7].map(n=>`<option ${n===S.goal?"selected":""}>${n}</option>`).join("")}</select></div></div>
+    <h3 style="margin-top:1rem">Registrar uma sessão</h3>
+    <div class="row" style="margin:.4rem 0"><div><label for="sd">Dia</label><input type="date" id="sd" value="${esc(ui.sDate)}" max="${t}" data-chg="sdate"></div>
+    <div><label>Duração</label><div class="chips" style="margin:0">${[20,30,45,60,90].map(m=>`<button class="chip" aria-pressed="${ui.sMin===m}" data-act="smin" data-v="${m}">${m} min</button>`).join("")}</div></div></div>
+    <label>O que vocês jogaram</label>
+    ${can.length?`<div class="chips">${can.map(g=>`<button class="chip" aria-pressed="${!!ui.sGames[g.id]}" data-act="sgame" data-v="${esc(g.id)}">${esc(g.name)}</button>`).join("")}</div>`:`<p class="muted small">Marque em "Jogos e compras" o que você já tem, e os jogos aparecem aqui.</p>`}
+    <button class="btn" data-act="addsess">Registrar sessão</button>
+  </section>
+  <div class="grid">
+    <section class="panel soft">
+      <h2>Mesa de hoje</h2>
+      ${sg.n?`<ul class="clean">
+        <li><span class="muted small">5 min de aquecimento</span><br>${sg.warm?esc(sg.warm.name):"Rodada rápida de flashcards"}</li>
+        <li><span class="muted small">25 a 30 min de jogo principal</span><br>${sg.main?esc(sg.main.name):"Nenhum jogo principal desta fase em casa ainda"}</li>
+        <li><span class="muted small">5 a 10 min de fechamento</span><br>${sg.close?esc(sg.close.name):"Flashcards com placar"}</li></ul>
+        <p class="small muted">A sugestão puxa sempre o jogo que está há mais tempo sem ir para a mesa.</p>`
+      :`<p>Nenhum jogo marcado como "Tenho". Abra "Jogos e compras" e marque os que já chegaram.</p>`}
+    </section>
+    <section class="panel">
+      <h2>Próximos passos</h2>
+      ${readyForNew()?`<p class="next"><b>Hora de abrir um jogo novo.</b> Todos os jogos principais desta fase já passaram de 6 sessões.</p>`:""}
+      ${no?`<p class="next"><b>Próximo a estrear:</b> ${esc(no.name)}</p>`:""}
+      ${nb?`<p class="next"><b>Próxima compra:</b> ${esc(nb.name)}</p>`:`<p class="next">Tudo desta fase já está comprado ou em casa.</p>`}
+      <p class="small muted">Regra: um jogo novo por vez. Abra o próximo quando o jogo principal atual passar de 6 sessões ou ficar fácil demais. O jogo antigo vira aquecimento.</p>
+    </section>
+    <section class="panel">
+      <h2>Horas na mesa</h2>
+      <p><span class="big num">${h.toFixed(1).replace(".",",")}</span> h no total</p>
+      <div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+      <p class="small muted">${pct}% do caminho da fase ${p.n}. Referência: cerca de ${p.h} h acumuladas para fechar ${p.lv.split("→")[1].trim()}. É uma estimativa de horas guiadas, não uma regra.</p>
+    </section>
+  </div></div>
+  <section class="panel" style="margin-top:1rem"><h2>Últimas sessões</h2>
+  ${S.sessions.length?`<ul class="clean">${S.sessions.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,8).map(x=>`<li><b>${esc(x.d.split("-").reverse().join("/"))}</b>, ${+x.min} min${x.win===0||x.win===1?`, ${esc(S.players[x.win])} venceu o jogo de caixa`:""}<br><span class="small muted">${(x.g||[]).map(id=>{const g=all().find(y=>y.id===id);return g?esc(g.name):""}).filter(Boolean).join(", ")||"Sem jogos marcados"}</span> <button class="link" data-act="delsess" data-v="${esc(x.k)}">apagar</button></li>`).join("")}</ul>`:`<p class="muted">Nenhuma sessão registrada. A primeira entra pelo formulário acima.</p>`}
+  </section>`;
+}
+
+function links(g){
+  if(/^https?:/.test(g.q))return `<a href="${esc(g.q)}" target="_blank" rel="noopener">Abrir a loja</a>`;
+  if(g.src==="P")return `<a href="${PTL[g.q]||PTL.l}" target="_blank" rel="noopener">Play to Learn</a>`;
+  const q=encodeURIComponent(g.q||g.name);
+  const tm=`<a href="https://www.temu.com/search_result.html?search_key=${q}" target="_blank" rel="noopener">Temu</a>`;
+  return (g.src==="T"?tm:"")+`<a href="https://lista.mercadolivre.com.br/${q.replace(/%20/g,"-")}" target="_blank" rel="noopener">Mercado Livre</a><a href="https://shopee.com.br/search?keyword=${q}" target="_blank" rel="noopener">Shopee</a><a href="https://www.amazon.com.br/s?k=${q}" target="_blank" rel="noopener">Amazon</a>`+(g.src==="T"?"":tm);
+}
+function vJogos(){
+  let list=all().filter(g=>(!ui.fPhase||g.ph===ui.fPhase)&&(!ui.fMissing||!owned(g.id)));
+  const spent=all().reduce((a,g)=>a+(["comprado","tenho","dominado"].includes(st(g.id))?(+S.games[g.id].p||0):0),0);
+  const have=all().filter(g=>owned(g.id)).length,way=all().filter(g=>st(g.id)==="comprado").length;
+  const groups=PH.map(p=>({p,items:list.filter(g=>g.ph===p.n)})).filter(x=>x.items.length);
+  return `<div class="grid g3 stats" style="margin-bottom:1rem">
+    <div class="panel soft"><span class="big num">${have}</span><br><span class="small muted">jogos em casa</span></div>
+    <div class="panel soft"><span class="big num">${way}</span><br><span class="small muted">comprados, a caminho</span></div>
+    <div class="panel soft"><span class="big num">R$ ${spent.toFixed(2).replace(".",",")}</span><br><span class="small muted">investido até agora</span></div></div>
+  <div class="panel" style="margin-bottom:1rem"><h3>Antes de pagar</h3>
+    <p class="small">Confira no anúncio se é <b>English edition</b>: Shopee e Mercado Livre misturam a versão brasileira com a importada. Jogos marcados "qualquer edição" não precisam ser importados, porque o inglês está no que vocês falam. Compre 3 a 4 jogos por fase, não tudo de uma vez.</p></div>
+  <div class="chips"><button class="chip" aria-pressed="${ui.fPhase===0}" data-act="fph" data-v="0">Todas as fases</button>${PH.map(p=>`<button class="chip" aria-pressed="${ui.fPhase===p.n}" data-act="fph" data-v="${p.n}">Fase ${p.n}</button>`).join("")}<button class="chip" aria-pressed="${ui.fMissing}" data-act="fmiss">Só o que falta</button></div>
+  ${groups.map(x=>`<section style="margin-top:1rem"><h2>Fase ${x.p.n}: ${x.p.t} <span class="muted small" style="font-weight:400">${x.p.lv}</span></h2>
+    ${x.items.map(g=>`<div class="game"><div><h3>${esc(g.name)}</h3>
+      <div class="meta"><span class="tag">${ROLE[g.role]}</span><span class="tag">${SRC[g.src]||"Meu"}</span>${g.en?'<span class="tag warn">comprar em inglês</span>':'<span class="tag">qualquer edição</span>'} ${plays(g.id)} sessões${g.role==="P"&&st(g.id)==="tenho"&&plays(g.id)>=6?", pronto para virar aquecimento":""}</div>
+      ${g.note?`<div class="meta">${esc(g.note)}</div>`:""}<div class="links">${links(g)}${g.cu?` <button class="link" data-act="delgame" data-v="${esc(g.id)}">remover</button>`:""}</div></div>
+      <div class="ctl"><select aria-label="Situação de ${esc(g.name)}" data-chg="gst" data-v="${esc(g.id)}">${ST.map(s=>`<option value="${s}" ${st(g.id)===s?"selected":""}>${STL[s]}</option>`).join("")}</select>
+      <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="R$ pago" aria-label="Valor pago por ${esc(g.name)}" value="${S.games[g.id]&&S.games[g.id].p?esc(S.games[g.id].p):""}" data-chg="gpr" data-v="${esc(g.id)}"></div></div>`).join("")}</section>`).join("")||`<p class="muted">Nada para mostrar com esse filtro.</p>`}
+  <section class="panel" style="margin-top:1.25rem"><h3>Adicionar um jogo que não está na lista</h3>
+    <div class="row" style="margin-top:.5rem"><div style="flex:1;min-width:200px"><label for="cn">Nome do jogo</label><input id="cn" style="width:100%"></div>
+    <div><label for="cp">Fase</label><select id="cp">${PH.map(p=>`<option>${p.n}</option>`).join("")}</select></div>
+    <div><label for="cr">Papel</label><select id="cr"><option value="P">Jogo principal</option><option value="A">Aquecimento</option><option value="C">Conversa</option></select></div>
+    <button class="btn" data-act="addgame">Adicionar jogo</button></div></section>`;
+}
+
+
+/* ---------- placar de flashcards ---------- */
+const KIND={img:"Palavras com imagem",freq:"Palavras sem imagem",frase:"Frases",verbo:"Verbos irregulares",pote:"Palavras do pote",alfa:"Letras e soletrar",num:"Números",gram:"Classes de palavras"};
+const MODES={"en-pt":["Inglês → português","Reconhecer. É o modo mais fácil: comece por ele com cartas novas."],"pt-en":["Português → inglês","Produzir. É o modo que conta para a fala. Use com cartas já vistas."],"img-en":["Imagem → inglês","Produzir sem passar pelo português. O melhor modo para baralhos com figura."],"ouvir":["Ouvir → significado","O celular fala, vocês dizem o que é ou batem na carta certa. Treina o ouvido, que é o ponto fraco de dois iniciantes."],"soletrar":["Soletrar","Um escolhe uma palavra de qualquer baralho, o outro soletra em voz alta, letra por letra, em inglês."],"ditado":["Ditado de números","Um dita um preço, telefone ou ano, o outro escreve. Confiram no papel."],"verbo":["Infinitivo → passado","Um fala o infinitivo, o outro responde passado e particípio."],"montar":["Montar frase","Tirem uma carta de cada cor e montem uma frase com elas, mesmo que saia absurda."]};
+const KMODES={img:["img-en","ouvir","en-pt"],freq:["en-pt","pt-en","ouvir"],frase:["pt-en","ouvir","en-pt"],verbo:["verbo","ouvir"],pote:["pt-en","en-pt","ouvir"],alfa:["soletrar","ouvir"],num:["ditado","ouvir","img-en"],gram:["montar","pt-en","en-pt"]};
+const BASE=[
+ ["sm1-0","SuperMente: Alfabeto","alfa","f-super1",50],["sm1-1","SuperMente: Números","num","f-super1",50],["sm1-2","SuperMente: Cores e formas","img","f-super1",50],["sm1-3","SuperMente: Membros da família","img","f-super1",50],["sm1-4","SuperMente: Animais","img","f-super1",50],["sm1-5","SuperMente: Roupas","img","f-super1",50],["sm1-6","SuperMente: Comidas e bebidas","img","f-super1",50],
+ ["sm2-0","SuperMente: Gramática I","gram","f-super2",50],["sm2-1","SuperMente: Gramática II","gram","f-super2",50],["sm2-2","SuperMente: Frases","frase","f-super2",50],
+ ["f-1000","1000 palavras mais comuns","freq","f-1000",1000,10],["f-sent","1,000 English Sentence Flash Cards","frase","f-sent",1000,10],
+ ["t-talk","Talking Flash Cards (Temu)","img","t-talk",0],["t-sight","Sight Words, 220 palavras (Temu)","freq","t-sight",220],["p-fruits","Fruits and Vegetables (memória)","img","p-fruits",0],["p-family","Family Members (memória)","img","p-family",0],["p-shapes","Shapes, Numbers and Colors (memória)","img","p-shapes",0],["p-irreg","120 Listas Verbos Irregulares","verbo","p-irreg",0],["e-picbingo","Picture Bingo: as 100 cartas","img","e-picbingo",100],["e-verbbingo","Verb Bingo: as cartas","img","e-verbbingo",0]
+];
+const GRP={"f-super1":"SuperMente, kit de vocabulário","f-super2":"SuperMente, kit de gramática e frases"};
+const DKHOW={
+ img:{ok:"Falou o nome da figura em inglês, com a pronúncia certa.",bonus:"Usou a palavra numa frase. Pode ser simples: It's a dog. I have a dog.",ex:["Figura de cachorro. Disse dog.","Disse I have a dog.","Não lembrou, ou disse dógui."],b1:"Acertou a palavra",b2:"Acertou e fez uma frase",say:["What's this?","It's a...","I have a...","I don't know this one."]},
+ freq:{ok:"Disse o que a palavra significa, ou falou em inglês quando a carta estava em português.",bonus:"Usou num pedaço de frase. Para palavras como the, of e get isso é o mais importante: a cup of coffee, get up.",ex:["Carta: water. Disse água.","Disse I drink water.","Não lembrou."],b1:"Acertou a palavra",b2:"Acertou e fez uma frase",say:["How do you use it?","Give me an example.","A cup of coffee.","Next card."]},
+ frase:{ok:"Falou a frase da carta em inglês, inteira e com a pronúncia certa.",bonus:"Trocou uma palavra e falou a frase nova: I like coffee vira I like tea.",ex:["Carta: Eu gosto de café. Disse I like coffee.","Depois disse I like tea.","Travou no meio da frase."],b1:"Acertou a frase",b2:"Acertou e trocou uma palavra",say:["How do you say this?","Say it again, slowly.","Now change one word.","That's right."]},
+ verbo:{ok:"Falou o passado e o particípio do verbo: go, went, gone.",bonus:"Fez uma frase no passado com ele: I went to the beach.",ex:["Carta: go. Disse went, gone.","Disse I went to the beach.","Disse goed."],b1:"Acertou o verbo",b2:"Acertou e fez uma frase",say:["Go, went, gone.","What's the past of buy?","Use it in a sentence."]},
+ alfa:{ok:"Soletrou a palavra inteira em inglês, letra por letra, sem errar nenhuma. Atenção: A soa ei, E soa i, I soa ai.",bonus:"Soletrou algo seu: nome completo, e-mail ou endereço.",ex:["Palavra: house. Soletrou H, O, U, S, E.","Soletrou o próprio sobrenome.","Falou a letra E com som de é."],b1:"Soletrou certo",b2:"Soletrou algo próprio",say:["How do you spell it?","Can you spell your name?","Capital letter.","Say the letter again."]},
+ num:{ok:"Falou o número em inglês, ou escreveu certo o número que o outro ditou.",bonus:"Usou numa frase com preço, hora ou telefone: It costs twenty-five dollars.",ex:["Carta: 13. Disse thirteen.","Disse It costs thirteen dollars.","Disse thirty."],b1:"Acertou o número",b2:"Acertou e fez uma frase",say:["How much is it?","What time is it?","My number is...","Thirteen. Thirty."]},
+ gram:{ok:"Montou uma frase correta com as cartas tiradas, uma de cada cor. Pode ser absurda: The happy dog eats slowly.",bonus:"Transformou a frase em negativa ou em pergunta.",ex:["Montou The happy dog eats slowly.","Disse Does the happy dog eat slowly?","A frase saiu na ordem do português."],b1:"Montou a frase",b2:"Montou e transformou",say:["Pick one card of each color.","My sentence is...","Make it negative.","Make it a question."]},
+ pote:{ok:"Falou em inglês a palavra que tinha faltado no jogo.",bonus:"Disse a frase que queria ter dito naquela hora do jogo.",ex:["Carta: aluguel. Disse rent.","Disse You have to pay the rent.","Não lembrou."],b1:"Acertou a palavra",b2:"Acertou e fez a frase",say:["I needed this word when...","Now I remember!","Let's add a new word."]}
+};
+const INSTR_BY_MODE={
+ "pt-en":{
+  img:{text:'Pegue a carta do baralho e <b>mostre o lado em português</b>. O jogador deve falar a palavra <b>em inglês</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Falou a palavra certa = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Fez uma frase em inglês com a palavra = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não soube ou errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre o lado em português. O jogador deve falar a palavra em inglês. Falou a palavra certa, um ponto. Fez uma frase em inglês com a palavra, dois pontos. Não soube ou errou, zero."},
+  freq:{text:'Pegue a carta do baralho e <b>mostre o lado em português</b>. O jogador deve falar a palavra <b>em inglês</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Falou a palavra certa = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Usou a palavra numa frase em inglês = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não soube ou errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre o lado em português. O jogador deve falar a palavra em inglês. Falou a palavra certa, um ponto. Usou a palavra numa frase em inglês, dois pontos. Não soube ou errou, zero."},
+  frase:{text:'Pegue a carta do baralho e <b>mostre a frase em português</b>. O jogador deve falar <b>a frase inteira em inglês</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Falou a frase certa = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Trocou uma palavra e fez outra frase = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Travou ou errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre a frase em português. O jogador deve falar a frase inteira em inglês. Falou a frase certa, um ponto. Trocou uma palavra e fez outra frase, dois pontos. Travou ou errou, zero."},
+  pote:{text:'Pegue a carta do pote e <b>mostre o lado em português</b>. O jogador deve falar a palavra <b>em inglês</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Falou a palavra certa = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Disse a frase que queria ter dito no jogo = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não lembrou = <b>zero</b></span></span>',audio:"Pegue a carta do pote e mostre o lado em português. O jogador deve falar a palavra em inglês. Falou a palavra certa, um ponto. Disse a frase que queria ter dito no jogo, dois pontos. Não lembrou, zero."}
+ },
+ "en-pt":{
+  img:{text:'Pegue a carta do baralho e <b>mostre o lado em inglês</b>. O jogador deve dizer <b>o significado em português</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Disse o significado certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Fez uma frase em inglês com a palavra = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não soube ou errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre o lado em inglês. O jogador deve dizer o significado em português. Disse o significado certo, um ponto. Fez uma frase em inglês com a palavra, dois pontos. Não soube ou errou, zero."},
+  freq:{text:'Pegue a carta do baralho e <b>mostre o lado em inglês</b>. O jogador deve dizer <b>o significado em português</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Disse o significado certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Usou a palavra numa frase em inglês = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não soube ou errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre o lado em inglês. O jogador deve dizer o significado em português. Disse o significado certo, um ponto. Usou a palavra numa frase em inglês, dois pontos. Não soube ou errou, zero."},
+  frase:{text:'Pegue a carta do baralho e <b>mostre a frase em inglês</b>. O jogador deve dizer <b>o que a frase significa em português</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Disse o significado certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Fez uma frase parecida em inglês = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Errou = <b>zero</b></span></span>',audio:"Pegue a carta do baralho e mostre a frase em inglês. O jogador deve dizer o que a frase significa em português. Disse o significado certo, um ponto. Fez uma frase parecida em inglês, dois pontos. Errou, zero."},
+  pote:{text:'Pegue a carta do pote e <b>mostre o lado em inglês</b>. O jogador deve dizer <b>o significado em português</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Disse o significado certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Disse a frase que queria ter dito no jogo = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não lembrou = <b>zero</b></span></span>',audio:"Pegue a carta do pote e mostre o lado em inglês. O jogador deve dizer o significado em português. Disse o significado certo, um ponto. Disse a frase que queria ter dito no jogo, dois pontos. Não lembrou, zero."}
+ },
+ "img-en":{
+  img:{text:'Pegue a carta e <b>mostre só a figura</b> (tampa a palavra). O jogador deve falar <b>o nome em inglês</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Falou o nome certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Fez uma frase com a palavra = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não soube ou errou = <b>zero</b></span></span>',audio:"Pegue a carta e mostre só a figura, tampa a palavra. O jogador deve falar o nome em inglês. Falou o nome certo, um ponto. Fez uma frase com a palavra, dois pontos. Não soube ou errou, zero."}
+ },
+ "ouvir":{
+  _default:{text:'Toque em <b>Ouvir</b> numa frase abaixo. O celular fala em inglês. O jogador deve dizer <b>o que significa</b>.<span class="fc-step"><span class="pts-line"><span class="dot g"></span> Disse o significado certo = <b>1 ponto</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot b"></span> Repetiu a palavra em inglês com pronúncia certa = <b>2 pontos</b></span></span><span class="fc-step"><span class="pts-line"><span class="dot r"></span> Não entendeu = <b>zero</b></span></span>',audio:"Toque em Ouvir numa frase abaixo. O celular fala em inglês. O jogador deve dizer o que significa. Disse o significado certo, um ponto. Repetiu a palavra em inglês com pronúncia certa, dois pontos. Não entendeu, zero."}
+ }
+};
+function getInstr(mode,kind){const m=INSTR_BY_MODE[mode];if(!m)return INSTR_BY_MODE["pt-en"].freq;return m[kind]||m._default||INSTR_BY_MODE["pt-en"].freq}
+const d0blk=c=>{const x=decks().find(y=>y.id===c.deck);return x&&x.blocks?(c.block||0)+1:0};
+const zero=()=>({w:0,f:0,o:0,x:0,pt:0});
+function decks(){
+  const b=BASE.map(a=>({id:a[0],name:a[1],kind:a[2],par:a[3],def:a[4],blocks:a[5]||0,grp:GRP[a[3]]||"Outros baralhos e jogos de memória",here:owned(a[3]),status:st(a[3])}));
+  return[{id:"pote",name:"Pote de palavras",kind:"pote",grp:"Sempre disponível",here:true}].concat(b,(S.cdecks||[]).map(d=>({id:d.id,name:d.name,kind:d.kind,cu:true,grp:"Baralhos que eu criei",here:true})))}
+function dd(id){const d=S.deckData[id]||{},b=BASE.find(a=>a[0]===id);return{total:d.total!=null?d.total:(b?b[4]:0),ret:d.ret||0}}
+function cur(){if(!S.cur||!S.cur.p)S.cur={deck:"pote",mode:"pt-en",block:0,p:[zero(),zero()],log:[]};const D=decks(),d=D.find(x=>x.id===S.cur.deck)||D[0];S.cur.deck=d.id;const ok=KMODES[d.kind]||KMODES.img;if(!ok.includes(S.cur.mode))S.cur.mode=ok[0];if(!d.blocks)S.cur.block=0;return S.cur}
+function groups(D){const o=[];D.forEach(x=>{let g=o.find(y=>y.n===x.grp);if(!g)o.push(g={n:x.grp,items:[]});g.items.push(x)});return o}
+const dname=id=>{const x=decks().find(y=>y.id===id)||CAT.find(y=>y.id===id);return x?x.name:"Baralho removido"};
+const pts=q=>Math.max(0,q.w+q.f*2+q.o*3-q.pt), hit=q=>q.w+q.f+q.o;
+const retiredAll=()=>(S.retLegacy||0)+Object.keys(S.deckData).reduce((a,k)=>a+(+S.deckData[k].ret||0),0);
+const pctOf=(a,b)=>b?Math.round(a/b*100):0;
+function vPlacar(){
+  const c=cur(),D=decks(),d=D.find(x=>x.id===c.deck)||D[0],info=dd(d.id),h=DKHOW[d.kind]||DKHOW.img,ra=retiredAll();
+  const n=c.log.length,len=c.len||20,over=n>=len,turn=c.turn||0,started=n>0;
+  const left=ui.tEnd?Math.max(0,Math.ceil((ui.tEnd-Date.now())/1000)):0;if(n>0)ui.rmsg="";
+  const P=[pts(c.p[0]),pts(c.p[1])],lead=P[0]===P[1]?"Empate":`${S.players[P[0]>P[1]?0:1]} venceu`;
+  const instr=getInstr(c.mode,d.kind);
+  return `<section class="panel" style="margin-bottom:1rem"><div class="fc-instr"><button class="play-btn" data-act="sayPT" data-v="${esc(instr.audio)}" aria-label="Ouvir instrução em português">▶</button><div class="fc-text">${instr.text}</div></div></section>
+  <section class="panel" style="margin-top:1rem"><h3>Preparar a rodada</h3>
+    <div class="row"><div style="flex:1;min-width:220px"><label for="cdk">Qual baralho está na mesa?</label><select id="cdk" data-chg="curdeck" style="width:100%" ${started?"disabled":""}>${groups(D).map(g=>`<optgroup label="${esc(g.n)}">${g.items.map(x=>`<option value="${esc(x.id)}" ${x.id===d.id?"selected":""}>${esc(x.name)}${x.here?"":" (ainda não chegou)"}</option>`).join("")}</optgroup>`).join("")}</select></div>
+    ${d.blocks?`<div><label for="cbl">Bloco</label><select id="cbl" data-chg="curblock" ${started?"disabled":""}>${[...Array(d.blocks)].map((_,i)=>`<option value="${i}" ${(c.block||0)===i?"selected":""}>Cartas ${i*100+1} a ${(i+1)*100}</option>`).join("")}</select></div>`:""}
+    <div><label for="clen">Cartas na rodada</label><select id="clen" data-chg="curlen" ${started?"disabled":""}>${[10,20,30].map(x=>`<option ${x===len?"selected":""}>${x}</option>`).join("")}</select></div></div>
+    <label style="margin-top:.7rem">O que aparece na carta e o que se responde</label>
+    <div class="chips">${(KMODES[d.kind]||KMODES.img).map(m=>`<button class="chip" aria-pressed="${c.mode===m}" data-act="mode" data-v="${m}">${MODES[m][0]}</button>`).join("")}</div>
+    <p class="small muted">${MODES[c.mode][1]}</p>
+    ${started?`<p class="small muted">Baralho, bloco e tamanho ficam travados até a rodada acabar.</p>`:""}
+  </section>
+  <section class="panel" style="margin-top:1rem" id="roundbox"><h3>Rodada</h3>${ui.rmsg?`<p class="okmsg" role="status">${esc(ui.rmsg)}</p>`:""}
+    <div class="sline"><div class="${!over&&turn===0?"on":""}"><span>${esc(S.players[0])}</span><b class="num">${P[0]}</b></div><i>x</i><div class="${!over&&turn===1?"on":""}"><b class="num">${P[1]}</b><span>${esc(S.players[1])}</span></div></div>
+    <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,n/len*100)}%"></i></div>
+    ${over?`<p class="turn">Rodada completa. ${esc(lead)}, ${P[0]} a ${P[1]}.</p>`
+      :`<p class="turn">Carta ${n+1} de ${len}. Quem responde agora: <b>${esc(S.players[turn])}</b></p>
+      <div class="big3"><button class="b0" data-act="tap" data-v="x"><b>Errou</b><span>0 ponto</span></button>
+      <button class="b1" data-act="tap" data-v="w"><b>${h.b1}</b><span>1 ponto</span></button>
+      <button class="b2" data-act="tap" data-v="f"><b>${h.b2}</b><span>2 pontos</span></button></div>`}
+    <div class="row" style="margin-top:.8rem;align-items:center">
+      <button class="btn ghost" data-act="undo" ${n?"":"disabled"}>Desfazer a última carta</button>
+      ${over?"":`<button class="btn ghost" data-act="timer">Relógio de 10 s</button><span class="num big" id="tleft" aria-live="polite">${left||""}</span>`}</div>
+    <div class="endbox ${over?"hot":""}">
+      <div><label for="rret">Quantas cartas saíram do baralho hoje?</label><input id="rret" type="number" min="0" max="200" value="0" style="width:120px">
+      <p class="small muted" style="max-width:46ch">São as que os dois acertaram sem hesitar. Elas vão para a pilha "já sei" e abrem espaço para cartas novas. Se nenhuma saiu, deixe 0.</p></div>
+      <div class="row"><button class="btn" data-act="endround" ${started?"":"disabled"}>${over?"Salvar a rodada":"Encerrar antes e salvar"}</button><button class="btn ghost" data-act="zero" ${started?"":"disabled"}>Descartar</button></div></div>
+  </section>
+  <div class="grid g2" style="margin-top:1rem">
+  <section class="panel"><h3>Frases para usar durante a rodada</h3><ul class="clean phr">${h.say.map(phrase).join("")}</ul>
+    <details><summary>Dicas para a rodada render mais</summary><ul class="clean small">
+      <li>De cada 20 cartas, no máximo 5 novas. Mais que isso e nada fixa.</li>
+      <li>Uma vez por mês, joguem uma rodada só com a pilha "já sei". A carta que alguém errar volta para o baralho.</li>
+      <li>Sequência da semana: cartas novas no modo mais fácil da lista, depois o modo de produzir, e uma rodada de ouvir para fechar.</li>
+      <li>Acima de 80% de acerto num baralho, é hora de colocar cartas novas.</li></ul></details>
+  </section>
+  <details class="stg"><summary>Placar geral e pilha "já sei"</summary><div class="stgb">
+    <div class="score">${[0,1].map(i=>{const t=(S.hits[i]||0)+(S.miss[i]||0);return `<div><h3>${esc(S.players[i])}</h3><p><span class="big num">${S.score[i]||0}</span> pontos</p><p class="small muted">${S.wins[i]||0} rodadas vencidas${t?`, ${pctOf(S.hits[i],t)}% de acerto`:""}</p></div>`}).join("")}</div>
+    <h3 style="margin-top:.8rem">Cartas na pilha "já sei"</h3><p><span class="big num">${ra}</span> de 1000</p><div class="bar" aria-hidden="true"><i style="width:${Math.min(100,ra/10)}%"></i></div>
+    <p class="small muted">São as cartas que saíram dos baralhos porque vocês dois já sabem de cor. É o seu vocabulário ativo de verdade.</p>
+    ${ui.confirmReset?`<div class="row"><button class="btn" style="background:var(--stop);border-color:var(--stop)" data-act="reset2">Confirmar: zerar placar e rodadas</button><button class="btn ghost" data-act="resetno">Cancelar</button></div>`:`<button class="link" data-act="reset">Zerar placar geral</button>`}
+  </div></details></div>
+  <details class="stg" style="margin-top:.6rem"><summary>Meus baralhos: acerto, progresso e total de cartas</summary><div class="stgb">
+    <div class="dtable">${groups(D).map(g=>`<h3 style="margin-top:1rem">${esc(g.n)}</h3>`+g.items.map(x=>{const i=dd(x.id),r=S.rounds.filter(y=>y.deck===x.id),hh=r.reduce((a,y)=>a+y.hit[0]+y.hit[1],0),mm=r.reduce((a,y)=>a+y.miss[0]+y.miss[1],0);return `<div class="drow"><div><b>${esc(x.name)}</b><br><span class="small muted">${KIND[x.kind]||"Palavras"}, ${r.length} rodadas${hh+mm?`, ${pctOf(hh,hh+mm)}% de acerto`:""}${x.cu?` <button class="link" data-act="deldeck" data-v="${esc(x.id)}">remover</button>`:""}</span>
+      ${i.total?`<div class="bar" aria-hidden="true"><i style="width:${Math.min(100,pctOf(i.ret,i.total))}%"></i></div>`:""}</div>
+      <div class="row" style="gap:.4rem"><div><label>Já sei</label><input type="number" min="0" value="${i.ret}" data-chg="dret" data-v="${esc(x.id)}" style="width:84px" aria-label="Cartas aposentadas de ${esc(x.name)}"></div><div><label>Total</label><input type="number" min="0" value="${i.total||""}" placeholder="?" data-chg="dtot" data-v="${esc(x.id)}" style="width:84px" aria-label="Total de cartas de ${esc(x.name)}"></div></div></div>`}).join("")).join("")}</div>
+    <p class="small muted">Os baralhos recomendados já vêm configurados, mesmo antes de chegarem. Os totais da SuperMente são estimativas de 50 cartas por caixa: ajuste o número quando abrir cada uma. Nos jogos de memória, conte as cartas e preencha o total para a barra de progresso aparecer.</p>
+    <div class="row" style="margin-top:.6rem"><div style="flex:1;min-width:200px"><label for="dn">Novo baralho</label><input id="dn" style="width:100%" placeholder="ex.: Cartas do Monopoly"></div>
+    <div><label for="dkk">Tipo</label><select id="dkk"><option value="img">Palavras com imagem</option><option value="freq">Palavras sem imagem</option><option value="frase">Frases</option></select></div>
+    <button class="btn" data-act="adddeck">Criar baralho</button></div>
+  </div></details>
+  <details class="stg"><summary>Últimas rodadas</summary><div class="stgb">
+    ${S.rounds.length?`<ul class="clean">${S.rounds.slice().reverse().slice(0,10).map(r=>{return `<li><b>${esc(r.d.split("-").reverse().join("/"))}</b>, ${esc(dname(r.deck))}${r.block?`, bloco ${r.block}`:""} <span class="tag">${(MODES[r.mode]||[""])[0]}</span><br><span class="small muted">${esc(S.players[0])} ${r.pts[0]} x ${r.pts[1]} ${esc(S.players[1])}${r.ret?`, ${r.ret} cartas para a pilha já sei`:""}</span> <button class="link" data-act="delround" data-v="${esc(r.k)}">apagar</button></li>`}).join("")}</ul>`:`<p class="muted">Nenhuma rodada encerrada ainda. Escolha o baralho acima e comece.</p>`}
+  </div></details>`;
+}
+
+function vNivel(){
+  const p=PH[S.phase-1],ch=p.gate.map((_,i)=>!!S.checks[p.n+"-"+i]),ok=ch.every(Boolean),h=hours();
+  return `<div class="grid g2"><section class="panel">
+    <h2>Posso passar para a fase ${Math.min(5,p.n+1)}?</h2>
+    <p class="muted small">Fase atual: ${p.n}, ${p.t} (${p.lv}). Marque só o que já acontece na mesa sem esforço.</p>
+    ${p.gate.map((g,i)=>`<label class="check"><input type="checkbox" ${ch[i]?"checked":""} data-chg="chk" data-v="${p.n}-${i}"><span>${esc(g)}</span></label>`).join("")}
+    <ul class="clean small" style="margin:.6rem 0">
+      <li>Horas na mesa: <b>${h.toFixed(1).replace(".",",")} h</b>. Referência da fase: cerca de ${p.h} h acumuladas.</li>
+      <li>Faixa esperada na prova: <b>${p.band}</b>.</li></ul>
+    <div class="row"><button class="btn" data-act="up" ${ok&&p.n<5?"":"disabled"}>Passar para a fase ${Math.min(5,p.n+1)}</button>${p.n>1?`<button class="btn ghost" data-act="down">Voltar uma fase</button>`:""}</div>
+    ${ok?"":`<p class="small muted">O botão libera quando os ${p.gate.length} itens estiverem marcados.</p>`}
+  </section>
+  <section class="panel soft"><h2>Prova: faço ou não faço?</h2>
+    <p><b>Faça, mas não estude para ela.</b> A prova é um termômetro do que os jogos já ensinaram. Estudar para a prova estraga a medição e traz de volta o formato que nunca funcionou para você.</p>
+    <ul class="clean">
+      <li><b>Agora:</b> EF SET Quick Check, 15 min, grátis. Só para registrar o ponto de partida. As perguntas são sempre as mesmas, então não repita.</li>
+      <li><b>A cada 3 meses:</b> EF SET de 50 min, grátis, com nota de 0 a 100 na escala A1 a C2. É adaptativo, então dá para repetir.</li>
+      <li><b>Limite:</b> essas provas medem leitura e escuta. Fala não entra. Quem avalia sua fala é o professor: peça a ele um nível a cada 3 meses.</li>
+      <li><b>Prova oficial paga</b> (IELTS, TOEFL, Cambridge): só quando precisar do certificado para visto, trabalho ou estudo.</li></ul>
+    <p class="row" style="margin-top:.6rem"><a class="btn ghost" href="https://www.efset.org/" target="_blank" rel="noopener">Abrir o EF SET</a></p>
+  </section></div>
+  <section class="panel" style="margin-top:1rem"><h2>Minhas provas</h2>
+    <div class="row"><div><label for="td">Data</label><input type="date" id="td" value="${today()}"></div>
+    <div><label for="tn">Prova</label><select id="tn"><option>EF SET 50 min</option><option>EF SET Quick Check</option><option>Avaliação do professor</option><option>Outra</option></select></div>
+    <div><label for="tr">Resultado</label><input id="tr" placeholder="ex.: 34, A2"></div>
+    <button class="btn" data-act="addtest">Registrar prova</button></div>
+    ${S.tests.length?`<ul class="clean" style="margin-top:.6rem">${S.tests.slice().sort((a,b)=>b.d.localeCompare(a.d)).map(t=>`<li><b>${esc(t.d.split("-").reverse().join("/"))}</b>, ${esc(t.n)}: ${esc(t.r)} <button class="link" data-act="deltest" data-v="${esc(t.k)}">apagar</button></li>`).join("")}</ul>`:`<p class="muted small" style="margin-top:.6rem">Nenhuma prova registrada. A primeira define seu ponto de partida.</p>`}
+  </section>`;
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v;let persist=true;
+  if(a==="logout"){logout();return}
+  if(a==="chpw"){changePw();return}
+  if(a==="export"){exportData();return}
+  if(a==="tab"){ui.tab=v;ui.touched=true;persist=false;ui.jump=true}
+  else if(a==="smin"){ui.sMin=+v;persist=false}
+  else if(a==="jmode"){ui.jmode=v;persist=false}
+  else if(a==="swin"){ui.sWin=+v;persist=false}
+  else if(a==="openg"){ui.tab="jogar";ui.jmode="caixa";ui.hGame=v;persist=false;ui.jumpTo="#hg"}
+  else if(a==="openf"){ui.tab="jogar";ui.jmode="flash";persist=false;ui.jumpTo="#cdk"}
+  else if(a==="sgame"){ui.sGames[v]=!ui.sGames[v];persist=false}
+  else if(a==="fph"){ui.fPhase=+v;persist=false}
+  else if(a==="fmiss"){ui.fMissing=!ui.fMissing;persist=false}
+  else if(a==="hph"){ui.hPhase=+v;persist=false}
+  else if(a==="hown"){ui.hOwned=!ui.hOwned;persist=false}
+  else if(a==="say"){speak(v);return}
+  else if(a==="sayPT"){speakPT(v,b);return}
+  else if(a==="selgame"){ui.hGame=ui.hGame===v?null:v;persist=false}
+  else if(a==="addsess"){S.sessions.push({k:"s"+Date.now(),d:ui.sDate||today(),min:ui.sMin,win:ui.sWin==null?-1:ui.sWin,g:Object.keys(ui.sGames).filter(k=>ui.sGames[k])});ui.sWin=-1;if(S.sessions.length>600)S.sessions=S.sessions.slice(-600);ui.sGames={};ui.msg="Sessão registrada. A semana e as horas já foram atualizadas.";ui.tab="inicio";ui.jump=true}
+  else if(a==="delsess"){S.sessions=S.sessions.filter(x=>x.k!==v)}
+  else if(a==="addgame"){const n=$("#cn").value.trim();if(!n)return;S.custom.push({id:"x"+Date.now(),name:n.slice(0,80),ph:+$("#cp").value,role:$("#cr").value,src:"",en:true,q:n,note:"",cu:true})}
+  else if(a==="delgame"){S.custom=S.custom.filter(g=>g.id!==v);delete S.games[v]}
+  else if(a==="mode"){cur().mode=v}
+  else if(a==="tap"){const c=cur(),i=c.turn||0;if(c.log.length>=(c.len||20))return;c.p[i][v]++;c.log.push([i,v]);c.turn=1-i;ui.tEnd=0;if(c.log.length>=(c.len||20))ui.jumpTo="#roundbox"}
+  else if(a==="undo"){const c=cur(),l=c.log.pop();if(l){c.p[l[0]][l[1]]=Math.max(0,c.p[l[0]][l[1]]-1);c.turn=l[0]}}
+  else if(a==="zero"){const c=cur();c.p=[zero(),zero()];c.log=[];c.turn=0}
+  else if(a==="timer"){ui.tEnd=Date.now()+10000;persist=false}
+  else if(a==="endround"){const c=cur(),P=[pts(c.p[0]),pts(c.p[1])],H=[hit(c.p[0]),hit(c.p[1])],M=[c.p[0].x,c.p[1].x],rt=Math.max(0,Math.min(200,+$("#rret").value||0));
+    S.rounds.push({k:"r"+Date.now(),d:today(),deck:c.deck,mode:c.mode,block:d0blk(c),pts:P,hit:H,miss:M,ret:rt});if(S.rounds.length>300)S.rounds=S.rounds.slice(-300);
+    [0,1].forEach(i=>{S.score[i]=(S.score[i]||0)+P[i];S.hits[i]=(S.hits[i]||0)+H[i];S.miss[i]=(S.miss[i]||0)+M[i]});if(P[0]!==P[1]){const w=P[0]>P[1]?0:1;S.wins[w]=(S.wins[w]||0)+1}
+    if(rt){const o=dd(c.deck);S.deckData[c.deck]=Object.assign({},S.deckData[c.deck],{ret:o.ret+rt})}
+    c.p=[zero(),zero()];c.log=[];c.turn=0;const wq=weekPts(monOf(today()));ui.rmsg="Rodada salva. Disputa da semana: "+S.players[0]+" "+wq[0]+" x "+wq[1]+" "+S.players[1]+".";ui.jumpTo="#roundbox"}
+  else if(a==="delround"){const r=S.rounds.find(x=>x.k===v);if(r){[0,1].forEach(i=>{S.score[i]=Math.max(0,(S.score[i]||0)-r.pts[i]);S.hits[i]=Math.max(0,(S.hits[i]||0)-r.hit[i]);S.miss[i]=Math.max(0,(S.miss[i]||0)-r.miss[i])});if(r.pts[0]!==r.pts[1]){const w=r.pts[0]>r.pts[1]?0:1;S.wins[w]=Math.max(0,(S.wins[w]||0)-1)}
+    if(r.ret&&S.deckData[r.deck])S.deckData[r.deck].ret=Math.max(0,(S.deckData[r.deck].ret||0)-r.ret);S.rounds=S.rounds.filter(x=>x.k!==v)}}
+  else if(a==="adddeck"){const n=$("#dn").value.trim();if(!n)return;const id="d"+Date.now();S.cdecks.push({id:id,name:n.slice(0,60),kind:$("#dkk").value});cur().deck=id}
+  else if(a==="deldeck"){S.cdecks=S.cdecks.filter(x=>x.id!==v);delete S.deckData[v]}
+  else if(a==="addprize"){const n=$("#zn").value.trim();if(!n)return;S.prizes.push({id:"z"+Date.now(),name:n.slice(0,80),cost:+$("#zc").value||1})}
+  else if(a==="delprize"){S.prizes=S.prizes.filter(z=>z.id!==v)}
+  else if(a==="redeem"){const z=S.prizes.find(x=>x.id===v),i=+b.dataset.p;if(!z||league().bal[i]<z.cost)return;S.redeem.push({k:"e"+Date.now(),d:today(),p:i,name:z.name,cost:z.cost});ui.msg=S.players[i]+" trocou "+stars(z.cost)+" por: "+z.name+".";ui.jump=true}
+  else if(a==="delredeem"){S.redeem=S.redeem.filter(r=>r.k!==v)}
+  else if(a==="reset"){ui.confirmReset=true;persist=false}
+  else if(a==="resetno"){ui.confirmReset=false;persist=false}
+  else if(a==="reset2"){S.score=[0,0];S.wins=[0,0];S.hits=[0,0];S.miss=[0,0];S.rounds=[];ui.confirmReset=false}
+  else if(a==="up"){if(S.phase<5)S.phase++}
+  else if(a==="down"){if(S.phase>1)S.phase--}
+  else if(a==="addtest"){const r=$("#tr").value.trim();if(!r)return;S.tests.push({k:"t"+Date.now(),d:$("#td").value||today(),n:$("#tn").value,r:r.slice(0,40)})}
+  else if(a==="deltest"){S.tests=S.tests.filter(t=>t.k!==v)}
+  if(persist)save();render();
+  if(ui.jump){ui.jump=false;try{window.scrollTo(0,0)}catch(e){}}
+  if(ui.jumpTo){const q=ui.jumpTo;ui.jumpTo="";try{const n=$(q);if(n)window.scrollTo(0,n.getBoundingClientRect().top+window.scrollY-90)}catch(e){}}
+});
+document.addEventListener("change",e=>{
+  if(e.target.id==="impf"&&e.target.files[0]){importData(e.target.files[0]);return}
+  const el=e.target.closest("[data-chg]");if(!el)return;const c=el.dataset.chg,v=el.dataset.v;
+  if(c==="sdate"){ui.sDate=el.value;return}
+  if(c==="goal")S.goal=+el.value;
+  else if(c==="gst"){S.games[v]=Object.assign({},S.games[v],{s:el.value})}
+  else if(c==="gpr"){S.games[v]=Object.assign({},S.games[v],{p:Math.max(0,+el.value||0)})}
+  else if(c==="pname"){S.players[+v]=el.value.trim().slice(0,24)||("Jogador "+(+v+1))}
+  else if(c==="chk"){S.checks[v]=el.checked}
+  else if(c==="curdeck"){cur().deck=el.value;cur()}
+  else if(c==="curblock"){cur().block=+el.value}
+  else if(c==="curlen"){cur().len=+el.value}
+  else if(c==="dret"){S.deckData[v]=Object.assign({},S.deckData[v],{ret:Math.max(0,Math.round(+el.value||0))})}
+  else if(c==="dtot"){S.deckData[v]=Object.assign({},S.deckData[v],{total:Math.max(0,Math.round(+el.value||0))})}
+  else if(c==="hgame"){ui.hGame=el.value;render();return}
+  save();render();
+});
+setInterval(()=>{const e=$("#tleft");if(!e||!ui.tEnd)return;const l=Math.ceil((ui.tEnd-Date.now())/1000);if(l<=0){ui.tEnd=0;e.textContent="Tempo!";}else e.textContent=l},250);
+boot();
+</script>
+</body>
+</html>

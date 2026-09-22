@@ -234,12 +234,27 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .big3 button{font:inherit;cursor:pointer;border-radius:14px;padding:.9rem .5rem;min-height:84px;display:flex;flex-direction:column;gap:.2rem;align-items:center;justify-content:center;text-align:center;border:2px solid}
 .big3 button b{font-size:1rem;line-height:1.2}.big3 button span{font-size:.85rem;opacity:.85}
-.big3 .b0{background:#fff;border-color:var(--line);color:var(--stop)}
-.big3 .b1{background:var(--wash);border-color:var(--felt);color:var(--felt-deep)}
+.big3 button .icon{font-size:1.6rem;display:block;margin-bottom:.2rem}
+.big3 .b0{background:#fef2f2;border-color:var(--line);color:var(--stop)}
+.big3 .b0:hover{box-shadow:0 4px 16px rgba(200,55,45,.2)}
+.big3 .b1{background:#f0fdf4;border-color:var(--felt);color:var(--felt-deep)}
+.big3 .b1:hover{box-shadow:0 4px 16px rgba(15,123,79,.2)}
 .big3 .b2{background:var(--felt-deep);border-color:var(--felt-deep);color:#fff}
+.big3 .b2:hover{box-shadow:0 6px 20px rgba(15,123,79,.35)}
+.big3 button:active{transform:scale(.96)}
+.start-cta{text-align:center;margin:1.2rem 0 .5rem}
+.start-cta button{font:inherit;font-size:1rem;font-weight:700;padding:.7rem 2rem;border:none;border-radius:var(--r-l);background:var(--felt);color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(15,123,79,.3);transition:box-shadow .15s}
+.start-cta button:hover{box-shadow:0 6px 24px rgba(15,123,79,.4)}
+.result-box{text-align:center;padding:1rem 0}
+.result-box .winner{font-size:1.2rem;font-weight:700;color:var(--felt);margin-bottom:.3rem}
+.result-box .final{font-size:.9rem;color:var(--muted)}
+.result-box .mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;text-align:center;margin-top:.8rem}
+.result-box .mini-stats .stat{background:var(--wash);border-radius:var(--r-s);padding:.5rem}
+.result-box .mini-stats .stat .n{font-family:"Bricolage Grotesque",sans-serif;font-size:1.3rem;font-weight:700;color:var(--felt-deep)}
+.result-box .mini-stats .stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
 .endbox{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;justify-content:space-between;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
 .endbox.hot{background:#fff8dc;border:2px solid var(--token);border-radius:12px;padding:1rem}
-@media(max-width:640px){.big3{grid-template-columns:1fr}.big3 button{min-height:62px;flex-direction:row;justify-content:space-between;padding:.7rem 1rem}.sline b{font-size:1.9rem}.sline>div{padding:.4rem .5rem;gap:.4rem}.sline span{font-size:.9rem}}
+@media(max-width:640px){.big3{grid-template-columns:1fr}.big3 button{min-height:62px;flex-direction:row;justify-content:space-between;padding:.7rem 1rem}.big3 button .icon{font-size:1.2rem;margin-bottom:0;margin-right:.3rem}.sline b{font-size:1.9rem}.sline>div{padding:.4rem .5rem;gap:.4rem}.sline span{font-size:.9rem}}
 
 .star{color:var(--token);font-size:.8em}
 
@@ -1114,7 +1129,7 @@ const retiredAll=()=>(S.retLegacy||0)+Object.keys(S.deckData).reduce((a,k)=>a+(+
 const pctOf=(a,b)=>b?Math.round(a/b*100):0;
 function vPlacar(){
   const c=cur(),D=decks(),d=D.find(x=>x.id===c.deck)||D[0],info=dd(d.id),h=DKHOW[d.kind]||DKHOW.img,ra=retiredAll();
-  const n=c.log.length,len=c.len||20,over=n>=len,turn=c.turn||0,started=n>0;
+  const n=c.log.length,len=c.len||20,over=n>=len,turn=c.turn||0,started=n>0||!!c.started;
   const left=ui.tEnd?Math.max(0,Math.ceil((ui.tEnd-Date.now())/1000)):0;if(n>0)ui.rmsg="";
   const P=[pts(c.p[0]),pts(c.p[1])],lead=P[0]===P[1]?"Empate":`${S.players[P[0]>P[1]?0:1]} venceu`;
   const instr=getInstr(c.mode,d.kind);
@@ -1131,14 +1146,26 @@ function vPlacar(){
   <section class="panel" style="margin-top:1rem" id="roundbox"><h3>Rodada</h3>${ui.rmsg?`<p class="okmsg" role="status">${esc(ui.rmsg)}</p>`:""}
     <div class="sline"><div class="${!over&&turn===0?"on":""}"><span>${esc(S.players[0])}</span><b class="num">${P[0]}</b></div><i>x</i><div class="${!over&&turn===1?"on":""}"><b class="num">${P[1]}</b><span>${esc(S.players[1])}</span></div></div>
     <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,n/len*100)}%"></i></div>
-    ${over?`<p class="turn">Rodada completa. ${esc(lead)}, ${P[0]} a ${P[1]}.</p>`
-      :`<p class="turn">Carta ${n+1} de ${len}. Quem responde agora: <b>${esc(S.players[turn])}</b></p>
-      <div class="big3"><button class="b0" data-act="tap" data-v="x"><b>Errou</b><span>0 ponto</span></button>
-      <button class="b1" data-act="tap" data-v="w"><b>${h.b1}</b><span>1 ponto</span></button>
-      <button class="b2" data-act="tap" data-v="f"><b>${h.b2}</b><span>2 pontos</span></button></div>`}
-    <div class="row" style="margin-top:.8rem;align-items:center">
-      <button class="btn ghost" data-act="undo" ${n?"":"disabled"}>Desfazer a última carta</button>
-      ${over?"":`<button class="btn ghost" data-act="timer">Relógio de 10 s</button><span class="num big" id="tleft" aria-live="polite">${left||""}</span>`}</div>
+    ${over?`<div class="result-box">
+        <div class="winner">${P[0]===P[1]?'Empate!':esc(S.players[P[0]>P[1]?0:1])+' venceu!'}</div>
+        <div class="final">${P[0]} a ${P[1]}</div>
+        <div class="mini-stats">
+          <div class="stat"><div class="n">${hit(c.p[0])+hit(c.p[1])}</div><div class="l">Acertos</div></div>
+          <div class="stat"><div class="n">${c.p[0].x+c.p[1].x}</div><div class="l">Erros</div></div>
+          <div class="stat"><div class="n">${n?Math.round((hit(c.p[0])+hit(c.p[1]))/n*100):0}%</div><div class="l">Precisão</div></div>
+        </div></div>`
+      :started?`<p class="turn">Carta ${n+1} de ${len}. Quem responde agora: <b>${esc(S.players[turn])}</b></p>
+      <div class="big3"><button class="b0" data-act="tap" data-v="x"><span class="icon">✕</span><b>Errou</b><span>0 ponto</span></button>
+      <button class="b1" data-act="tap" data-v="w"><span class="icon">✓</span><b>${h.b1}</b><span>1 ponto</span></button>
+      <button class="b2" data-act="tap" data-v="f"><span class="icon">★</span><b>${h.b2}</b><span>2 pontos</span></button></div>
+      <div class="row" style="margin-top:.8rem;align-items:center">
+      <button class="btn ghost" data-act="undo" ${n?"":"disabled"}>↩ Desfazer</button>
+      <button class="btn ghost" data-act="timer">⏱ 10 s</button><span class="num big" id="tleft" aria-live="polite">${left||""}</span></div>`
+      :`<p class="turn">Pronto para começar</p>
+      <div class="big3" style="opacity:.4;pointer-events:none"><button class="b0"><span class="icon">✕</span><b>Errou</b><span>0 ponto</span></button>
+      <button class="b1"><span class="icon">✓</span><b>${h.b1}</b><span>1 ponto</span></button>
+      <button class="b2"><span class="icon">★</span><b>${h.b2}</b><span>2 pontos</span></button></div>
+      <div class="start-cta"><button data-act="startround">Começar rodada</button></div>`}
     <div class="endbox ${over?"hot":""}">
       <div><label for="rret">Quantas cartas saíram do baralho hoje?</label><input id="rret" type="number" min="0" max="200" value="0" style="width:120px">
       <p class="small muted" style="max-width:46ch">São as que os dois acertaram sem hesitar. Elas vão para a pilha "já sei" e abrem espaço para cartas novas. Se nenhuma saiu, deixe 0.</p></div>
@@ -1222,6 +1249,7 @@ document.addEventListener("click",e=>{
   else if(a==="say"){speak(v);return}
   else if(a==="sayPT"){speakPT(v,b);return}
   else if(a==="selgame"){ui.hGame=ui.hGame===v?null:v;persist=false}
+  else if(a==="startround"){const c=cur();c.log=[];c.p=[zero(),zero()];c.turn=0;c.started=true;persist=false}
   else if(a==="addsess"){S.sessions.push({k:"s"+Date.now(),d:ui.sDate||today(),min:ui.sMin,win:ui.sWin==null?-1:ui.sWin,g:Object.keys(ui.sGames).filter(k=>ui.sGames[k])});ui.sWin=-1;if(S.sessions.length>600)S.sessions=S.sessions.slice(-600);ui.sGames={};ui.msg="Sessão registrada. A semana e as horas já foram atualizadas.";ui.tab="inicio";ui.jump=true}
   else if(a==="delsess"){S.sessions=S.sessions.filter(x=>x.k!==v)}
   else if(a==="addgame"){const n=$("#cn").value.trim();if(!n)return;S.custom.push({id:"x"+Date.now(),name:n.slice(0,80),ph:+$("#cp").value,role:$("#cr").value,src:"",en:true,q:n,note:"",cu:true})}
@@ -1229,13 +1257,13 @@ document.addEventListener("click",e=>{
   else if(a==="mode"){cur().mode=v}
   else if(a==="tap"){const c=cur(),i=c.turn||0;if(c.log.length>=(c.len||20))return;c.p[i][v]++;c.log.push([i,v]);c.turn=1-i;ui.tEnd=0;if(c.log.length>=(c.len||20))ui.jumpTo="#roundbox"}
   else if(a==="undo"){const c=cur(),l=c.log.pop();if(l){c.p[l[0]][l[1]]=Math.max(0,c.p[l[0]][l[1]]-1);c.turn=l[0]}}
-  else if(a==="zero"){const c=cur();c.p=[zero(),zero()];c.log=[];c.turn=0}
+  else if(a==="zero"){const c=cur();c.p=[zero(),zero()];c.log=[];c.turn=0;c.started=false}
   else if(a==="timer"){ui.tEnd=Date.now()+10000;persist=false}
   else if(a==="endround"){const c=cur(),P=[pts(c.p[0]),pts(c.p[1])],H=[hit(c.p[0]),hit(c.p[1])],M=[c.p[0].x,c.p[1].x],rt=Math.max(0,Math.min(200,+$("#rret").value||0));
     S.rounds.push({k:"r"+Date.now(),d:today(),deck:c.deck,mode:c.mode,block:d0blk(c),pts:P,hit:H,miss:M,ret:rt});if(S.rounds.length>300)S.rounds=S.rounds.slice(-300);
     [0,1].forEach(i=>{S.score[i]=(S.score[i]||0)+P[i];S.hits[i]=(S.hits[i]||0)+H[i];S.miss[i]=(S.miss[i]||0)+M[i]});if(P[0]!==P[1]){const w=P[0]>P[1]?0:1;S.wins[w]=(S.wins[w]||0)+1}
     if(rt){const o=dd(c.deck);S.deckData[c.deck]=Object.assign({},S.deckData[c.deck],{ret:o.ret+rt})}
-    c.p=[zero(),zero()];c.log=[];c.turn=0;const wq=weekPts(monOf(today()));ui.rmsg="Rodada salva. Disputa da semana: "+S.players[0]+" "+wq[0]+" x "+wq[1]+" "+S.players[1]+".";ui.jumpTo="#roundbox"}
+    c.p=[zero(),zero()];c.log=[];c.turn=0;c.started=false;const wq=weekPts(monOf(today()));ui.rmsg="Rodada salva. Disputa da semana: "+S.players[0]+" "+wq[0]+" x "+wq[1]+" "+S.players[1]+".";ui.jumpTo="#roundbox"}
   else if(a==="delround"){const r=S.rounds.find(x=>x.k===v);if(r){[0,1].forEach(i=>{S.score[i]=Math.max(0,(S.score[i]||0)-r.pts[i]);S.hits[i]=Math.max(0,(S.hits[i]||0)-r.hit[i]);S.miss[i]=Math.max(0,(S.miss[i]||0)-r.miss[i])});if(r.pts[0]!==r.pts[1]){const w=r.pts[0]>r.pts[1]?0:1;S.wins[w]=Math.max(0,(S.wins[w]||0)-1)}
     if(r.ret&&S.deckData[r.deck])S.deckData[r.deck].ret=Math.max(0,(S.deckData[r.deck].ret||0)-r.ret);S.rounds=S.rounds.filter(x=>x.k!==v)}}
   else if(a==="adddeck"){const n=$("#dn").value.trim();if(!n)return;const id="d"+Date.now();S.cdecks.push({id:id,name:n.slice(0,60),kind:$("#dkk").value});cur().deck=id}

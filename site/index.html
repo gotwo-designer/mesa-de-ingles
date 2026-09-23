@@ -113,6 +113,18 @@ details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif
 .sn{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:8px;background:var(--felt);color:#fff;font-weight:700;margin-right:.35rem}
 .stgb{padding:0 0 1rem;max-width:80ch}
 .chip.has{background:var(--wash);border-color:var(--felt);color:var(--felt-deep)}
+.ai-box{background:linear-gradient(135deg,#f0f7ff 0%,#e8f4e8 100%);border:1px solid #b8d4e3;border-radius:var(--r-l);padding:1.2rem;margin-bottom:1rem}
+.ai-box h2{margin:0 0 .8rem;font-size:1.15rem;display:flex;align-items:center;gap:.5rem}
+.ai-box .ai-icon{display:inline-flex;align-items:center;justify-content:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--felt);color:#fff;font-size:.85rem;flex:none}
+.ai-tip{background:#fff;border-radius:var(--r);padding:.8rem 1rem;margin-bottom:.6rem;border-left:3px solid var(--felt)}
+.ai-tip:last-child{margin-bottom:0}
+.ai-tip h4{margin:0 0 .3rem;font-size:.95rem;color:var(--felt-deep)}
+.ai-tip p{margin:0;font-size:.9rem;line-height:1.45;color:#334}
+.ai-tip .ai-stat{font-weight:600;color:var(--stop)}
+.ai-tip .ai-good{font-weight:600;color:var(--felt)}
+.ai-empty{color:#667;font-size:.9rem;font-style:italic}
+.chip.meu{background:#fff3b0;border-color:var(--token);color:#5a4800;font-weight:600}
+.chip.meu.has{background:var(--token);border-color:#d49e00;color:#3d2e00}
 ul.ok{margin:.2rem 0 .6rem;padding-left:1.2rem}
 .fix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:.3rem 1rem;padding:.6rem 0;border-top:1px solid var(--line)}
 .fix .sym{font-weight:600;color:var(--stop)}
@@ -415,9 +427,9 @@ e-prep|Preposition Island (ELI)|1|P|E|1|ELI Preposition Island|
 e-numbers|The Great Game of Numbers (ELI)|1|A|E|1|ELI Great Game of Numbers|
 c-guesswho|Guess Who? ou Cara a Cara|1|P|C|0|jogo Guess Who Cara a Cara|Qualquer edição serve: as perguntas saem da sua boca, não da caixa.
 c-zingo|Zingo (bingo de imagem e palavra)|1|A|C|1|Zingo ThinkFun english|
-c-battleship|Batalha Naval|1|A|C|0|jogo batalha naval|Qualquer edição. Treina letras e números: "B seven. Hit! Miss!"
+c-battleship|Batalha Naval|4|A|C|0|jogo batalha naval|Só rende quando vocês já conversam. Na fase 4 as coordenadas puxam conversa real.
 c-dobble|Dobble|1|A|C|0|jogo Dobble|Qualquer edição. Quem fala o nome do objeto em inglês primeiro leva a carta.
-c-uno|Uno|1|A|C|0|jogo Uno|Qualquer edição. Cores, números, "draw two", "skip", "reverse".
+c-uno|Uno|4|A|C|0|jogo Uno|Só rende a partir da fase 4, quando vocês já falam frases completas sem pensar. Antes disso a mecânica é visual demais.
 f-super2|Flashcards SuperMente, kit gramática e frases (3 caixas)|2|A|F|1|https://www.supermente.com.br/ingles/ingles-kit-2|Caixa de frases: português na frente, inglês no verso. Vale 2 pontos no placar.
 f-sent|1,000 English Sentence Flash Cards (importado)|2|A|F|1|1000 English sentence flash cards|Tiras de frases simples por tema. Só importado (Amazon).
 p-do|Simple Present: Do and Does|2|P|P|1|e|
@@ -466,7 +478,21 @@ c-unlock|Unlock! ou Exit (em inglês)|4|P|C|1|Unlock escape adventures english|
 c-trivial|Trivial Pursuit (edição em inglês)|4|A|C|1|Trivial Pursuit english|
 c-once|Once Upon a Time (em inglês)|4|C|C|1|Once Upon a Time storytelling card game|
 c-dnd|Dungeons and Dragons Starter Set (em inglês)|5|P|C|1|Dungeons Dragons Starter Set english|
-c-heavy|Um jogo pesado em texto à sua escolha (em inglês)|5|P|C|1|board game english edition|`;
+c-heavy|Um jogo pesado em texto à sua escolha (em inglês)|5|P|C|1|board game english edition|
+c-cashflow|Cashflow: Escape the Rat Race (Rich Dad)|2|P|C|1|cashflow board game rich dad|Todas as cartas, regras e decisões são em inglês. Treina vocabulário de finanças enquanto joga.
+c-stet|Stet! Dreyer's English (card game)|3|P|C|1|stet dreyers english card game|Jogo de gramática e vocabulário avançado. Cada carta tem uma pegadinha da língua inglesa.
+c-boggle|Scrabble Boggle: The 3 Minute Word Game|2|A|C|1|scrabble boggle word game|Monte palavras em 3 minutos com as letras sorteadas. Toda palavra falada em frase vale ponto extra.
+c-shouldknow|I Should Have Known That (card game)|3|P|C|1|I should have known that card game|Perguntas de conhecimento geral em inglês. Leia em voz alta, discuta e responda.
+c-murdoku|Murdoku (murder mystery puzzle)|3|P|C|1|murdoku puzzle game|Leia as pistas em inglês e resolva o crime. As pistas obrigam leitura atenta.
+c-impostor|Find the Impostor (card game)|3|C|C|1|find the impostor card game|Descubra quem está mentindo. As perguntas e respostas são todas em inglês.
+t-listen|Yumifun Listen & Think (oral comprehension cards)|1|A|T|1|yumifun listen think cards|Cartas de compreensão auditiva: ouça e responda. Treina o ouvido desde o início.
+t-animal|Cartões de Vocabulário — Animais (Temu)|1|A|T|1|animal vocabulary flash cards english|Cartas com imagem de animal na frente e nome em inglês no verso.
+t-frutveg|Cartões de Vocabulário — Frutas e vegetais (Temu)|1|A|T|1|fruit vegetable flash cards english|Cartas de frutas e vegetais com imagem e nome em inglês.
+t-80sent|80 Cartas de Construção de Frases|2|P|T|1|sentence building cards 80|80 cartas coloridas por classe de palavra para montar frases. Complementa o t-sentence.
+t-wordfam|Word Family Build Book (30 livros)|1|A|T|1|word family build book set|30 livrinhos de fonética: cada um trabalha uma família de palavras (cat, bat, hat). Treina leitura e pronúncia.
+t-phoneme|Hand2mind Talking Mirror Phoneme Set (44 sons)|1|P|T|1|hand2mind talking mirror phoneme set|Espelho falante com 44 cartas dos sons do inglês. Você vê a boca e ouve o som certo.
+p-phrasal|Phrasal Verbs (Play to Learn)|3|P|P|1|c|Jogo de tabuleiro + cartas com phrasal verbs. Obriga a usar cada um numa frase.
+p-triple|Triple Learning: Do-Does, Present Continuous, To Be (Play to Learn)|1|P|P|1|e|Caixa com 3 tabuleiros das estruturas básicas. Um por sessão.`;
 const CAT=RAW.split("\n").map(l=>{const a=l.split("|");return{id:a[0],name:a[1],ph:+a[2],role:a[3],src:a[4],en:a[5]==="1",q:a[6],note:a[7]||""}});
 const ST=["","lista","comprado","tenho","dominado"], STL={"":"Não tenho","lista":"Na lista","comprado":"Comprado, a caminho","tenho":"Tenho","dominado":"Dominado"};
 
@@ -550,13 +576,53 @@ const HOW={
  "c-trivial":{how:"Quem pergunta lê em voz alta, quem responde usa frase completa. Errar o fato não importa, o que conta é entender a pergunta.",say:["I think it's...","I have no idea.","My guess is...","Can you read it again?","Correct!"]},
  "c-once":{how:"Contem a história com conectores e interrompam de verdade, como manda a regra. Interromper em inglês exige ouvir com atenção total.",say:["Once upon a time...","Wait, that reminds me...","Meanwhile...","And they lived happily ever after."]},
  "c-dnd":{how:"Descreva suas ações em primeira pessoa e pergunte tudo ao mestre. O ideal é uma mesa online com mestre nativo: são 3 horas de conversa real por sessão.",say:["I want to...","I search the room.","I try to persuade the guard.","What do I see?","Can I roll for that?"]},
- "c-heavy":{how:"A primeira sessão é ler o manual em inglês juntos, em voz alta, e explicar as regras um para o outro. Só isso já é uma aula inteira.",say:["How does this work?","According to the rules...","So, on my turn I can...","Let me check the rulebook."]}
+ "c-heavy":{how:"A primeira sessão é ler o manual em inglês juntos, em voz alta, e explicar as regras um para o outro. Só isso já é uma aula inteira.",say:["How does this work?","According to the rules...","So, on my turn I can...","Let me check the rulebook."]},
+ "c-cashflow":{how:"Leia cada carta de evento e de mercado em voz alta. Antes de decidir, explique o raciocínio em inglês: I'm going to buy this because... O outro questiona: Are you sure? Why? No fim, cada um resume a partida em 1 minuto no passado.",say:["I want to buy this.","I can't afford it.","My cash flow is...","I received a paycheck.","Should I invest?","I'm out of the rat race!"]},
+ "c-stet":{how:"Leia a carta, decida se a frase está correta ou tem erro. Explique a sua decisão em inglês: I think this is wrong because... O outro discorda ou concorda. A discussão é o treino.",say:["Is this correct?","I think the mistake is...","No, that's actually right.","The rule says...","I'm not sure, let me think.","Stet! Keep it as is."]},
+ "c-boggle":{how:"Monte as palavras em silêncio nos 3 minutos. Depois, cada palavra encontrada tem que ser lida e usada numa frase. Palavra que ninguém conhece vai para o pote.",say:["I found...","Is that a word?","How do you spell it?","Use it in a sentence.","Time's up!"]},
+ "c-shouldknow":{how:"Um lê a pergunta em voz alta, o outro responde em frase completa. Errou? Explique o que você achava e por quê. A discussão da resposta vale mais que acertar.",say:["The answer is...","I should have known that!","I think it's...","That doesn't make sense.","Read the next one."]},
+ "c-murdoku":{how:"Leiam as pistas juntos em voz alta. Cada um monta uma teoria em inglês: I think the killer is... because... Discordem e testem até resolver.",say:["The clue says...","I think it was...","That doesn't match because...","Let's check this one.","We solved it!"]},
+ "c-impostor":{how:"Perguntem e respondam em frase completa. Quem acha o impostor explica por que suspeitou: I think you're the impostor because you said... Mentir em inglês é difícil e é isso que treina.",say:["What do you think about...?","I agree.","That sounds suspicious.","I think you're lying.","I'm not the impostor!","Let's vote."]},
+ "t-listen":{t:"flash",how:"Use com o placar de flashcards. Ouça a carta, diga o que entendeu e repita em voz alta. O outro confere."},
+ "t-animal":{t:"flash"},"t-frutveg":{t:"flash"},
+ "t-80sent":{how:"Monte frases com as cartas coloridas. Cada cor é uma classe de palavra (sujeito, verbo, objeto). Leia a frase em voz alta, o outro transforma: negativa ou pergunta. Monte pelo menos 10 frases por sessão.",say:["My sentence is...","Make it negative.","Make it a question.","Change the subject.","That doesn't make sense."]},
+ "t-wordfam":{how:"Leiam um livrinho juntos por sessão. Um lê as palavras, o outro repete e inventa uma frase com cada uma. Cat — The cat is sleeping. Bat — I saw a bat at night.",say:["This word is...","It rhymes with...","Use it in a sentence.","Read the next one.","Let's try another book."]},
+ "t-phoneme":{how:"Escolha 5 sons por sessão. Olhe no espelho, ouça o som da carta, tente imitar. O outro compara com o áudio. Sons difíceis para brasileiro: th, r, l no final, w, short i vs long e.",say:["Listen to this sound.","Try again.","Watch my mouth.","That's closer!","This one is hard."]},
+ "p-phrasal":{how:"Siga a regra da caixa. Cada phrasal verb acertado só pontua se você usar numa frase sobre a sua vida: I gave up smoking. I'm looking for a new job.",say:["What does this mean?","Use it in a sentence.","Give me an example.","I look forward to...","I ran out of...","Turn it off."]},
+ "p-triple":{t:"struct",how:"Use um tabuleiro por sessão: primeiro To Be, depois Do/Does, depois Present Continuous. Siga a regra dos jogos de estrutura. Quando os 3 ficarem automáticos, misture numa sessão só."}
 };
 function howOf(g){const h=HOW[g.id]||{};const t=TPL[h.t]||{};return{how:h.how||t.how||"Siga a regra da caixa com as regras da mesa por cima: frase completa, narrar a jogada e uma pergunta para o outro a cada rodada.",say:h.say||t.say||[]}}
 const canSpeak=(()=>{try{return "speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined"}catch(e){return false}})();
-function speak(t){if(!canSpeak)return;try{const u=new SpeechSynthesisUtterance(t.replace(/\.\.\./g," "));u.lang="en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+/* vozes: carrega lista e deixa o usuário escolher em Config */
+let _allVoices=[],_chosenEN=null,_chosenPT=null;
+function _loadVoices(){
+  if(!canSpeak)return;
+  _allVoices=speechSynthesis.getVoices();
+  /* restaura escolha salva */
+  try{
+    const se=localStorage.getItem("mesa-voz-en"),sp=localStorage.getItem("mesa-voz-pt");
+    if(se)_chosenEN=_allVoices.find(v=>v.name===se)||null;
+    if(sp)_chosenPT=_allVoices.find(v=>v.name===sp)||null;
+  }catch(e){}
+}
+if(canSpeak){speechSynthesis.onvoiceschanged=_loadVoices;_loadVoices()}
+function _pickVoice(lang){
+  if(lang==="en")return _chosenEN||null;
+  return _chosenPT||null;
+}
+function speak(t){if(!canSpeak)return;try{const u=new SpeechSynthesisUtterance(t.replace(/\.\.\./g," "));u.lang="en-US";const v=_pickVoice("en");if(v)u.voice=v;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 let _speakingPT=false;
-function speakPT(t,btn){if(!canSpeak)return;try{speechSynthesis.cancel();if(_speakingPT&&btn){_speakingPT=false;document.querySelectorAll('.play-btn').forEach(b=>b.classList.remove('speaking'));return}const u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";u.rate=.92;if(btn){btn.classList.add('speaking');_speakingPT=true}u.onend=u.onerror=()=>{_speakingPT=false;if(btn)btn.classList.remove('speaking')};speechSynthesis.speak(u)}catch(e){_speakingPT=false}}
+function speakPT(t,btn){if(!canSpeak)return;try{speechSynthesis.cancel();if(_speakingPT&&btn){_speakingPT=false;document.querySelectorAll('.play-btn').forEach(b=>b.classList.remove('speaking'));return}const u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";const v=_pickVoice("pt");if(v)u.voice=v;u.rate=.92;if(btn){btn.classList.add('speaking');_speakingPT=true}u.onend=u.onerror=()=>{_speakingPT=false;if(btn)btn.classList.remove('speaking')};speechSynthesis.speak(u)}catch(e){_speakingPT=false}}
+function voiceOptions(lang){return _allVoices.filter(v=>v.lang.startsWith(lang)).map(v=>v.name)}
+function setVoice(lang,name){
+  const v=_allVoices.find(x=>x.name===name)||null;
+  if(lang==="en"){_chosenEN=v;try{if(v)localStorage.setItem("mesa-voz-en",v.name);else localStorage.removeItem("mesa-voz-en")}catch(e){}}
+  else{_chosenPT=v;try{if(v)localStorage.setItem("mesa-voz-pt",v.name);else localStorage.removeItem("mesa-voz-pt")}catch(e){}}
+}
+function testVoice(lang){
+  const txt=lang==="en"?"Hello! This is how I sound. Do you like my voice?":"Olá! É assim que eu falo. Gostou da minha voz?";
+  if(lang==="en")speak(txt);else speakPT(txt);
+}
 function phrase(t){return `<li class="ph"><span lang="en">${esc(t)}</span>${canSpeak?`<button class="chip" data-act="say" data-v="${esc(t)}" aria-label="Ouvir: ${esc(t)}">Ouvir</button>`:""}</li>`}
 const LADDER_EXAMPLES={
  "t-talk":["Diga só a palavra: Apple.",'Fale uma frase: "It\'s an apple." E pergunte: "Do you like apples?"','Igual, mas com 10 segundos para responder.'],
@@ -565,7 +631,13 @@ const LADDER_EXAMPLES={
  "c-monopoly":['Fale o básico: "Buy." ou "Pay rent."','Frase completa: "I want to buy this property." E pergunte: "How much is the rent?"','Igual, mas com 10 segundos para cada fala.'],
  "c-dobble":['Grite o nome: "Anchor!"','Fale na frase: "I see an anchor!" E pergunte: "What did you see?"','Igual, mas com relógio — quem fala primeiro leva.'],
  "c-battleship":['Diga a coordenada: "B seven."','Frase completa: "I attack B seven." E pergunte: "Did I hit your ship?"','Igual, mas com 10 segundos por jogada.'],
- "e-picbingo":['Diga a palavra: "Dog!"','Fale na frase: "I have a dog on my card!" E pergunte: "Do you have this one?"','Igual, mas com 10 segundos para responder.']
+ "e-picbingo":['Diga a palavra: "Dog!"','Fale na frase: "I have a dog on my card!" E pergunte: "Do you have this one?"','Igual, mas com 10 segundos para responder.'],
+ "c-cashflow":['Leia a carta: "Paycheck."','Frase completa: "I received my paycheck." E pergunte: "Should I invest it?"','Igual, mas explique cada decisão em 10 segundos.'],
+ "c-stet":['Leia a frase: "Correct or wrong?"','Explique: "I think this is wrong because the verb should be..."','Igual, mas com 10 segundos para decidir.'],
+ "c-boggle":['Diga a palavra: "Cat!"','Fale na frase: "I found cat. The cat is sleeping."','Igual, mas com 10 segundos por palavra.'],
+ "c-shouldknow":['Leia e responda: "The answer is Brazil."','Frase completa: "I think the answer is Brazil because it\'s the largest country in South America."','Igual, mas com 10 segundos para responder.'],
+ "c-murdoku":['Leia a pista: "The suspect was in the kitchen."','Monte a teoria: "I think the killer is the chef because he was in the kitchen."','Igual, mas com 10 segundos por pista.'],
+ "c-impostor":['Responda curto: "I like dogs."','Frase completa: "I like dogs because they are loyal." E pergunte: "What about you?"','Igual, mas com 10 segundos para responder e defender.']
 };
 function ladder(g){const n=plays(g.id);if(g.src==="F")return null;const ex=LADDER_EXAMPLES[g.id]||LADDER_EXAMPLES["c-uno"];if(n<2)return{rule:"Pode falar palavras soltas e frases curtas. Sem relógio.",goal:"O objetivo é só aprender a regra do jogo em inglês.",example:ex[0],level:1,n:n};if(n<4)return{rule:"Agora toda fala tem que ser frase completa + uma pergunta para o jogador.",goal:"Isso força você a montar frases de verdade, não só palavras.",example:ex[1],level:2,n:n};if(n<6)return{rule:"Mesmas regras, mas agora com relógio: 10 segundos por jogada.",goal:"Treina a velocidade — pensar em inglês sem traduzir do português.",example:ex[2],level:3,n:n};return{rule:"Esse jogo já ficou fácil. Use como aquecimento de 5 minutos.",goal:"Abra o próximo jogo da lista para continuar evoluindo.",example:null,level:4,n:n}}
 function vComo(){
@@ -582,116 +654,119 @@ function vComo(){
 
 /* ---------- as 13 fases e o diagnóstico ---------- */
 const CHECK5=[
- ["Dose","Foram pelo menos 4 sessões por semana nas últimas 4 semanas? Se não, o problema é dose, não método. Não mude nada além disso."],
- ["Mesa em inglês","A partida foi mesmo em inglês ou virou jogo em português com cartas em inglês? Sem a regra da mesa, o jogo ensina só leitura."],
- ["Áudio nativo","Teve voz nativa na semana? Celular cantando cartas, clipes, professor. Dois iniciantes sozinhos não constroem ouvido."],
- ["Alguém fluente corrigindo","Sem correção, o erro vira hábito. Uma aula de conversa por semana já resolve."],
- ["Repetição","O mesmo jogo foi para a mesa 6 vezes ou mais? Trocar de jogo toda semana diverte e não automatiza nada."]
+ ["Dose","Vocês jogaram pelo menos 4 vezes por semana nas últimas 4 semanas? Se não, o problema é frequência. Não mude mais nada — só jogue mais vezes."],
+ ["Falaram inglês de verdade?","A partida foi em inglês mesmo ou virou jogo em português com cartas em inglês? Se não seguiram as regras da mesa, o jogo só ensina a ler, não a falar."],
+ ["Ouviram voz nativa?","Teve áudio de nativo na semana? Celular falando cartas, vídeos, professor online. Dois iniciantes sozinhos não treinam o ouvido."],
+ ["Alguém corrigiu vocês?","Sem correção, o erro vira hábito. Uma aula de conversa por semana com um professor nativo já resolve."],
+ ["Repetiram o mesmo jogo?","O mesmo jogo foi para a mesa 6 vezes ou mais? Trocar de jogo toda semana é divertido, mas não fixa nada."]
 ];
 const STG=[
  {n:0,t:"O idioma parece um barulho contínuo",lv:"A0 → A1",ph:1,
-  goal:"Juntar as primeiras 300 a 500 palavras de altíssima frequência e umas 10 estruturas inteiras (I want..., Can I...?, Where is...?), ligando a palavra direto à coisa, sem passar pelo português.",
-  g:["f-super1","e-picbingo","c-dobble","c-uno","c-zingo","p-fruits","p-family","p-shapes"],
+  goal:"Aprender as primeiras 300 a 500 palavras do dia a dia e umas 10 frases prontas (I want..., Can I...?, Where is...?). O truque: ligar a palavra direto à coisa, sem traduzir para o português.",
+  g:["f-super1","e-picbingo","c-dobble","c-zingo","p-fruits","p-family","p-shapes","t-listen","t-animal","t-frutveg","t-wordfam","t-phoneme","p-triple"],
   extra:["Bingo cantado pelo celular","Tapa-certo: o celular fala, quem bater primeiro na carta leva"],
-  play:"Use sempre a figura, nunca lista em português. No placar, modo imagem → inglês e uma rodada de ouvir por sessão. Toda palavra nova é ouvida no celular antes de ser falada.",
+  play:"Olhe a figura e fale em inglês — sem lista em português. Nos flashcards, use o modo imagem → inglês e faça pelo menos uma rodada só de ouvir por sessão. Antes de falar uma palavra nova, ouça no celular como ela soa.",
   ok:["Nomeia 8 de cada 10 cartas em menos de 3 segundos","Reconhece as mesmas palavras quando o celular fala, sem ver a carta","Usa 5 frases de mesa sem olhar a colinha"],
   fix:[["Esquece tudo de uma sessão para a outra","Cartas novas demais. Máximo de 5 novas por rodada, e troque 2 sessões longas por rodadas de 10 minutos todo dia."],["Sabe lendo, mas não reconhece ouvindo","Falta o modo ouvir. Bingo cantado e tapa-certo em toda sessão, antes do jogo principal."],["Continua traduzindo palavra por palavra","Tire o português de cena: tampe o verso das cartas e jogue só imagem → inglês. Tradução só quando a figura não resolver."],["Acha o vocabulário infantil e perde a vontade","Crie um baralho com as palavras da sua vida e do seu trabalho. O pote de palavras existe para isso."]]},
  {n:1,t:"Conhece palavras, mas não monta frases",lv:"A1",ph:1,
-  goal:"Trocar palavras soltas por blocos prontos: I think that..., Do you have...?, I don't think so. O bloco sai inteiro, sem montagem.",
-  g:["p-tobe","c-guesswho","e-prep","e-verbbingo","f-super2","c-battleship"],
+  goal:"Parar de falar palavra solta e começar a usar frases prontas: I think that..., Do you have...?, I don't think so. A frase tem que sair inteira, de uma vez.",
+  g:["p-tobe","c-guesswho","e-prep","e-verbbingo","f-super2"],
   extra:["Go Fish com qualquer baralho: Do you have a...? Yes, here you are. No, go fish.","As 18 frases de mesa"],
-  play:"Escolha jogos de molde fixo, em que a mesma frase se repete dezenas de vezes por partida. No baralho de frases, acertou, troca uma palavra e fala de novo: é isso que ensina o molde.",
+  play:"Escolha jogos em que a mesma frase se repete muitas vezes na partida. É a repetição que faz a frase grudar. Nos flashcards de frases, acertou uma? Troque uma palavra e fale de novo.",
   ok:["Faz as perguntas do Guess Who sem montar palavra por palavra","Usa 15 frases de mesa sem colinha","Apresenta-se em 5 frases sem travar"],
   fix:[["Monta a frase palavra por palavra","Você está jogando baralho de palavras demais. Inverta a proporção: 2 rodadas de frases para cada rodada de palavras."],["Sabe o bloco no jogo, mas ele some fora do jogo","Use o mesmo bloco em 3 jogos diferentes na mesma semana e feche toda sessão com os 2 minutos finais."],["Um fala e o outro fica calado","Regra nova: quem jogar calado compra uma carta ou perde a vez. Narrar a jogada passa a ser obrigatório."]]},
  {n:2,t:"Forma frases, mas fala devagar",lv:"A1 → A2",ph:2,
-  goal:"Automaticidade. Encontrar as mesmas estruturas centenas de vezes até não precisar mais calcular a gramática.",
-  g:["p-do","p-cont","p-can","p-goingto","p-did","p-was","c-monopoly","c-life","c-clue","e-fullstop","c-cubes","p-begq"],
+  goal:"Falar sem parar para pensar na gramática. A ideia é repetir as mesmas frases tantas vezes que elas saem sozinhas.",
+  g:["p-do","p-cont","p-can","p-goingto","p-did","p-was","c-monopoly","c-life","c-clue","e-fullstop","c-cubes","p-begq","c-cashflow","c-boggle","t-80sent"],
   extra:["Relógio de 10 segundos do placar"],
-  play:"Um jogo de estrutura por vez, 6 sessões cada, e o anterior vira aquecimento. Da terceira sessão em diante entra o relógio. No Monopoly e no Game of Life, narre tudo no passado no fim da partida.",
+  play:"Foque em um jogo por vez e jogue pelo menos 6 sessões antes de trocar. O jogo anterior vira aquecimento. Da terceira sessão pra frente, ligue o relógio. No Monopoly e no Game of Life, contem no fim o que aconteceu na partida — tudo no passado.",
   ok:["As frases do jogo saem em menos de 3 segundos","Conta o que fez ontem em 5 frases, sem pausa longa","Usa passado e futuro sem parar para pensar na regra"],
   fix:[["Continua calculando gramática a cada frase","Trocou de jogo cedo demais. Volte e fique 6 sessões no mesmo. Nesta fase repetição vale mais que variedade."],["Trava quando o relógio entra","Comece com 20 segundos, depois 15, depois 10. O relógio tem que apertar, não paralisar."],["Erra sempre a mesma estrutura","O jogo daquela estrutura volta como aquecimento por 2 semanas, e o erro vai para o professor."],["Muitas pausas com uh","Aprenda 4 frases para ganhar tempo: Well..., Let me think, You know, How can I say this? Pausa preenchida em inglês também é fluência."]]},
  {n:3,t:"Consegue falar, mas não entende as pessoas",lv:"A2",ph:2,
-  goal:"Construir o vocabulário auditivo: reconhecer no som o que você já conhece no papel, com redução e ligação entre palavras (gonna, wanna, whaddaya).",
+  goal:"Treinar o ouvido. Você já conhece muita coisa lendo, mas não reconhece quando alguém fala — porque na vida real gonna, wanna e whaddaya parecem outra língua.",
   g:["e-travel","c-hedbanz","c-guesswho"],
   extra:["Jogo do clipe: toquem 5 a 10 segundos de uma série ou vídeo, cada um escreve o que ouviu, revelem a legenda em inglês, 1 ponto por palavra certa","Baralho de reduções: gonna, wanna, gotta, lemme, kinda, dunno, whaddaya. Frente como se fala, verso como se escreve","Guess Who e Hedbanz com o professor, por vídeo, em velocidade normal"],
-  play:"Aviso honesto: tabuleiro entre dois iniciantes não resolve esta fase, porque falta voz nativa. A mesa precisa de áudio real. Todo baralho novo entra primeiro no modo ouvir, e o jogo do clipe vira o jogo principal por algumas semanas.",
+  play:"Aviso importante: dois iniciantes jogando sozinhos não resolvem esta fase. Vocês precisam de áudio de verdade — voz de gente nativa. Todo baralho novo começa no modo ouvir, e o jogo do clipe (ouvir um trecho de série e escrever o que entendeu) vira o exercício principal por algumas semanas.",
   ok:["Entende o professor em ritmo normal em assuntos conhecidos","Reconhece gonna, wanna e gotta sem legenda","Faz 6 pontos ou mais em 10 no jogo do clipe com vídeos para estudantes"],
   fix:[["Entende lendo a legenda, mas não sem ela","Seu vocabulário visual está muito à frente do auditivo. Por um mês, baralho novo só entra pelo modo ouvir."],["Entende o professor, mas não vídeo","O professor adapta a fala para você. Peça velocidade normal e use clipes de gente real, não de aula."],["Pega palavras soltas e perde a frase","Dite frases curtas inteiras no jogo do clipe, não palavras. Repitam o mesmo clipe 3 vezes antes de revelar."],["Nada disso move o ponteiro","Esta fase é de volume. Some 15 minutos por dia de áudio fácil no carro ou no banho. Não é estudo, é exposição, e sem ela o ouvido não fecha."]]},
  {n:4,t:"Começa a entender sem traduzir",lv:"A2 → B1",ph:3,
-  goal:"Entender direto, em blocos, e começar a antecipar o fim da frase antes de ela terminar.",
-  g:["c-taboo","c-duet","e-five","p-conv","p-story","c-hedbanz","e-sayit"],
+  goal:"Entender sem precisar traduzir na cabeça. Você começa a adivinhar como a frase vai terminar antes de a pessoa acabar de falar.",
+  g:["c-taboo","c-duet","e-five","p-conv","p-story","c-hedbanz","e-sayit","c-shouldknow","c-murdoku","c-impostor"],
   extra:["Complete a frase: um lê o começo de uma carta de frase (I don't know what you're...), o outro completa. Completou de um jeito natural, 2 pontos","Dobble de frases: só leva a carta quem disser uma frase com o objeto"],
-  play:"Jogos rápidos demais para dar tempo de traduzir. A partir daqui o modo inglês → português sai do placar de vez: ele mantém o português no meio do caminho.",
+  play:"Agora os jogos são rápidos demais para dar tempo de traduzir na cabeça — e é exatamente esse o ponto. Tire o modo inglês → português dos flashcards: ele só atrasa porque mantém o português no meio do caminho.",
   ok:["Entende as frases de mesa e do professor sem passar pelo português","Completa começos de frase comuns","Descreve uma carta do Taboo no modo fácil"],
   fix:[["Ainda traduz tudo na cabeça","Aperte o relógio e corte o português dos baralhos. Tradução é hábito de velocidade baixa: some quando não dá tempo."],["Não consegue antecipar nada","Falta ver os mesmos padrões repetidos. Reassista aos mesmos clipes e episódios em vez de sempre buscar coisa nova."],["Entende, mas responde em português na cabeça","Narre a jogada em voz alta o tempo todo. Fala contínua puxa o pensamento para o inglês."]]},
  {n:5,t:"Conversa, mas só dentro da zona de conforto",lv:"B1",ph:3,
-  goal:"Ampliar os assuntos e trocar o inglês correto porém estranho pelo inglês natural.",
-  g:["p-conv","p-countries","c-scatter","c-a2a","c-dixit","c-justone","p-story","c-wordup","e-idioms"],
+  goal:"Falar sobre qualquer assunto, não só os de sempre. E trocar o inglês que está certo mas soa esquisito pelo inglês que um nativo usaria.",
+  g:["p-conv","p-countries","c-scatter","c-a2a","c-dixit","c-justone","p-story","c-wordup","e-idioms","c-stet","p-phrasal"],
   extra:["Tema sorteado: 20 temas difíceis num saquinho, sorteia um, 2 minutos falando, o outro faz 2 perguntas","Pote de frases naturais: make a decision, take a break, it depends on..."],
-  play:"Nos jogos de defender e contestar (Scattergories, Apples to Apples), a discussão vale mais que a resposta. Todo mês, grave 2 minutos falando e mande para o professor com a pergunta: como um nativo diria isso?",
+  play:"Nos jogos de discussão (Scattergories, Apples to Apples), o debate vale mais que a resposta certa. Todo mês, grave 2 minutos falando sobre qualquer coisa e mande para o professor perguntando: como um nativo diria isso?",
   ok:["Sustenta 20 minutos num tema novo, contornando as palavras que faltam","O professor corrige mais naturalidade do que gramática","Faz uma sessão inteira sem português"],
   fix:[["Só fala dos mesmos assuntos","Tema repetido na mesma semana fica proibido. O saquinho de temas decide, não vocês."],["Frases corretas, mas que soam estranhas","Isso só se resolve com alguém fluente corrigindo. Aumente as aulas de conversa e guarde cada correção no pote de frases naturais."],["Acomodou e parou de evoluir","É o platô do intermediário. Traga uma terceira pessoa para a mesa e suba um degrau nos jogos, mesmo com desconforto."]]},
  {n:6,t:"O problema passa a ser velocidade",lv:"B1 → B2",ph:4,
-  goal:"Acompanhar conversa real: rápida, imprevisível, com interrupção, humor e mudança de assunto.",
-  g:["c-catan","c-unlock","c-taboo","c-balder","c-once","c-trivial"],
+  goal:"Acompanhar conversa de verdade: rápida, cheia de interrupção, piada e mudança de assunto sem aviso.",
+  g:["c-catan","c-unlock","c-taboo","c-balder","c-once","c-trivial","c-uno","c-battleship"],
   extra:["Mesas com 3 ou mais pessoas, presenciais ou online com voz","Jogo do clipe com conversa espontânea: podcast de bate-papo, talk show, reality"],
-  play:"Mais gente na mesa significa várias vozes e interrupções de verdade. Taboo na regra oficial, Unlock com o cronômetro correndo. É aqui que as horas de exposição real passam a pesar mais que qualquer jogo.",
+  play:"Chamem mais gente para a mesa — 3, 4 pessoas. Com várias vozes ao mesmo tempo, vocês treinam interrupção e velocidade de verdade. Joguem Taboo na regra oficial e Unlock com o cronômetro apertando. A partir daqui, ouvir inglês todo dia pesa mais do que qualquer jogo.",
   ok:["Acompanha conversa de 3 pessoas perdendo pouco","Responde sem pedir para repetir","Entende 80% de um podcast de conversa sobre assunto conhecido"],
   fix:[["Entende vídeo didático, mas não conversa espontânea","Troque a fonte dos clipes. Saia dos canais para estudantes e vá para gente conversando de verdade."],["Se perde quando interrompem ou mudam de assunto","Once Upon a Time e jogos de negociação treinam exatamente isso. Jogue com 3 ou mais."],["Os jogos estão em dia e o ouvido não acompanha","Falta volume. Esta fase pede perto de 1 hora por dia de inglês real nos ouvidos. Jogo sozinho não entrega essa quantidade."]]},
  {n:7,t:"Começa a pensar em inglês",lv:"B2",ph:4,
-  goal:"A resposta nasce em inglês, e quando falta uma palavra você contorna: the thing you use to climb up to the roof.",
+  goal:"A resposta já nasce em inglês na sua cabeça. Quando falta uma palavra, você não trava — você contorna: the thing you use to climb up to the roof.",
   g:["c-taboo","c-justone","c-sherlock","c-duet","p-solve","p-adv"],
   extra:["Sessão inteira em inglês, do oi ao tchau, uma vez por semana","Dicionário proibido durante a partida: só depois"],
-  play:"Taboo é literalmente o treino de contornar palavra que falta. Os moldes It's a thing that..., You use it to... têm que estar automáticos. No Sherlock, as teorias são discutidas só em inglês.",
+  play:"Taboo é perfeito para isso: você tem que explicar sem usar a palavra proibida, e acaba aprendendo a descrever qualquer coisa. Pratiquem frases como It's a thing that..., You use it to... até elas saírem sem pensar. No Sherlock, discutam as teorias só em inglês.",
   ok:["A resposta a perguntas simples surge sem tradução","Descreve um objeto sem saber o nome e o outro entende","Quase não para a conversa por falta de palavra"],
   fix:[["Trava sempre que falta uma palavra","Os moldes de descrição não estão automáticos. Duas semanas de Taboo como aquecimento diário."],["Na mesa pensa em inglês, fora dela volta ao português","Narre o que está fazendo por 5 minutos ao dia, em voz alta ou mentalmente. Não é estudo, é hábito."]]},
  {n:8,t:"Conversa confortável, personalidade limitada",lv:"B2",ph:4,
-  goal:"Ser você em inglês: contar histórias, fazer piada, discordar com educação, persuadir, mudar o tom.",
+  goal:"Ser você mesmo em inglês. Contar uma história engraçada, discordar sem parecer grosso, fazer piada, convencer alguém — tudo isso com personalidade.",
   g:["c-balder","c-once","c-a2a","c-dixit","c-cubes","p-biz","c-dnd"],
   extra:["Baralho de reações: Fair enough. That makes sense. I see where you're coming from. I wouldn't necessarily say that. No way! You're kidding. Cada uma usada com naturalidade na partida vale 1 ponto","Jogos de blefe com grupo: The Resistance, Lobisomem","Debate sorteado: defender por 2 minutos o lado de que você discorda"],
-  play:"Jogos de blefe, persuasão e história obrigam a usar tom, ironia e discordância. No RPG, interpretar um personagem dá permissão para testar vozes e registros que você ainda não usa.",
+  play:"Jogos de blefe e de contar histórias forçam vocês a usar tom de voz, ironia e discordância — coisas que o inglês básico não pede. No RPG, interpretar um personagem dá liberdade para testar jeitos de falar que você ainda não ousou.",
   ok:["Faz a mesa rir em inglês","Discorda sem soar grosseiro","Conta uma história de 3 minutos que prende quem ouve"],
   fix:[["Soa robótico, só transmite informação","Baralho de reações em toda partida, até elas saírem sem pensar."],["Não consegue contar histórias","Use uma estrutura fixa: situação, problema, virada, fim. Story Cubes, 2 minutos, todo dia de jogo."],["Evita discordar ou interromper","Jogos de blefe e debate sorteado tiram a escolha: a regra obriga."]]},
  {n:9,t:"O ouvido dá um salto",lv:"B2 → C1",ph:5,
-  goal:"Prever. O cérebro preenche o que não ouviu direito usando contexto e padrão, como um nativo em ambiente barulhento.",
+  goal:"Seu cérebro começa a preencher sozinho o que não ouviu direito, usando o contexto — igual um nativo faz num bar barulhento.",
   g:["c-dnd","c-heavy","c-sherlock"],
   extra:["Pause e preveja: pausa o vídeo no meio da frase, cada um aposta como ela termina, 1 ponto para quem chegar mais perto","Mesas com nativos, online com voz","Filmes e séries já vistos, agora sem legenda"],
-  play:"Esta fase é quase toda volume de exposição, centenas de horas. Os jogos servem para manter o hábito prazeroso e para treinar previsão de propósito.",
+  play:"Aqui o que mais importa é quantidade: centenas de horas ouvindo inglês real. Os jogos mantêm o hábito gostoso e treinam essa previsão de propósito.",
   ok:["Séries em velocidade normal ficam confortáveis","Entende em ambiente com ruído","Acerta o fim da frase no pause e preveja na maioria das vezes"],
   fix:[["Filmes ainda parecem rápidos","Falta quantidade. Não existe atalho aqui: mais horas, de preferência de conteúdo que você veria de qualquer jeito."],["Entende um sotaque só","Varie de propósito: americano, britânico, australiano, canadense."],["Depende da legenda","Escada: legenda em inglês, depois sem legenda em coisa já vista, depois sem legenda em coisa nova."]]},
  {n:10,t:"Pronúncia vira ritmo",lv:"B2 → C1",ph:5,
-  goal:"Sair do som de cada palavra para stress, redução e ligação. I WANT to GO to the STORE: nem toda palavra tem a mesma força.",
+  goal:"Parar de falar cada palavra com a mesma força e aprender o ritmo do inglês. I WANT to GO to the STORE — as palavras importantes são mais fortes, as outras quase somem.",
   g:["c-sherlock","c-once","c-dnd","c-monopoly"],
   extra:["Duelo de shadowing: 10 segundos de fala nativa, cada um imita e grava, o outro ou o professor vota em quem chegou mais perto","Jogo das tônicas: leia uma carta batendo na mesa só nas palavras fortes","Ler cartas e casos em voz alta com voz de narrador"],
-  play:"Qualquer carta com texto vira treino de ritmo quando lida em voz alta com intenção. O duelo de shadowing é o jogo principal desta fase, e a gravação é o juiz.",
+  play:"Qualquer carta com texto vira treino de ritmo quando lida em voz alta com vontade. O exercício principal é o duelo de shadowing: ouvir 10 segundos de um nativo e imitar. Gravem e comparem — a gravação é o juiz.",
   ok:["Nativos param de pedir para repetir","Sua gravação tem palavras fortes e fracas, não tudo igual","Reduz to, for, and, of sem pensar"],
   fix:[["Pronuncia todas as palavras com a mesma força","Marque as tônicas nas cartas de frase e exagere no contraste. Parece teatral para você e soa normal para o nativo."],["Não percebe o próprio ritmo","Sem ouvido externo não anda. Aulas com foco em pronúncia, e gravar e comparar toda semana."]]},
  {n:11,t:"Entende quase tudo, com alguns buracos",lv:"C1",ph:5,
-  goal:"Tapar buracos por área. Entender 100% de tudo não é meta: nem nativo entende.",
+  goal:"Você já entende quase tudo, mas tem buracos em alguns assuntos. A meta não é entender 100% — nem nativo entende tudo.",
   g:["c-trivial","c-heavy","p-biz","c-sherlock"],
   extra:["Um baralho do pote por área: negócios, anúncios, saúde, finanças","Jogos temáticos pesados: economia, ciência, história"],
-  play:"Escolha jogos e conteúdos pela área onde o buraco apareceu. O pote de palavras passa a ser organizado por assunto.",
+  play:"Escolha jogos e conteúdos do assunto onde você sente que falta vocabulário — negócios, saúde, tecnologia. O pote de palavras agora é organizado por assunto.",
   ok:["Os buracos são de área específica, não de palavra comum","Trabalha e faz reunião em inglês sem preparação"],
   fix:[["Ainda faltam palavras comuns","Falta leitura. Livro e artigo longo trazem o vocabulário raro que conversa e jogo não trazem."],["Os buracos são sempre na mesma área","Monte o baralho daquela área e jogue 2 semanas só com ele."]]},
  {n:12,t:"Fluência avançada",lv:"C1 / C2",ph:5,
-  goal:"O idioma deixa de ser o obstáculo. Reformular, argumentar, brincar com a língua, ajustar o registro.",
+  goal:"O inglês deixa de ser obstáculo. Você reformula, argumenta, brinca com as palavras e ajusta o tom conforme a situação — como faz em português.",
   g:["c-dnd","c-heavy","c-balder"],
   extra:["Mestrar uma mesa ou ensinar as regras de um jogo para nativos: é a prova final","Palavras cruzadas crípticas e jogos de trocadilho"],
-  play:"Manutenção prazerosa. A mesa com nativos vira parte da vida, não do plano de estudo.",
+  play:"Agora é manutenção — e tem que ser gostosa. A mesa com nativos vira parte da sua vida, não mais um dever de casa.",
   ok:["Explica regras complexas para nativos sem que eles adaptem a fala","Percebe ironia e muda de registro conforme a situação"],
   fix:[["Sente que regrediu","É falta de uso, não de capacidade. Uma mesa por semana em inglês segura o nível."]]}
 ];
-function gref(id){const g=all().find(x=>x.id===id);if(!g)return"";const o=owned(id);return `<span class="chip ${o?"has":""}" style="cursor:default">${esc(g.name)}${o?", tenho":""}</span>`}
+/* jogos que já temos em casa — destacados em amarelo nas fases */
+const MEUS=new Set(["c-cashflow","c-stet","c-boggle","c-shouldknow","c-murdoku","c-impostor","t-listen","t-animal","t-frutveg","t-80sent","t-wordfam","t-phoneme","p-phrasal","p-triple"]);
+function gref(id){const g=all().find(x=>x.id===id);if(!g)return"";const o=owned(id);const m=MEUS.has(id);return `<span class="chip ${o?"has":""} ${m?"meu":""}" style="cursor:default">${esc(g.name)}${o?" ✔":""}</span>`}
 function vFases(){
-  return `<section class="panel soft"><h2>Antes de culpar a fase: 5 perguntas</h2>
-    <p class="small muted">Quase todo "não está funcionando" cai numa destas. Mude uma coisa por vez, mantenha por 2 semanas e só então reavalie. Se a dose estiver em dia por 8 a 12 semanas e ainda parecer que nada mudou, faça o EF SET: muitas vezes o progresso existe e só não é visível de dentro.</p>
+  return `<section class="panel soft"><h2>Sente que travou? Responda estas 5 perguntas primeiro</h2>
+    <p class="small muted">Quase sempre o problema está numa delas. Mude uma coisa de cada vez e espere 2 semanas antes de mudar outra. Se depois de 8 a 12 semanas ainda parecer que nada mudou, faça a prova EF SET — muitas vezes o progresso existe, mas você não percebe de dentro.</p>
     <ol class="rules">${CHECK5.map(c=>`<li><b>${c[0]}.</b> ${esc(c[1])}</li>`).join("")}</ol></section>
   <p class="small muted" style="margin:1rem 0 .4rem">As 13 fases do seu texto, agrupadas nas 5 fases do painel. As da fase atual abrem sozinhas.</p>
+  <p class="small" style="margin:0 0 .6rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center"><span class="chip meu" style="cursor:default;font-size:.78rem">Já temos</span> <span class="chip" style="cursor:default;font-size:.78rem">Ainda não temos</span></p>
   ${STG.map(x=>`<details class="stg" ${x.ph===S.phase?"open":""}><summary><span class="num sn">${x.n}</span> ${esc(x.t)} <span class="tag">${x.lv}</span> <span class="tag">painel: fase ${x.ph}</span></summary>
     <div class="stgb"><p><b>O que está sendo construído.</b> ${esc(x.goal)}</p>
     <p><b>Jogos.</b></p><div class="chips">${x.g.map(gref).join("")}</div>
     ${x.extra.length?`<ul class="clean small">${x.extra.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`:""}
-    <p><b>Como jogar nesta fase.</b> ${esc(x.play)}</p>
+    <p><b>Como jogar nesta fase.</b></p><div class="fc-instr"><button class="play-btn" data-act="sayPT" data-v="${esc(x.play)}" aria-label="Ouvir">&#9654;</button><div class="fc-text">${esc(x.play)}</div></div>
     <p><b>Sinais de que funcionou.</b></p><ul class="ok">${x.ok.map(o=>`<li>${esc(o)}</li>`).join("")}</ul>
     <p><b>Se não funcionou.</b></p><div class="fixes">${x.fix.map(f=>`<div class="fix"><div class="sym">${esc(f[0])}</div><div>${esc(f[1])}</div></div>`).join("")}</div></div></details>`).join("")}`;
 }
@@ -767,7 +842,7 @@ function pSessions(){return `<details class="stg"><summary>Sessões registradas 
 function vInicio(){
   const a=nextAction(),p=PH[S.phase-1],h=hours(),base=S.phase>1?PH[S.phase-2].h:0,pct=Math.max(0,Math.min(100,Math.round((h-base)/(p.h-base)*100)));
   const nb=nextBuy(),no=nextOpen();
-  return msg()+intro("Início","Aqui você vê como está a sua semana e qual é o próximo passo. Na dúvida sobre o que fazer, siga o cartão verde.")+
+  return msg()+intro("Início","Como está a sua semana e o que fazer agora. Na dúvida, siga o cartão verde.")+
   `<section class="cta"><p class="small">O que fazer agora</p><h3>${esc(a.t)}</h3><p>${esc(a.p)}</p><button class="btn inv" data-act="tab" data-v="${a.tab}">${a.b}</button></section>
   ${pLeague()}
   <div class="grid g2" style="margin-top:1rem">${pWeek()}
@@ -819,7 +894,7 @@ function pRegister(){
 function vJogar(){
   const sg=suggest(),m=ui.jmode||"caixa";
   const item=(lab,g,alt,nob)=>`<li><span class="muted small">${lab}</span><br><b>${g?esc(g.name):alt}</b> ${g&&g.src!=="F"?`<button class="chip" data-act="openg" data-v="${esc(g.id)}">Ver como jogar</button>`:(nob&&!g?"":`<button class="chip" data-act="openf">Abrir o placar</button>`)}</li>`;
-  return msg()+intro("Jogar","Deixe esta tela aberta no celular durante a partida. São 3 passos: escolher o que vai para a mesa, jogar com as instruções abertas e registrar a sessão no fim.")+
+  return msg()+intro("Jogar","Deixe esta tela aberta no celular durante a partida. São 3 passos simples: escolher o jogo, jogar com as instruções na mão e registrar no fim.")+
   step(1,"Escolher o que vai para a mesa","A sugestão usa só os jogos que você marcou como Tenho e puxa o que está há mais tempo parado. É sugestão: pode trocar.")+
   (sg.n?`<section class="panel soft"><ul class="clean">${item("5 min de aquecimento",sg.warm,"Rodada rápida de flashcards")}${item("25 a 30 min de jogo principal",sg.main,"Nenhum jogo principal desta fase em casa ainda",true)}${item("5 a 10 min de fechamento",sg.close,"Flashcards com placar")}</ul></section>`
         :`<section class="panel soft"><p>Ainda não há jogos marcados como Tenho, então não dá para sugerir. Marque na tela Comprar. Enquanto isso, o Pote de palavras e os flashcards já funcionam no passo 2.</p><button class="btn ghost" data-act="tab" data-v="comprar">Abrir Comprar</button></section>`)+
@@ -830,16 +905,30 @@ function vJogar(){
 }
 function vComprar(){
   if(ui.fPhase<0)ui.fPhase=S.phase;
-  return intro("Comprar","Sua lista de compras, separada por fase. Comece pela fase em que você está e compre 3 a 4 jogos por vez.")+
+  return intro("Comprar","Todos os jogos, separados por fase. Comece comprando 3 ou 4 da sua fase atual e vá ampliando.")+
   `<section class="panel" style="margin-bottom:1rem"><h3>O que significa cada situação</h3><ul class="clean small">
     <li><b>Não tenho.</b> Ainda não decidi comprar.</li><li><b>Na lista.</b> Quero comprar.</li><li><b>Comprado, a caminho.</b> Já paguei, ainda não chegou.</li>
     <li><b>Tenho.</b> Está em casa. Só estes aparecem nas sugestões da tela Jogar.</li><li><b>Dominado.</b> Ficou fácil. Passa a ser sugerido como aquecimento.</li></ul></section>`+vJogos();
 }
 function vEvoluir(){
   const p=PH[S.phase-1];
-  return intro("Evoluir",`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Esta tela responde 3 perguntas: já posso subir de fase, como está o meu nível na prova, e o que ajustar se eu travei.`)+
-  step(1,"Já posso subir de fase? E a prova?","Marque no checklist só o que já acontece na mesa sem esforço. A prova é um termômetro a cada 3 meses, sem estudar para ela.")+vNivel()+
-  step(2,"Travei. O que eu ajusto?","Comece pelas 5 perguntas. Depois abra a fase em que você se reconhece e procure o seu sintoma. As do seu nível já vêm abertas.")+vFases();
+  return intro("Evoluir",`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Aqui você descobre se já pode subir de fase, como anda o seu nível e o que fazer se sentir que travou.`)+
+  step(1,"Já posso subir de fase?","Marque só o que você já faz na mesa sem precisar pensar. A cada 3 meses, faça a prova EF SET para medir o seu nível — sem estudar para ela.")+vNivel()+
+  step(2,"Travei. O que eu mudo?","Comece pelas 5 perguntas abaixo. Depois abra a fase que mais parece com você e procure o que está sentindo. As fases do seu nível já vêm abertas.")+vFases()+
+  step(3,"Treinar com professor nativo","Dois iniciantes sozinhos constroem vocabulário, mas não constroem ouvido nem pronúncia. Um professor nativo corrige o que o jogo não corrige.")+vProfessor();
+}
+function vProfessor(){
+  const sites=[
+    {name:"italki",url:"https://www.italki.com",desc:"Professores e tutores de inglês do mundo todo. Dá para filtrar por preço, sotaque e horário. A partir de US$ 5 por aula."},
+    {name:"Cambly",url:"https://www.cambly.com",desc:"Conversa com nativos sem hora marcada. Bom para treinar escuta e fluência. Planos semanais a partir de US$ 6."},
+    {name:"Preply",url:"https://preply.com",desc:"Professores com perfil detalhado e vídeo de apresentação. Primeira aula com garantia de troca. A partir de US$ 5."},
+    {name:"Verbling",url:"https://www.verbling.com",desc:"Aulas ao vivo com professores certificados. Interface simples e agenda integrada."},
+    {name:"EngVid",url:"https://www.engvid.com",desc:"Aulas gratuitas em vídeo com professores nativos. Não é ao vivo, mas explica gramática e pronúncia de um jeito claro."}
+  ];
+  return `<section class="panel soft"><h3>Por que um professor nativo?</h3>
+    <p>Os jogos dão repetição e vocabulário. O professor dá três coisas que o jogo sozinho não dá: correção de pronúncia na hora, escuta de voz real em velocidade normal e feedback sobre o que soa estranho mesmo estando gramaticalmente certo.</p>
+    <p class="small muted">Uma aula de 30 minutos por semana já faz diferença. Use os jogos para praticar entre as aulas.</p></section>
+    <div class="grid g2">${sites.map(s=>`<section class="panel"><h3>${esc(s.name)}</h3><p class="small">${esc(s.desc)}</p><a href="${s.url}" target="_blank" rel="noopener" class="btn ghost" style="margin-top:.4rem;display:inline-block;text-decoration:none">Abrir ${esc(s.name)} ↗</a></section>`).join("")}</div>`;
 }
 const GTABS2=[
  ["inicio","Início","Abra quando pegar o celular, antes de qualquer coisa.","Mostra a semana, as horas jogadas e um cartão verde com o próximo passo. Se você só abrir uma tela, abra esta.",
@@ -874,6 +963,13 @@ function vAjuda(){
   <details class="stg"><summary>A sugestão do passo 1 está vazia</summary><div class="stgb"><p>Ela só usa jogos com situação Tenho ou Dominado, da sua fase ou de fases anteriores. Marque na tela Comprar.</p></div></details>
   <details class="stg"><summary>Registrei algo errado</summary><div class="stgb"><p>Sessões, rodadas e provas têm um botão apagar ao lado. Apagar uma rodada corrige os totais sozinho.</p></div></details>
   <details class="stg"><summary>O botão Ouvir não aparece</summary><div class="stgb"><p>O navegador não tem voz em inglês disponível. Abra o painel no Chrome ou no Safari atualizados.</p></div></details>
+  <details class="stg"><summary>Escolher a voz do áudio</summary><div class="stgb"><p>Seu aparelho pode ter vozes melhores instaladas. Escolha abaixo e toque em Testar para ouvir a diferença.</p>
+    <div style="margin:.6rem 0"><label for="voz-en" class="small muted" style="display:block;margin-bottom:.2rem">Voz em inglês</label>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><select id="voz-en" style="flex:1;min-width:180px" data-chg="vozen"><option value="">Padrão do aparelho</option></select><button class="btn ghost" data-act="testvoz" data-v="en" style="white-space:nowrap">Testar</button></div></div>
+    <div style="margin:.6rem 0"><label for="voz-pt" class="small muted" style="display:block;margin-bottom:.2rem">Voz em português</label>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><select id="voz-pt" style="flex:1;min-width:180px" data-chg="vozpt"><option value="">Padrão do aparelho</option></select><button class="btn ghost" data-act="testvoz" data-v="pt" style="white-space:nowrap">Testar</button></div></div>
+    <p class="small muted">No Android: Configurações → Idioma → Conversão de texto em voz → instale o Google TTS para ter vozes mais naturais.</p>
+  </div></details>
   <details class="stg"><summary>Quero zerar o placar</summary><div class="stgb"><p>Jogar, passo 2, Flashcards, Placar geral, Zerar placar geral. A pilha já sei de cada baralho continua: para zerar, digite 0 em Meus baralhos.</p></div></details>`;
 }
 
@@ -986,7 +1082,12 @@ function importData(file){const fr=new FileReader();fr.onload=()=>{try{const d=J
 
 /* ---------- render ---------- */
 function players(){const el=$("#players");if(document.activeElement&&el.contains&&el.contains(document.activeElement))return;el.innerHTML=[0,1].map(i=>`<div><label for="pn${i}">Jogador ${i+1}</label><input id="pn${i}" maxlength="24" value="${esc(S.players[i])}" data-chg="pname" data-v="${i}"></div>`).join("")}
-function render(){if(closeWeeks())save();players();track();tabs();const v=$("#view");v.innerHTML=(({inicio:vInicio,jogar:vJogar,comprar:vComprar,evoluir:vEvoluir,resultados:vResultados,ajuda:vAjuda})[ui.tab]||vInicio)();if(ui.tab==="resultados")drawCharts();}
+function render(){if(closeWeeks())save();players();track();tabs();const v=$("#view");v.innerHTML=(({inicio:vInicio,jogar:vJogar,comprar:vComprar,evoluir:vEvoluir,resultados:vResultados,ajuda:vAjuda})[ui.tab]||vInicio)();if(ui.tab==="resultados")drawCharts();if(ui.tab==="ajuda")_populateVoiceSelects();}
+function _populateVoiceSelects(){
+  const se=$("#voz-en"),sp=$("#voz-pt");if(!se||!sp)return;
+  voiceOptions("en").forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;if(_chosenEN&&_chosenEN.name===n)o.selected=true;se.appendChild(o)});
+  voiceOptions("pt").forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;if(_chosenPT&&_chosenPT.name===n)o.selected=true;sp.appendChild(o)});
+}
 function track(){
   const p=PH[S.phase-1];
   $("#track").innerHTML=PH.map(x=>`<button class="sq ${x.n<S.phase?"done":""} ${x.n===S.phase?"cur":""}" data-act="tab" data-v="evoluir" aria-label="Fase ${x.n}, ${x.t}, ${x.lv}${x.n===S.phase?", fase atual":""}">${x.n===S.phase?'<svg class="pawn" viewBox="0 0 20 26" aria-hidden="true"><circle cx="10" cy="6" r="5" fill="#f2b705"/><path d="M3 25c0-8 3-12 7-12s7 4 7 12z" fill="#f2b705"/></svg>':""}<div class="n">${x.n}</div><div class="t">${x.t}</div><div class="lv">${x.lv}</div></button>`).join("");
@@ -1249,6 +1350,72 @@ function vNivel(){
 }
 
 /* ---------- resultados ---------- */
+function buildAnalysis(){
+  const rounds=S.rounds||[];
+  if(rounds.length<3)return `<div class="ai-box"><h2><span class="ai-icon">&#9733;</span> Análise inteligente</h2><p class="ai-empty">Jogue pelo menos 3 rodadas de flashcards para a análise aparecer aqui.</p></div>`;
+  // aggregate by deck and mode per player
+  const byDeck={},byMode={};
+  rounds.forEach(r=>{
+    [0,1].forEach(i=>{
+      const h=r.hit[i]||0,m=r.miss[i]||0;
+      if(!byDeck[i])byDeck[i]={};
+      if(!byDeck[i][r.deck])byDeck[i][r.deck]={hit:0,miss:0,n:0};
+      byDeck[i][r.deck].hit+=h;byDeck[i][r.deck].miss+=m;byDeck[i][r.deck].n++;
+      if(!byMode[i])byMode[i]={};
+      if(!byMode[i][r.mode])byMode[i][r.mode]={hit:0,miss:0,n:0};
+      byMode[i][r.mode].hit+=h;byMode[i][r.mode].miss+=m;byMode[i][r.mode].n++;
+    });
+  });
+  // trend: compare last 5 rounds vs previous 5
+  const trend=[0,1].map(i=>{
+    const pr=rounds.filter(r=>(r.hit[i]+r.miss[i])>0);
+    if(pr.length<6)return null;
+    const recent=pr.slice(-5),older=pr.slice(-10,-5);
+    const pctR=recent.reduce((a,r)=>a+r.hit[i],0)/(recent.reduce((a,r)=>a+r.hit[i]+r.miss[i],0)||1);
+    const pctO=older.reduce((a,r)=>a+r.hit[i],0)/(older.reduce((a,r)=>a+r.hit[i]+r.miss[i],0)||1);
+    return{recent:Math.round(pctR*100),older:Math.round(pctO*100),diff:Math.round((pctR-pctO)*100)};
+  });
+  // build tips per player
+  const html=[0,1].map(i=>{
+    const tips=[];
+    const dks=byDeck[i]||{};
+    // find worst decks (min 2 rounds, error rate > 20%)
+    const dkArr=Object.entries(dks).filter(([,v])=>v.n>=2&&(v.hit+v.miss)>=4).map(([k,v])=>({id:k,name:dname(k),errPct:Math.round(v.miss/(v.hit+v.miss)*100),hit:v.hit,miss:v.miss,n:v.n})).sort((a,b)=>b.errPct-a.errPct);
+    const worst=dkArr.filter(d=>d.errPct>=20).slice(0,3);
+    if(worst.length){
+      tips.push(`<div class="ai-tip"><h4>Baralhos que precisam de mais treino</h4><p>${worst.map(d=>`<b>${esc(d.name)}</b>: <span class="ai-stat">${d.errPct}% de erro</span> (${d.miss} erros em ${d.hit+d.miss} cartas)`).join("<br>")}</p><p style="margin-top:.4rem">Foque nesses baralhos nas próximas rodadas para fortalecer esses temas.</p></div>`);
+    }
+    const best=dkArr.filter(d=>d.errPct<15&&(d.hit+d.miss)>=6).slice(0,2);
+    if(best.length){
+      tips.push(`<div class="ai-tip"><h4>Parabéns! Esses estão indo bem</h4><p>${best.map(d=>`<b>${esc(d.name)}</b>: <span class="ai-good">${100-d.errPct}% de acerto</span>`).join("<br>")}</p></div>`);
+    }
+    // mode analysis
+    const mds=byMode[i]||{};
+    const mdArr=Object.entries(mds).filter(([,v])=>(v.hit+v.miss)>=4).map(([k,v])=>({mode:k,label:(MODES[k]||[k])[0],errPct:Math.round(v.miss/(v.hit+v.miss)*100),n:v.n})).sort((a,b)=>b.errPct-a.errPct);
+    const hardMode=mdArr.find(m=>m.errPct>=25);
+    const easyMode=mdArr.find(m=>m.errPct<15);
+    if(hardMode){
+      tips.push(`<div class="ai-tip"><h4>Modo mais difícil</h4><p>O modo <b>${esc(hardMode.label)}</b> tem <span class="ai-stat">${hardMode.errPct}% de erro</span>. ${hardMode.mode==="pt-en"||hardMode.mode==="img-en"?"Produzir em inglês é mais difícil que reconhecer — isso é normal! Continue praticando.":hardMode.mode==="ouvir"?"Compreensão auditiva leva tempo. Tente ouvir músicas e podcasts em inglês no dia a dia.":"Continue praticando esse modo para ganhar confiança."}</p></div>`);
+    }
+    // trend
+    const t=trend[i];
+    if(t){
+      if(t.diff>5)tips.push(`<div class="ai-tip"><h4>Tendência positiva</h4><p>Seu acerto subiu de <b>${t.older}%</b> para <span class="ai-good">${t.recent}%</span> nas últimas rodadas. Continue assim!</p></div>`);
+      else if(t.diff<-5)tips.push(`<div class="ai-tip"><h4>Atenção à tendência</h4><p>Seu acerto caiu de <b>${t.older}%</b> para <span class="ai-stat">${t.recent}%</span> nas últimas rodadas. Tente revisar os baralhos mais difíceis com calma.</p></div>`);
+    }
+    // general recommendation
+    if(!worst.length&&!hardMode&&tips.length===0){
+      tips.push(`<div class="ai-tip"><h4>Tudo equilibrado!</h4><p>Vocês estão indo bem em todos os baralhos. Que tal experimentar novos modos de jogo ou avançar para baralhos mais desafiadores?</p></div>`);
+    }
+    return tips.length?tips.join(""):"";
+  });
+  const p0=html[0],p1=html[1];
+  if(!p0&&!p1)return"";
+  return `<div class="ai-box"><h2><span class="ai-icon">&#9733;</span> Análise inteligente</h2>
+    ${p0?`<h3 style="margin:0 0 .5rem;font-size:1rem">${esc(S.players[0])}</h3>${p0}`:""}
+    ${p1?`<h3 style="margin:${p0?".8rem":"0"} 0 .5rem;font-size:1rem">${esc(S.players[1])}</h3>${p1}`:""}
+  </div>`;
+}
 function vResultados(){
   const tests=S.tests.slice().sort((a,b)=>a.d.localeCompare(b.d));
   const rounds=S.rounds.slice().sort((a,b)=>a.d.localeCompare(b.d));
@@ -1265,7 +1432,8 @@ function vResultados(){
   const aggByDate=(arr)=>{const m={};arr.forEach(r=>{if(!m[r.d])m[r.d]={d:r.d,pts:0,hit:0,miss:0,n:0};m[r.d].pts+=r.pts;m[r.d].hit+=r.hit;m[r.d].miss+=r.miss;m[r.d].n++});return Object.values(m).sort((a,b)=>a.d.localeCompare(b.d))};
   const agg0=aggByDate(rByP[0]),agg1=aggByDate(rByP[1]);
 
-  return `<div class="grid g2" style="margin-bottom:1rem">
+  return `${buildAnalysis()}
+  <div class="grid g2" style="margin-bottom:1rem">
     ${[0,1].map(i=>`<section class="panel soft evo-card"><h2>${esc(S.players[i])}</h2>
       <div class="grid g3" style="gap:.5rem;margin-top:.6rem">
         <div><span class="big num">${pStats[i].pts}</span><div class="lbl">pontos</div></div>
@@ -1373,6 +1541,7 @@ document.addEventListener("click",e=>{
   else if(a==="hown"){ui.hOwned=!ui.hOwned;persist=false}
   else if(a==="say"){speak(v);return}
   else if(a==="sayPT"){speakPT(v,b);return}
+  else if(a==="testvoz"){testVoice(v);return}
   else if(a==="selgame"){ui.hGame=ui.hGame===v?null:v;persist=false}
   else if(a==="startround"){const c=cur();c.log=[];c.p=[zero(),zero()];c.turn=0;c.started=true;persist=false}
   else if(a==="addsess"){S.sessions.push({k:"s"+Date.now(),d:ui.sDate||today(),min:ui.sMin,win:ui.sWin==null?-1:ui.sWin,g:Object.keys(ui.sGames).filter(k=>ui.sGames[k])});ui.sWin=-1;if(S.sessions.length>600)S.sessions=S.sessions.slice(-600);ui.sGames={};ui.msg="Sessão registrada. A semana e as horas já foram atualizadas.";ui.tab="inicio";ui.jump=true}
@@ -1423,6 +1592,8 @@ document.addEventListener("change",e=>{
   else if(c==="dret"){S.deckData[v]=Object.assign({},S.deckData[v],{ret:Math.max(0,Math.round(+el.value||0))})}
   else if(c==="dtot"){S.deckData[v]=Object.assign({},S.deckData[v],{total:Math.max(0,Math.round(+el.value||0))})}
   else if(c==="hgame"){ui.hGame=el.value;render();return}
+  else if(c==="vozen"){setVoice("en",el.value);return}
+  else if(c==="vozpt"){setVoice("pt",el.value);return}
   save();render();
 });
 setInterval(()=>{const e=$("#tleft");if(!e||!ui.tEnd)return;const l=Math.ceil((ui.tEnd-Date.now())/1000);if(l<=0){ui.tEnd=0;e.textContent="Tempo!";}else e.textContent=l},250);

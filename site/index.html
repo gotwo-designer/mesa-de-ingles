@@ -1260,7 +1260,7 @@ function vPlacar(){
     <label style="margin-top:.7rem">O que aparece na carta e o que se responde</label>
     <div class="chips">${(KMODES[d.kind]||KMODES.img).map(m=>`<button class="chip" aria-pressed="${c.mode===m}" data-act="mode" data-v="${m}">${MODES[m][0]}</button>`).join("")}</div>
     <p class="small muted">${MODES[c.mode][1]}</p>
-    ${started?`<p class="small muted">Baralho, bloco e tamanho ficam travados até a rodada acabar.</p>`:""}
+    ${started?`<div style="margin-top:.6rem;padding:.6rem .8rem;background:#fff3e0;border:1px solid #e6a817;border-radius:var(--r);display:flex;align-items:center;gap:.6rem;flex-wrap:wrap"><span style="font-size:.9rem;color:#7a5600">🔒 Rodada em andamento (carta ${n} de ${len}). Baralho travado.</span><button class="btn ghost" data-act="zero" style="font-size:.8rem;padding:.25rem .7rem">Descartar rodada</button></div>`:""}
   </section>
   <section class="panel" style="margin-top:1rem" id="roundbox"><h3>Rodada</h3>${ui.rmsg?`<p class="okmsg" role="status">${esc(ui.rmsg)}</p>`:""}
     <div class="sline"><div class="${!over&&turn===0?"on":""}"><span>${esc(S.players[0])}</span><b class="num">${P[0]}</b></div><i>x</i><div class="${!over&&turn===1?"on":""}"><b class="num">${P[1]}</b><span>${esc(S.players[1])}</span></div></div>

@@ -123,6 +123,30 @@ details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif
 .ai-tip .ai-stat{font-weight:600;color:var(--stop)}
 .ai-tip .ai-good{font-weight:600;color:var(--felt)}
 .ai-empty{color:#667;font-size:.9rem;font-style:italic}
+
+/* ---------- botão flutuante de ajuda ---------- */
+.help-fab{position:fixed;bottom:1.2rem;right:1.2rem;z-index:1000}
+.help-fab-btn{width:48px;height:48px;border-radius:50%;border:none;background:var(--felt);color:#fff;cursor:pointer;box-shadow:0 3px 12px rgba(15,123,79,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s,background .2s;position:relative;z-index:2}
+.help-fab-btn:hover{transform:scale(1.08);box-shadow:0 4px 18px rgba(15,123,79,.45);background:var(--felt-deep)}
+.help-fab-btn svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.help-panel{position:absolute;bottom:56px;right:0;width:320px;max-height:70vh;background:#fff;border-radius:var(--r-l);box-shadow:0 8px 30px rgba(0,0,0,.15);overflow:hidden;opacity:0;transform:translateY(10px) scale(.95);pointer-events:none;transition:opacity .25s,transform .25s}
+.help-fab.open .help-panel{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.help-panel-head{padding:.8rem 1rem;background:var(--felt);color:#fff;display:flex;align-items:center;justify-content:space-between}
+.help-panel-head h3{margin:0;font-size:1rem;color:#fff}
+.help-panel-close{background:none;border:none;color:rgba(255,255,255,.8);font-size:1.2rem;cursor:pointer;padding:0 .2rem;line-height:1}
+.help-panel-close:hover{color:#fff}
+.help-panel-body{max-height:calc(70vh - 50px);overflow-y:auto;padding:.5rem 0}
+.help-item{display:flex;align-items:center;gap:.7rem;padding:.65rem 1rem;border:none;background:none;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-size:.9rem;color:var(--ink);transition:background .15s}
+.help-item:hover{background:var(--wash)}
+.help-item-icon{width:32px;height:32px;border-radius:8px;background:var(--wash);display:flex;align-items:center;justify-content:center;flex:none}
+.help-item-icon svg{width:18px;height:18px;stroke:var(--felt);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.help-item-text{flex:1}
+.help-item-text b{display:block;font-size:.88rem;font-weight:600}
+.help-item-text span{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem}
+.help-sep{height:1px;background:var(--line);margin:.3rem 1rem}
+.help-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999}
+.help-fab.open .help-overlay{display:block}
+@media(max-width:400px){.help-panel{width:calc(100vw - 2rem);right:-.2rem}}
 .chip.meu{background:#fff3b0;border-color:var(--token);color:#5a4800;font-weight:600}
 .chip.meu.has{background:var(--token);border-color:#d49e00;color:#3d2e00}
 ul.ok{margin:.2rem 0 .6rem;padding-left:1.2rem}
@@ -390,6 +414,65 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
   <p class="small muted" id="trackcap" style="margin:-.7rem 0 1rem"></p>
   <nav class="tabs" role="tablist" id="tabs"></nav>
   <main id="view"></main>
+</div>
+
+<!-- Botão de ajuda flutuante -->
+<div class="help-fab" id="helpFab">
+  <div class="help-overlay" id="helpOverlay"></div>
+  <button class="help-fab-btn" id="helpBtn" aria-label="Ajuda" title="Ajuda">
+    <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1.1-1.5 2.2"/><path d="M12 17h.01"/></svg>
+  </button>
+  <div class="help-panel">
+    <div class="help-panel-head">
+      <h3>Ajuda</h3>
+      <button class="help-panel-close" id="helpClose" aria-label="Fechar">✕</button>
+    </div>
+    <div class="help-panel-body" id="helpBody">
+      <!-- Menu principal -->
+      <div id="helpMenu">
+        <button class="help-item" data-help="rotina">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <div class="help-item-text"><b>A rotina</b><span>Os 3 momentos de cada sessão</span></div>
+        </button>
+        <div class="help-sep"></div>
+        <button class="help-item" data-help="inicio">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/></svg></div>
+          <div class="help-item-text"><b>Início</b><span>O que fazer antes de jogar</span></div>
+        </button>
+        <button class="help-item" data-help="jogar">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01"/></svg></div>
+          <div class="help-item-text"><b>Jogar</b><span>Jogo de caixa e flashcards</span></div>
+        </button>
+        <button class="help-item" data-help="comprar">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h10L20 7H6.5"/><path d="M9 20h.01M17 20h.01"/></svg></div>
+          <div class="help-item-text"><b>Comprar</b><span>Próximos jogos da fase</span></div>
+        </button>
+        <button class="help-item" data-help="evoluir">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M4 19h16M6 16l4-5 3 3 5-7"/></svg></div>
+          <div class="help-item-text"><b>Evoluir</b><span>Testes e progressão de fase</span></div>
+        </button>
+        <button class="help-item" data-help="resultados">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M9 17v-6M12 17v-4M15 17v-8M5 3v16a2 2 0 002 2h14"/></svg></div>
+          <div class="help-item-text"><b>Resultados</b><span>Placar, gráficos e análise IA</span></div>
+        </button>
+        <div class="help-sep"></div>
+        <button class="help-item" data-help="dados">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <div class="help-item-text"><b>Dados e backup</b><span>Onde ficam salvos, exportar, importar</span></div>
+        </button>
+        <button class="help-item" data-help="voz">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+          <div class="help-item-text"><b>Áudio e voz</b><span>Escolher voz, botão não aparece</span></div>
+        </button>
+        <button class="help-item" data-help="duvidas">
+          <div class="help-item-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="help-item-text"><b>Dúvidas comuns</b><span>Zerar placar, erros, senha</span></div>
+        </button>
+      </div>
+      <!-- Conteúdo do tópico (preenchido via JS) -->
+      <div id="helpContent" hidden></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1008,7 +1091,7 @@ function pLeague(){
 
 /* ---------- estado ---------- */
 let S={rev:0,players:["Raí","Raiana"],phase:1,goal:5,games:{},custom:[],sessions:[],score:[0,0],wins:[0,0],round:[0,0],retired:0,tests:[],checks:{},deckData:{},cdecks:[],rounds:[],cur:null,hits:[0,0],miss:[0,0],retLegacy:null,weeks:{},prizes:null,redeem:[]};
-const TABN={inicio:"Início",jogar:"Jogar",comprar:"Comprar",evoluir:"Evoluir",ajuda:"Ajuda"};
+const TABN={inicio:"Início",jogar:"Jogar",comprar:"Comprar",evoluir:"Evoluir"};
 const DKOF=id=>BASE.some(a=>a[3]===id);
 let ui={tab:"inicio",fPhase:-1,fMissing:false,sMin:30,sGames:{},sDate:""};
 let sb=null, uid=null, saving=Promise.resolve(), pending=false, timer=null;
@@ -1082,7 +1165,7 @@ function importData(file){const fr=new FileReader();fr.onload=()=>{try{const d=J
 
 /* ---------- render ---------- */
 function players(){const el=$("#players");if(document.activeElement&&el.contains&&el.contains(document.activeElement))return;el.innerHTML=[0,1].map(i=>`<div><label for="pn${i}">Jogador ${i+1}</label><input id="pn${i}" maxlength="24" value="${esc(S.players[i])}" data-chg="pname" data-v="${i}"></div>`).join("")}
-function render(){if(closeWeeks())save();players();track();tabs();const v=$("#view");v.innerHTML=(({inicio:vInicio,jogar:vJogar,comprar:vComprar,evoluir:vEvoluir,resultados:vResultados,ajuda:vAjuda})[ui.tab]||vInicio)();if(ui.tab==="resultados")drawCharts();if(ui.tab==="ajuda")_populateVoiceSelects();}
+function render(){if(closeWeeks())save();players();track();tabs();const v=$("#view");v.innerHTML=(({inicio:vInicio,jogar:vJogar,comprar:vComprar,evoluir:vEvoluir,resultados:vResultados})[ui.tab]||vInicio)();if(ui.tab==="resultados")drawCharts();}
 function _populateVoiceSelects(){
   const se=$("#voz-en"),sp=$("#voz-pt");if(!se||!sp)return;
   voiceOptions("en").forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;if(_chosenEN&&_chosenEN.name===n)o.selected=true;se.appendChild(o)});
@@ -1094,7 +1177,7 @@ function track(){
   $("#trackcap").textContent=`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Toque na trilha para ver quando subir.`;
 }
 function tabs(){
-  const T=[["inicio","Início","M3 11l9-8 9 8v10h-6v-6H9v6H3z"],["jogar","Jogar","M4 4h16v16H4zM8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01"],["comprar","Comprar","M3 4h2l2.5 11h10L20 7H6.5M9 20h.01M17 20h.01"],["evoluir","Evoluir","M4 19h16M6 16l4-5 3 3 5-7"],["resultados","Resultados","M9 17v-6M12 17v-4M15 17v-8M5 3v16a2 2 0 002 2h14"],["ajuda","Ajuda","M12 21a9 9 0 100-18 9 9 0 000 18zM9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1.1-1.5 2.2M12 17h.01"]];
+  const T=[["inicio","Início","M3 11l9-8 9 8v10h-6v-6H9v6H3z"],["jogar","Jogar","M4 4h16v16H4zM8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01"],["comprar","Comprar","M3 4h2l2.5 11h10L20 7H6.5M9 20h.01M17 20h.01"],["evoluir","Evoluir","M4 19h16M6 16l4-5 3 3 5-7"],["resultados","Resultados","M9 17v-6M12 17v-4M15 17v-8M5 3v16a2 2 0 002 2h14"]];
   $("#tabs").innerHTML=T.map(t=>`<button role="tab" aria-selected="${ui.tab===t[0]}" data-act="tab" data-v="${t[0]}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${t[2]}"/></svg><span>${t[1]}</span></button>`).join("");
 }
 function weekDays(){const d=new Date();const off=(d.getDay()+6)%7;const m=new Date(d);m.setDate(d.getDate()-off);return[...Array(7)].map((_,i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return x})}
@@ -1597,6 +1680,64 @@ document.addEventListener("change",e=>{
   save();render();
 });
 setInterval(()=>{const e=$("#tleft");if(!e||!ui.tEnd)return;const l=Math.ceil((ui.tEnd-Date.now())/1000);if(l<=0){ui.tEnd=0;e.textContent="Tempo!";}else e.textContent=l},250);
+/* ---------- botão de ajuda flutuante ---------- */
+(function(){
+  const fab=$("#helpFab"),btn=$("#helpBtn"),overlay=$("#helpOverlay"),closeBtn=$("#helpClose"),menu=$("#helpMenu"),content=$("#helpContent");
+  function toggleHelp(){fab.classList.toggle("open")}
+  function closeHelp(){fab.classList.remove("open");content.hidden=true;menu.hidden=false}
+  btn.addEventListener("click",toggleHelp);
+  overlay.addEventListener("click",closeHelp);
+  closeBtn.addEventListener("click",closeHelp);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeHelp()});
+
+  function helpTopicHTML(topic){
+    const back=`<button class="help-item" data-help="back" style="border-bottom:1px solid var(--line)"><div class="help-item-icon" style="background:transparent"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></div><div class="help-item-text"><b>Voltar</b></div></button>`;
+    if(topic==="rotina"){
+      return back+`<div style="padding:.8rem 1rem"><h3 style="margin:0 0 .5rem;font-size:.95rem">A rotina</h3>`+GROUT2.map(r=>`<div style="margin-bottom:.6rem"><b style="font-size:.85rem;color:var(--felt-deep)">${r[0]}</b><p style="font-size:.82rem;color:var(--muted);margin:.2rem 0 0">${esc(r[1])}</p></div>`).join("")+`</div>`;
+    }
+    // Telas
+    const tabTopics=["inicio","jogar","comprar","evoluir","resultados"];
+    const idx=tabTopics.indexOf(topic);
+    if(idx>=0){
+      const t=GTABS2[idx];
+      return back+`<div style="padding:.8rem 1rem"><h3 style="margin:0 0 .3rem;font-size:.95rem">${t[1]}</h3><p style="font-size:.82rem;color:var(--felt);margin:0 0 .5rem">${t[2]}</p><p style="font-size:.84rem;margin:0 0 .5rem">${esc(t[3])}</p><ul style="padding-left:1.2rem;margin:0;font-size:.82rem;color:var(--ink)">${t[4].map(x=>`<li style="margin-bottom:.3rem">${esc(x)}</li>`).join("")}</ul><button class="btn ghost" style="margin-top:.6rem;font-size:.82rem" data-act="tab" data-v="${t[0]}" onclick="document.getElementById('helpFab').classList.remove('open')">Abrir ${t[1]}</button></div>`;
+    }
+    if(topic==="dados"){
+      return back+`<div style="padding:.8rem 1rem"><h3 style="margin:0 0 .5rem;font-size:.95rem">Dados e backup</h3><p style="font-size:.84rem">Os dados ficam no seu banco Supabase, ligados ao seu login. O aviso no alto mostra "Salvo na nuvem" a cada mudança.</p><p style="font-size:.84rem">Entrando com o mesmo login no celular e no computador, os dados são os mesmos. Sem internet, o painel guarda no aparelho e envia na próxima mudança.</p><div style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn ghost" style="font-size:.82rem" data-act="export">Baixar cópia dos dados</button></div></div>`;
+    }
+    if(topic==="voz"){
+      return back+`<div style="padding:.8rem 1rem"><h3 style="margin:0 0 .5rem;font-size:.95rem">Áudio e voz</h3><p style="font-size:.84rem"><b>O botão Ouvir não aparece?</b> O navegador não tem voz em inglês disponível. Abra no Chrome ou Safari atualizados.</p><p style="font-size:.84rem"><b>Escolher a voz:</b> Seu aparelho pode ter vozes melhores instaladas.</p>
+      <div style="margin:.5rem 0"><label style="font-size:.8rem;color:var(--muted)">Voz em inglês</label><div style="display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-top:.2rem"><select id="hvoz-en" style="flex:1;min-width:140px;font-size:.82rem" data-chg="vozen"><option value="">Padrão</option></select><button class="btn ghost" style="font-size:.8rem" data-act="testvoz" data-v="en">Testar</button></div></div>
+      <div style="margin:.5rem 0"><label style="font-size:.8rem;color:var(--muted)">Voz em português</label><div style="display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-top:.2rem"><select id="hvoz-pt" style="flex:1;min-width:140px;font-size:.82rem" data-chg="vozpt"><option value="">Padrão</option></select><button class="btn ghost" style="font-size:.8rem" data-act="testvoz" data-v="pt">Testar</button></div></div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:.4rem">No Android: Configurações → Idioma → Conversão de texto em voz → instale o Google TTS.</p></div>`;
+    }
+    if(topic==="duvidas"){
+      return back+`<div style="padding:.8rem 1rem"><h3 style="margin:0 0 .5rem;font-size:.95rem">Dúvidas comuns</h3>
+      <div style="font-size:.84rem"><p><b>A sugestão do passo 1 está vazia?</b> Ela só usa jogos com situação Tenho ou Dominado. Marque na tela Comprar.</p>
+      <p><b>Registrei algo errado?</b> Sessões, rodadas e provas têm um botão apagar ao lado.</p>
+      <p><b>Quero zerar o placar.</b> Jogar → passo 2 → Flashcards → Placar geral → Zerar placar geral. A pilha "já sei" de cada baralho continua: para zerar, digite 0 em Meus baralhos.</p>
+      <p><b>A Raiana precisa de um login?</b> Não. O placar dos dois fica numa conta só. Se ela quiser abrir no celular dela, use o mesmo e-mail e senha.</p>
+      ${sb?`<div style="margin-top:.6rem;border-top:1px solid var(--line);padding-top:.6rem"><b>Trocar senha</b><div style="margin-top:.3rem"><label style="font-size:.8rem;color:var(--muted)">Nova senha</label><input id="npw" type="password" autocomplete="new-password" style="width:100%;font-size:.84rem;margin-top:.2rem"></div><div style="margin-top:.3rem"><label style="font-size:.8rem;color:var(--muted)">Repita</label><input id="npw2" type="password" autocomplete="new-password" style="width:100%;font-size:.84rem;margin-top:.2rem"></div><button class="btn" style="margin-top:.4rem;font-size:.82rem" data-act="chpw">Trocar</button><p id="pwmsg" style="font-size:.82rem;margin-top:.3rem" role="status"></p></div>`:""}</div></div>`;
+    }
+    return "";
+  }
+
+  function populateHelpVoices(){
+    const se=$("#hvoz-en"),sp=$("#hvoz-pt");if(!se||!sp)return;
+    se.innerHTML='<option value="">Padrão</option>';sp.innerHTML='<option value="">Padrão</option>';
+    voiceOptions("en").forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;if(_chosenEN&&_chosenEN.name===n)o.selected=true;se.appendChild(o)});
+    voiceOptions("pt").forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;if(_chosenPT&&_chosenPT.name===n)o.selected=true;sp.appendChild(o)});
+  }
+
+  document.getElementById("helpBody").addEventListener("click",function(e){
+    const item=e.target.closest("[data-help]");if(!item)return;
+    const topic=item.dataset.help;
+    if(topic==="back"){content.hidden=true;menu.hidden=false;return}
+    content.innerHTML=helpTopicHTML(topic);content.hidden=false;menu.hidden=true;
+    if(topic==="voz")populateHelpVoices();
+  });
+})();
+
 boot();
 </script>
 </body>

@@ -1116,7 +1116,7 @@ function save(){
     saving=saving.then(()=>sb.from("mesa_state").upsert({user_id:uid,data:body,updated_at:new Date().toISOString()})).then(r=>{pending=false;if(r.error)throw r.error;setSync("Salvo na nuvem")}).catch(()=>{pending=false;setSync("Sem conexão: salvo no aparelho, envio na próxima mudança")});
   },700);
 }
-function merge(d){if(!d)return;S=Object.assign(S,d);["games","checks","deckData","weeks"].forEach(k=>{if(!S[k]||typeof S[k]!=="object")S[k]={}});["custom","sessions","tests","cdecks","rounds","redeem"].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});if(!Array.isArray(S.players)||S.players.length!==2)S.players=["Raí","Raiana"];if(S.players[1]==="Dupla")S.players[1]="Raiana";["hits","miss","score","wins"].forEach(k=>{if(!Array.isArray(S[k])||S[k].length!==2)S[k]=[0,0]});if(S.retLegacy==null)S.retLegacy=+S.retired||0}
+function merge(d){if(!d)return;S=Object.assign(S,d);["games","checks","deckData","weeks"].forEach(k=>{if(!S[k]||typeof S[k]!=="object")S[k]={}});["custom","sessions","tests","cdecks","rounds","redeem"].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});if(!Array.isArray(S.players)||S.players.length!==2)S.players=["Raí","Raiana"];if(S.players[1]==="Dupla")S.players[1]="Raiana";["hits","miss","score","wins"].forEach(k=>{if(!Array.isArray(S[k])||S[k].length!==2)S[k]=[0,0]});if(S.retLegacy==null)S.retLegacy=+S.retired||0;MEUS.forEach(id=>{if(!S.games[id])S.games[id]={};if(!S.games[id].s||S.games[id].s==="")S.games[id].s="tenho"})}
 async function pull(){
   if(!sb||!uid||pending)return;
   const r=await sb.from("mesa_state").select("data").eq("user_id",uid).maybeSingle();

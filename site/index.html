@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mesa de inglês</title>
-<meta name="theme-color" content="#0a4a31">
+<meta name="theme-color" content="#0A3161">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mesa de inglês">
@@ -15,14 +15,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#ffffff; --wash:#eef8f1; --felt:#0f7b4f; --felt-deep:#0a4a31; --ink:#14211b; --muted:#5b6b63;
-  --line:#d6e6dc; --token:#f2b705; --stop:#c8372d; --r-s:8px; --r-l:16px;
+  /* Paleta: bandeira dos EUA. Azul = estrutura, vermelho = ação/destaque. */
+  --paper:#ffffff; --bg:#F4F6FA; --wash:#EAF0F8; --felt:#0A3161; --felt-deep:#072447; --red:#B31942; --tint:#FBE9EE;
+  --ink:#0F1B2D; --muted:#5B6B82; --line:#E3E8F0; --token:#B31942; --stop:#8A2A1E; --r-s:10px; --r-l:18px;
   color-scheme:light; box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
 h1,h2,h3,.num{font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;line-height:1.15;margin:0}
 h1{font-size:clamp(1.6rem,4.5vw,2.4rem);font-weight:700;letter-spacing:-.02em}
 h2{font-size:1.3rem;font-weight:700;margin-bottom:.6rem}
@@ -38,8 +39,8 @@ header.top{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:flex-end;ju
 /* trilha de tabuleiro: o único elemento chamativo */
 .track{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 1.25rem;padding:10px;background:var(--felt);border-radius:var(--r-l)}
 .sq{position:relative;background:var(--paper);border-radius:10px;padding:.6rem .6rem .7rem;min-height:92px;border:2px solid transparent}
-.sq.done{background:#d9efe2}
-.sq.cur{border-color:var(--token);box-shadow:0 0 0 3px rgba(242,183,5,.35)}
+.sq.done{background:#DCE6F3}
+.sq.cur{border-color:var(--red);box-shadow:0 0 0 3px rgba(179,25,66,.28)}
 .sq .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.5rem;color:var(--felt-deep)}
 .sq .lv{font-size:.8rem;color:var(--muted)}
 .sq .t{font-size:.86rem;font-weight:500}
@@ -63,7 +64,7 @@ nav.tabs button[aria-selected="true"]{color:var(--felt-deep);border-bottom-color
 .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:.6rem 0}
 .day{border:1px solid var(--line);border-radius:var(--r-s);padding:.45rem .2rem;text-align:center;font-size:.8rem;color:var(--muted)}
 .day b{display:block;font-size:1rem;color:var(--ink);font-family:"Bricolage Grotesque",sans-serif}
-.day.on{background:var(--felt);border-color:var(--felt);color:#dff3e7}.day.on b{color:#fff}
+.day.on{background:var(--felt);border-color:var(--felt);color:#C9D6E8}.day.on b{color:#fff}
 .day.today{border-color:var(--felt-deep);border-width:2px}
 
 button.btn,a.btn{font:inherit;font-weight:600;display:inline-block;text-decoration:none;border-radius:var(--r-s);padding:.55rem .9rem;border:1.5px solid var(--felt);background:var(--felt);color:#fff;cursor:pointer}
@@ -83,7 +84,7 @@ ul.clean li:last-child{border-bottom:0}
 .game{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem .8rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
 .game .meta{font-size:.84rem;color:var(--muted)}
 .tag{display:inline-block;font-size:.76rem;border-radius:6px;padding:.05rem .4rem;background:var(--wash);color:var(--felt-deep);margin-right:4px}
-.tag.warn{background:#fdf1cf;color:#6b4e00}
+.tag.warn{background:var(--tint);color:#8A1432}
 .game .links a{font-size:.84rem;color:var(--felt-deep);margin-right:.7rem}
 .game .ctl{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .game .ctl input{width:92px}
@@ -113,7 +114,7 @@ details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif
 .sn{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:8px;background:var(--felt);color:#fff;font-weight:700;margin-right:.35rem}
 .stgb{padding:0 0 1rem;max-width:80ch}
 .chip.has{background:var(--wash);border-color:var(--felt);color:var(--felt-deep)}
-.ai-box{background:linear-gradient(135deg,#f0f7ff 0%,#e8f4e8 100%);border:1px solid #b8d4e3;border-radius:var(--r-l);padding:1.2rem;margin-bottom:1rem}
+.ai-box{background:var(--wash);border:1px solid #C9D6E8;border-radius:var(--r-l);padding:1.2rem;margin-bottom:1rem}
 .ai-box h2{margin:0 0 .8rem;font-size:1.15rem;display:flex;align-items:center;gap:.5rem}
 .ai-box .ai-icon{display:inline-flex;align-items:center;justify-content:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--felt);color:#fff;font-size:.85rem;flex:none}
 .ai-tip{background:#fff;border-radius:var(--r);padding:.8rem 1rem;margin-bottom:.6rem;border-left:3px solid var(--felt)}
@@ -126,8 +127,8 @@ details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif
 
 /* ---------- botão flutuante de ajuda ---------- */
 .help-fab{position:fixed;bottom:4.5rem;right:1.2rem;z-index:1000}
-.help-fab-btn{width:48px;height:48px;border-radius:50%;border:none;background:var(--felt);color:#fff;cursor:pointer;box-shadow:0 3px 12px rgba(15,123,79,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s,background .2s;position:relative;z-index:2}
-.help-fab-btn:hover{transform:scale(1.08);box-shadow:0 4px 18px rgba(15,123,79,.45);background:var(--felt-deep)}
+.help-fab-btn{width:52px;height:52px;border-radius:50%;border:none;background:var(--red);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(179,25,66,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s,background .2s;position:relative;z-index:2}
+.help-fab-btn:hover{transform:scale(1.08);box-shadow:0 8px 22px rgba(179,25,66,.45);background:#8A1432}
 .help-fab-btn svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .help-panel{position:absolute;bottom:56px;right:0;width:320px;max-height:70vh;background:#fff;border-radius:var(--r-l);box-shadow:0 8px 30px rgba(0,0,0,.15);overflow:hidden;opacity:0;transform:translateY(10px) scale(.95);pointer-events:none;transition:opacity .25s,transform .25s;z-index:1001}
 .help-fab.open .help-panel{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
@@ -147,14 +148,14 @@ details.stg summary{padding:.7rem 0;font-family:"Bricolage Grotesque",sans-serif
 .help-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999}
 .help-fab.open .help-overlay{display:block}
 @media(max-width:400px){.help-panel{width:calc(100vw - 2rem);right:-.2rem}}
-.chip.meu{background:#fff3b0;border-color:var(--token);color:#5a4800;font-weight:600}
-.chip.meu.has{background:var(--token);border-color:#d49e00;color:#3d2e00}
+.chip.meu{background:var(--tint);border-color:var(--red);color:#8A1432;font-weight:600}
+.chip.meu.has{background:var(--red);border-color:var(--red);color:#fff}
 ul.ok{margin:.2rem 0 .6rem;padding-left:1.2rem}
 .fix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:.3rem 1rem;padding:.6rem 0;border-top:1px solid var(--line)}
 .fix .sym{font-weight:600;color:var(--stop)}
 @media(max-width:620px){.fix{grid-template-columns:1fr}}
 
-.gstep{display:flex;gap:.6rem;align-items:flex-start;justify-content:space-between;border-top:1px solid #cfe6d8;padding:.25rem 0}
+.gstep{display:flex;gap:.6rem;align-items:flex-start;justify-content:space-between;border-top:1px solid var(--line);padding:.25rem 0}
 .gstep .chip{flex:none;margin-top:.3rem;font-size:.8rem}
 ol.rules{margin:0;padding-left:1.2rem}ol.rules li{padding:.35rem 0}
 .how{border-top:1px solid var(--line);padding:.9rem 0;max-width:78ch}
@@ -230,8 +231,8 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .intro p{color:var(--muted)}
 .cta{background:var(--felt-deep);color:#fff;border-radius:var(--r-l);padding:1.1rem 1.2rem}
 .cta h3{font-size:1.3rem;font-weight:700;margin:.1rem 0 .3rem;color:#fff}
-.cta .small{color:#bfe3cf}
-.cta p{color:#e6f4ec;max-width:60ch}
+.cta .small{color:#9DB4D6}
+.cta p{color:#DCE6F3;max-width:60ch}
 .btn.inv{background:#fff;color:var(--felt-deep);border-color:#fff;margin-top:.7rem}
 .steph{display:flex;gap:.7rem;align-items:flex-start;margin:1.6rem 0 .6rem}
 .steph h3{font-size:1.3rem;font-weight:700}
@@ -243,7 +244,7 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .okmsg{background:var(--wash);border-left:4px solid var(--felt);padding:.6rem .8rem;border-radius:8px;margin:0 0 1rem;font-weight:500}
 .clean li .chip{margin-left:.4rem;font-size:.8rem}
 @media(max-width:640px){
-  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;background:#fff;border-top:1px solid var(--line);border-bottom:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;overflow:visible;padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 14px -10px rgba(10,74,49,.4)}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;background:#fff;border-top:1px solid var(--line);border-bottom:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;overflow:visible;padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 14px -10px rgba(10,49,97,.35)}
   nav.tabs button{flex-direction:column;gap:2px;justify-content:center;border:0;margin:0;padding:.35rem 0;font-size:.72rem;min-height:54px;border-radius:10px;color:var(--muted)}
   nav.tabs button[aria-selected="true"]{background:var(--wash);color:var(--felt-deep);border:0}
   .wrap{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
@@ -262,7 +263,7 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .sline{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.6rem;margin:.4rem 0}
 .sline>div{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:12px;border:2px solid transparent}
 .sline>div:last-child{justify-content:flex-end}
-.sline>div.on{border-color:var(--token);background:#fff8dc}
+.sline>div.on{border-color:var(--red);background:var(--tint)}
 .sline b{font-size:2.2rem;color:var(--felt-deep);line-height:1}
 .sline span{font-weight:600}
 .sline i{font-style:normal;color:var(--muted)}
@@ -271,25 +272,25 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .big3 button{font:inherit;cursor:pointer;border-radius:14px;padding:.9rem .5rem;min-height:84px;display:flex;flex-direction:column;gap:.2rem;align-items:center;justify-content:center;text-align:center;border:2px solid}
 .big3 button b{font-size:1rem;line-height:1.2}.big3 button span{font-size:.85rem;opacity:.85}
 .big3 button .icon{font-size:1.6rem;display:block;margin-bottom:.2rem}
-.big3 .b0{background:#fef2f2;border-color:var(--line);color:var(--stop)}
-.big3 .b0:hover{box-shadow:0 4px 16px rgba(200,55,45,.2)}
-.big3 .b1{background:#f0fdf4;border-color:var(--felt);color:var(--felt-deep)}
-.big3 .b1:hover{box-shadow:0 4px 16px rgba(15,123,79,.2)}
-.big3 .b2{background:var(--felt-deep);border-color:var(--felt-deep);color:#fff}
-.big3 .b2:hover{box-shadow:0 6px 20px rgba(15,123,79,.35)}
+.big3 .b0{background:#fff;border-color:var(--line);color:var(--stop)}
+.big3 .b0:hover{box-shadow:0 4px 16px rgba(138,42,30,.2)}
+.big3 .b1{background:var(--wash);border-color:var(--felt);color:var(--felt)}
+.big3 .b1:hover{box-shadow:0 4px 16px rgba(10,49,97,.2)}
+.big3 .b2{background:var(--red);border-color:var(--red);color:#fff}
+.big3 .b2:hover{box-shadow:0 6px 20px rgba(179,25,66,.35)}
 .big3 button:active{transform:scale(.96)}
 .start-cta{text-align:center;margin:1.2rem 0 .5rem}
-.start-cta button{font:inherit;font-size:1rem;font-weight:700;padding:.7rem 2rem;border:none;border-radius:var(--r-l);background:var(--felt);color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(15,123,79,.3);transition:box-shadow .15s}
-.start-cta button:hover{box-shadow:0 6px 24px rgba(15,123,79,.4)}
+.start-cta button{font:inherit;font-size:1rem;font-weight:700;padding:.7rem 2rem;border:none;border-radius:var(--r-l);background:var(--red);color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(179,25,66,.3);transition:box-shadow .15s}
+.start-cta button:hover{box-shadow:0 6px 24px rgba(179,25,66,.4)}
 .result-box{text-align:center;padding:1rem 0}
-.result-box .winner{font-size:1.2rem;font-weight:700;color:var(--felt);margin-bottom:.3rem}
+.result-box .winner{font-size:1.2rem;font-weight:700;color:var(--red);margin-bottom:.3rem}
 .result-box .final{font-size:.9rem;color:var(--muted)}
 .result-box .mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;text-align:center;margin-top:.8rem}
 .result-box .mini-stats .stat{background:var(--wash);border-radius:var(--r-s);padding:.5rem}
 .result-box .mini-stats .stat .n{font-family:"Bricolage Grotesque",sans-serif;font-size:1.3rem;font-weight:700;color:var(--felt-deep)}
 .result-box .mini-stats .stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
 .endbox{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;justify-content:space-between;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
-.endbox.hot{background:#fff8dc;border:2px solid var(--token);border-radius:12px;padding:1rem}
+.endbox.hot{background:var(--tint);border:2px solid var(--red);border-radius:12px;padding:1rem}
 @media(max-width:640px){.big3{grid-template-columns:1fr}.big3 button{min-height:62px;flex-direction:row;justify-content:space-between;padding:.7rem 1rem}.big3 button .icon{font-size:1.2rem;margin-bottom:0;margin-right:.3rem}.sline b{font-size:1.9rem}.sline>div{padding:.4rem .5rem;gap:.4rem}.sline span{font-size:.9rem}}
 
 .star{color:var(--token);font-size:.8em}
@@ -307,17 +308,17 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 /* ---- flashcard instrução com audio ---- */
 .fc-instr{display:flex;gap:.6rem;align-items:start;background:var(--wash);border-radius:8px;padding:.7rem .8rem;margin-bottom:.6rem}
 .fc-instr .play-btn{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:none;background:var(--felt-deep);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s}
-.fc-instr .play-btn:hover{background:#083d26}
+.fc-instr .play-btn:hover{background:var(--red)}
 .fc-instr .play-btn:active{transform:scale(.92)}
 .fc-instr .play-btn.speaking{background:var(--stop);animation:pulse-ring 1s infinite}
-@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(200,55,45,.4)}50%{box-shadow:0 0 0 8px rgba(200,55,45,0)}}
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(179,25,66,.4)}50%{box-shadow:0 0 0 8px rgba(179,25,66,0)}}
 .fc-instr .fc-text{font-size:.88rem;color:var(--felt-deep);line-height:1.5}
 .fc-instr .fc-text b{color:var(--ink)}
 .fc-instr .fc-text .fc-step{display:block;margin-top:.3rem}
 .fc-instr .fc-text .pts-line{display:inline-flex;align-items:center;gap:.3rem}
 .fc-instr .fc-text .dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .fc-instr .fc-text .dot.g{background:var(--felt-deep)}
-.fc-instr .fc-text .dot.b{background:#1a6b4a}
+.fc-instr .fc-text .dot.b{background:var(--red)}
 .fc-instr .fc-text .dot.r{background:var(--stop)}
 
 /* ---- game chips (jogo de caixa) ---- */
@@ -326,7 +327,7 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .game-chip:hover{border-color:var(--felt-deep);color:var(--felt-deep)}
 .game-chip[aria-pressed="true"]{background:var(--felt-deep);color:#fff;border-color:var(--felt-deep)}
 .game-chip .rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.game-chip .rdot.A{background:var(--token)}.game-chip .rdot.P{background:var(--felt-deep)}.game-chip .rdot.C{background:#5b8def}
+.game-chip .rdot.A{background:var(--token)}.game-chip .rdot.P{background:var(--felt-deep)}.game-chip .rdot.C{background:#5B8DEF}
 .game-chip[aria-pressed="true"] .rdot.P{background:#fff}
 .role-legend{display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap}
 .role-legend span{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)}
@@ -334,7 +335,7 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .role-legend .rld.A{background:var(--token)}.role-legend .rld.P{background:var(--felt-deep)}.role-legend .rld.C{background:#5b8def}
 
 /* ---- regra de hoje card ---- */
-.regra-card{background:linear-gradient(135deg,var(--felt-deep),#062e1d);color:#fff;border-radius:16px;padding:1.25rem;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.regra-card{background:linear-gradient(135deg,#0A3161,#072447);color:#fff;border-radius:16px;padding:1.25rem;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.18);position:relative;overflow:hidden}
 .regra-card::before{content:"";position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06)}
 .regra-card .rtag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.18);padding:.15rem .5rem;border-radius:10px}
 .regra-card h3{font-size:1rem;margin:.4rem 0 .3rem}
@@ -388,6 +389,80 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
 .test-tl li::before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--felt)}
 .test-tl li.p1::before{background:var(--token)}
 .test-tl li b{color:var(--felt-deep)}
+
+/* ============================================================
+   TEMA APP — bandeira dos EUA (azul estrutura, vermelho ação)
+   ============================================================ */
+.wrap{padding-top:0}
+.hero{background:var(--felt);color:#fff;margin:0 -1rem 1.1rem;padding:calc(1.1rem + env(safe-area-inset-top,0px)) 1rem 1rem;border-radius:0 0 28px 28px;box-shadow:0 10px 24px -14px rgba(10,49,97,.6)}
+.hero header.top{margin-bottom:.9rem}
+.hero h1{color:#fff}
+.hero .sub{color:#C9D6E8}
+.hero .sync{color:#9DB4D6}
+.hero #acct button{color:#fff}
+.hero label{color:#C9D6E8}
+.hero .who input{border-color:transparent;background:#fff;color:var(--ink)}
+.hero .track{background:rgba(255,255,255,.08);padding:8px;margin-bottom:.6rem;border:1px solid rgba(255,255,255,.12)}
+.hero .sq{background:#fff;color:var(--ink);border-color:transparent}
+.hero .sq .n{color:var(--felt)}
+.hero .sq.done{background:#DCE6F3}
+.hero .sq.cur{border-color:var(--red);box-shadow:0 0 0 3px rgba(179,25,66,.35);background:#fff}
+.hero #trackcap{color:#C9D6E8;margin:0}
+@media(max-width:640px){
+  .hero{margin:0 -.75rem .9rem;padding:calc(.9rem + env(safe-area-inset-top,0px)) .75rem .85rem;border-radius:0 0 24px 24px}
+  .hero .sub{display:none}
+  .hero #trackcap{font-size:.78rem}
+}
+/* abas: pílula segmentada no desktop */
+@media(min-width:641px){
+  nav.tabs{background:var(--wash);border:0;border-radius:14px;padding:4px;gap:4px;margin-bottom:1.25rem}
+  nav.tabs button{flex:1;justify-content:center;border:0;margin:0;border-radius:11px;padding:.6rem .8rem;color:var(--felt);min-height:44px}
+  nav.tabs button[aria-selected="true"]{background:var(--felt);color:#fff}
+}
+/* abas: barra inferior no celular */
+@media(max-width:640px){
+  nav.tabs button[aria-selected="true"]{background:transparent;color:var(--red);font-weight:700}
+  nav.tabs button[aria-selected="true"] svg{stroke-width:2.3}
+}
+/* cartões brancos sobre fundo gelo */
+.panel{background:var(--paper);border-color:var(--line)}
+.panel.soft{background:var(--wash);border-color:transparent}
+.big{color:var(--felt)}
+.acc-box{box-shadow:none;border:1px solid var(--line)}
+.acc-box summary{color:var(--felt)}
+/* ação primária = vermelho */
+button.btn:not(.ghost):not(.neg):not(.inv),a.btn:not(.ghost):not(.inv){background:var(--red);border-color:var(--red)}
+button.btn.ghost,a.btn.ghost{border-color:var(--line);color:var(--felt);background:var(--paper)}
+.btn.inv{background:#fff;color:var(--felt);border-color:#fff}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.chip.has{background:var(--wash);border-color:var(--felt);color:var(--felt)}
+.game-chip[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+.game-chip:hover{border-color:var(--red);color:var(--red)}
+.seg{border-color:var(--line);background:var(--wash);padding:4px;border-radius:14px;gap:4px}
+.seg button{background:transparent;color:var(--felt);border-radius:11px}
+.seg button[aria-pressed="true"]{background:var(--felt);color:#fff}
+.res-filter button{border-color:var(--line);color:var(--felt)}
+.res-filter button[aria-pressed="true"]{background:var(--felt);border-color:var(--felt);color:#fff}
+.bar i{background:var(--red)}
+.pl .pts{color:var(--felt)}
+.pt.p1{background:var(--felt)}.pt.p2{background:var(--red)}
+.sn{background:var(--felt)}
+.next{border-left-color:var(--red)}
+.okmsg{border-left-color:var(--red);background:var(--tint)}
+.test-tl li::before{background:var(--felt)}
+.test-tl li.p1::before{background:var(--red)}
+.day.today{border-color:var(--red)}
+.tag{background:var(--wash);color:var(--felt)}
+.cta{background:var(--felt)}
+.gate{background:var(--felt)}
+.gatebox .btn{background:var(--red);border-color:var(--red)}
+input:focus,select:focus{border-color:var(--felt)}
+:focus-visible{outline-color:var(--red)}
+/* botão flutuante de ajuda: acima da barra de abas no celular */
+.help-fab{bottom:1.5rem;right:1.25rem}
+.help-panel-head{background:var(--felt)}
+.help-item-icon svg{stroke:var(--felt)}
+@media(max-width:640px){.help-fab{bottom:calc(76px + env(safe-area-inset-bottom,0px));right:1rem}}
 </style>
 </head>
 <body>
@@ -403,6 +478,7 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
   </div>
 </div>
 <div class="wrap" id="app" hidden>
+  <div class="hero">
   <header class="top">
     <div>
       <h1>Mesa de inglês</h1>
@@ -411,7 +487,8 @@ button.sq{font:inherit;text-align:left;cursor:pointer;color:inherit}
     <div class="who"><div class="row" id="players"></div><div class="sync"><span id="sync" role="status">Carregando seus dados…</span> <span id="acct"></span></div></div>
   </header>
   <div class="track" id="track" aria-label="Trilha das cinco fases"></div>
-  <p class="small muted" id="trackcap" style="margin:-.7rem 0 1rem"></p>
+  <p class="small" id="trackcap"></p>
+  </div>
   <nav class="tabs" role="tablist" id="tabs"></nav>
   <main id="view"></main>
 </div>
@@ -836,7 +913,7 @@ const STG=[
   ok:["Explica regras complexas para nativos sem que eles adaptem a fala","Percebe ironia e muda de registro conforme a situação"],
   fix:[["Sente que regrediu","É falta de uso, não de capacidade. Uma mesa por semana em inglês segura o nível."]]}
 ];
-/* jogos que já temos em casa — destacados em amarelo nas fases */
+/* jogos que já temos em casa — destacados em vermelho nas fases */
 const MEUS=new Set(["c-cashflow","c-stet","c-boggle","c-shouldknow","c-murdoku","c-impostor","t-listen","t-animal","t-frutveg","t-80sent","t-wordfam","t-phoneme","p-phrasal","p-triple"]);
 function gref(id){const g=all().find(x=>x.id===id);if(!g)return"";const o=owned(id);const m=MEUS.has(id);return `<span class="chip ${o?"has":""} ${m?"meu":""}" style="cursor:default">${esc(g.name)}${o?" ✔":""}</span>`}
 function vFases(){
@@ -866,11 +943,11 @@ const GSTART=[
 ];
 const GTABS=[
  ["hoje","Hoje","Abrir antes e depois de cada sessão.","Responde duas perguntas: o que jogamos hoje e como está a nossa semana.",
-  ["Antes de jogar, olhe a Mesa de hoje. Ela monta a sessão em 3 partes (aquecimento, jogo principal, fechamento) e sempre puxa o jogo que está há mais tempo parado.","Depois de jogar, vá em Registrar uma sessão: escolha o dia, toque na duração e toque em cada jogo que foi para a mesa. Eles ficam escuros quando selecionados. Depois toque em Registrar sessão.","A semana no alto pinta de verde os dias jogados. A meta de sessões por semana você escolhe ali mesmo.","Próximos passos avisa qual jogo estrear, qual comprar e quando é hora de abrir um jogo novo (quando o principal passou de 6 sessões).","Horas na mesa soma tudo e mostra quanto falta para a referência da fase. É estimativa, não regra.","Registrou errado? Em Últimas sessões tem o botão apagar."]],
+  ["Antes de jogar, olhe a Mesa de hoje. Ela monta a sessão em 3 partes (aquecimento, jogo principal, fechamento) e sempre puxa o jogo que está há mais tempo parado.","Depois de jogar, vá em Registrar uma sessão: escolha o dia, toque na duração e toque em cada jogo que foi para a mesa. Eles ficam escuros quando selecionados. Depois toque em Registrar sessão.","A semana no alto pinta de azul os dias jogados. A meta de sessões por semana você escolhe ali mesmo.","Próximos passos avisa qual jogo estrear, qual comprar e quando é hora de abrir um jogo novo (quando o principal passou de 6 sessões).","Horas na mesa soma tudo e mostra quanto falta para a referência da fase. É estimativa, não regra.","Registrou errado? Em Últimas sessões tem o botão apagar."]],
  ["jogos","Jogos e compras","Abrir quando for comprar ou quando um jogo chegar.","É a sua lista de compras com controle de estoque.",
-  ["Cada jogo tem links de busca para Mercado Livre, Shopee e Amazon. Os da Play to Learn e da SuperMente abrem a loja deles. São buscas, então o preço você confere na hora.","A etiqueta amarela comprar em inglês significa que o texto da caixa é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Troque a situação conforme o jogo anda: Na lista, Comprado a caminho, Tenho, Dominado. Só jogos em Tenho ou Dominado aparecem na Mesa de hoje e no registro de sessão.","Digite o valor pago. O total investido aparece no alto.","Use os filtros Fase e Só o que falta para ver a próxima compra. Compre 3 a 4 jogos por fase, não tudo de uma vez.","Marque Dominado quando o jogo ficou fácil. Ele passa a ser sugerido como aquecimento.","Comprou algo fora da lista? Adicione no fim da página."]],
+  ["Cada jogo tem links de busca para Mercado Livre, Shopee e Amazon. Os da Play to Learn e da SuperMente abrem a loja deles. São buscas, então o preço você confere na hora.","A etiqueta vermelha comprar em inglês significa que o texto da caixa é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Troque a situação conforme o jogo anda: Na lista, Comprado a caminho, Tenho, Dominado. Só jogos em Tenho ou Dominado aparecem na Mesa de hoje e no registro de sessão.","Digite o valor pago. O total investido aparece no alto.","Use os filtros Fase e Só o que falta para ver a próxima compra. Compre 3 a 4 jogos por fase, não tudo de uma vez.","Marque Dominado quando o jogo ficou fácil. Ele passa a ser sugerido como aquecimento.","Comprou algo fora da lista? Adicione no fim da página."]],
  ["fases","Fases e diagnóstico","Abrir uma vez por mês, ou quando sentir que travou.","Explica as 13 fases do aprendizado, o que jogar em cada uma e o que ajustar quando não funcionou.",
-  ["Comece pelas 5 perguntas do alto. Quase todo travamento é dose, mesa em português, falta de áudio, falta de correção ou falta de repetição.","As fases do seu nível atual abrem sozinhas. Toque em qualquer outra para abrir.","Em cada fase: leia Sinais de que funcionou. Se você se reconhece neles, siga em frente. Se não, procure o seu sintoma em Se não funcionou e aplique só aquele ajuste por 2 semanas.","Os jogos que você já tem aparecem em verde."]],
+  ["Comece pelas 5 perguntas do alto. Quase todo travamento é dose, mesa em português, falta de áudio, falta de correção ou falta de repetição.","As fases do seu nível atual abrem sozinhas. Toque em qualquer outra para abrir.","Em cada fase: leia Sinais de que funcionou. Se você se reconhece neles, siga em frente. Se não, procure o seu sintoma em Se não funcionou e aplique só aquele ajuste por 2 semanas.","Os jogos que você já tem aparecem em azul."]],
  ["como","Como jogar","Deixar aberta no celular durante a partida.","Diz como tirar o máximo de inglês de cada jogo e dá as frases prontas, com áudio.",
   ["Em Jogo na mesa agora, escolha o jogo. A tela mostra só ele: a instrução, a regra de hoje e as frases.","A linha Hoje muda sozinha conforme as sessões registradas daquele jogo: sessões 1 e 2 palavra e frase curta, 3 e 4 frase mais pergunta, 5 e 6 com relógio, depois vira aquecimento.","Toque em Ouvir ao lado de qualquer frase para o celular falar com pronúncia americana. Os dois repetem. Esse botão é o juiz de pronúncia da mesa.","As 18 frases de mesa servem para qualquer jogo. Vale imprimir.","Se o botão Ouvir não aparecer, o navegador não tem voz em inglês instalada. Abra o painel no Chrome."]],
  ["placar","Placar de flashcards","Abrir em toda rodada de flashcards.","Conta pontos, acertos e erros por jogador, por baralho e por modo, e diz quando um baralho está pronto para cartas novas.",
@@ -916,7 +993,7 @@ function nextAction(){
 }
 function pWeek(){
   const wd=weekDays(),set=new Set(S.sessions.map(x=>x.d)),done=wd.filter(d=>set.has(iso(d))).length,t=today(),names=["seg","ter","qua","qui","sex","sáb","dom"];
-  return `<section class="panel"><h3>Sua semana</h3><p class="small muted">Cada dia com sessão registrada fica verde. O dia de hoje tem borda escura.</p>
+  return `<section class="panel"><h3>Sua semana</h3><p class="small muted">Cada dia com sessão registrada fica azul. O dia de hoje tem borda escura.</p>
     <p><span class="big num">${done}</span> de ${S.goal} sessões</p>
     <div class="week">${wd.map((d,i)=>`<div class="day ${set.has(iso(d))?"on":""} ${iso(d)===t?"today":""}">${names[i]}<b>${d.getDate()}</b></div>`).join("")}</div>
     <div class="row"><div><label for="goal">Minha meta de sessões por semana</label><select id="goal" data-chg="goal">${[3,4,5,6,7].map(n=>`<option ${n===S.goal?"selected":""}>${n}</option>`).join("")}</select></div></div></section>`;
@@ -925,7 +1002,7 @@ function pSessions(){return `<details class="stg"><summary>Sessões registradas 
 function vInicio(){
   const a=nextAction(),p=PH[S.phase-1],h=hours(),base=S.phase>1?PH[S.phase-2].h:0,pct=Math.max(0,Math.min(100,Math.round((h-base)/(p.h-base)*100)));
   const nb=nextBuy(),no=nextOpen();
-  return msg()+intro("Início","Como está a sua semana e o que fazer agora. Na dúvida, siga o cartão verde.")+
+  return msg()+intro("Início","Como está a sua semana e o que fazer agora. Na dúvida, siga o cartão azul.")+
   `<section class="cta"><p class="small">O que fazer agora</p><h3>${esc(a.t)}</h3><p>${esc(a.p)}</p><button class="btn inv" data-act="tab" data-v="${a.tab}">${a.b}</button></section>
   ${pLeague()}
   <div class="grid g2" style="margin-top:1rem">${pWeek()}
@@ -984,7 +1061,7 @@ function vJogar(){
   step(2,"Jogar","Escolha o tipo do que está na mesa agora. Dá para alternar quantas vezes quiser durante a sessão.")+
   `<div class="seg" role="group" aria-label="Tipo de jogo"><button aria-pressed="${m==="caixa"}" data-act="jmode" data-v="caixa">Jogo de caixa</button><button aria-pressed="${m==="flash"}" data-act="jmode" data-v="flash">Flashcards</button></div>
   ${m==="caixa"?pCaixa():vPlacar()}`+
-  step(3,"Terminamos: registrar a sessão","Leva 20 segundos. É este registro que pinta a semana de verde, conta as horas e avisa quando trocar de jogo.")+pRegister();
+  step(3,"Terminamos: registrar a sessão","Leva 20 segundos. É este registro que pinta a semana de azul, conta as horas e avisa quando trocar de jogo.")+pRegister();
 }
 function vComprar(){
   if(ui.fPhase<0)ui.fPhase=S.phase;
@@ -1014,17 +1091,17 @@ function vProfessor(){
     <div class="grid g2">${sites.map(s=>`<section class="panel"><h3>${esc(s.name)}</h3><p class="small">${esc(s.desc)}</p><a href="${s.url}" target="_blank" rel="noopener" class="btn ghost" style="margin-top:.4rem;display:inline-block;text-decoration:none">Abrir ${esc(s.name)} ↗</a></section>`).join("")}</div>`;
 }
 const GTABS2=[
- ["inicio","Início","Abra quando pegar o celular, antes de qualquer coisa.","Mostra a semana, as horas jogadas e um cartão verde com o próximo passo. Se você só abrir uma tela, abra esta.",
-  ["O cartão verde muda sozinho: primeiro pede para marcar os jogos que você tem, depois manda jogar a sessão do dia, depois mostra a próxima compra.","Primeiros passos aparece só até você concluir os 6 itens.","Disputa da semana soma os pontos das rodadas de flashcards de segunda a domingo, mais 5 pontos por vitória no jogo de caixa. Quem vence a semana ganha 1 estrela, e estrelas compram os prêmios que vocês cadastrarem. Dá para trocar na hora ou juntar.","Sua semana pinta de verde os dias com sessão. A meta semanal você escolhe ali.","Sessões registradas fica recolhido no fim. Abra para conferir ou apagar."]],
+ ["inicio","Início","Abra quando pegar o celular, antes de qualquer coisa.","Mostra a semana, as horas jogadas e um cartão azul com o próximo passo. Se você só abrir uma tela, abra esta.",
+  ["O cartão azul muda sozinho: primeiro pede para marcar os jogos que você tem, depois manda jogar a sessão do dia, depois mostra a próxima compra.","Primeiros passos aparece só até você concluir os 6 itens.","Disputa da semana soma os pontos das rodadas de flashcards de segunda a domingo, mais 5 pontos por vitória no jogo de caixa. Quem vence a semana ganha 1 estrela, e estrelas compram os prêmios que vocês cadastrarem. Dá para trocar na hora ou juntar.","Sua semana pinta de azul os dias com sessão. A meta semanal você escolhe ali.","Sessões registradas fica recolhido no fim. Abra para conferir ou apagar."]],
  ["jogar","Jogar","Fica aberta no celular durante toda a partida.","Junta tudo o que se usa na mesa, em 3 passos numerados.",
   ["Passo 1: veja a sugestão de aquecimento, jogo principal e fechamento. Toque em Ver como jogar para abrir as instruções daquele jogo.","Passo 2: escolha Jogo de caixa ou Flashcards. Em Jogo de caixa, selecione o jogo e leia a Regra de hoje e as frases. Toque em Ouvir para o celular falar a frase. Em Flashcards, escolha o baralho e o modo. A cada carta, toque em Errou (0), Acertou (1) ou Acertou com bônus (2). A vez passa sozinha e a rodada acaba depois de 20 cartas.","Passo 3: escolha o dia, a duração e toque em todos os jogos que foram para a mesa. Depois toque em Registrar sessão. Você volta para o Início com a semana atualizada.","Tocou errado no placar? Use Desfazer último toque. Rodada registrada errada? Abra Últimas rodadas e apague."]],
  ["comprar","Comprar","Abra quando for comprar ou quando chegar uma caixa.","Lista de compras por fase, com links de busca e controle do que já está em casa.",
-  ["Ela abre filtrada na sua fase atual. Use os botões de fase para ver as outras.","Em cada jogo, mude a situação conforme ele anda. Só Tenho e Dominado entram nas sugestões da tela Jogar.","A etiqueta amarela comprar em inglês significa que o texto é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Digite o valor pago para acompanhar o total investido."]],
+  ["Ela abre filtrada na sua fase atual. Use os botões de fase para ver as outras.","Em cada jogo, mude a situação conforme ele anda. Só Tenho e Dominado entram nas sugestões da tela Jogar.","A etiqueta vermelha comprar em inglês significa que o texto é o jogo: confira English edition no anúncio. Qualquer edição significa que a versão brasileira serve.","Digite o valor pago para acompanhar o total investido."]],
  ["evoluir","Evoluir","Abra uma vez por mês, a cada prova, ou quando sentir que travou.","Decide quando subir de fase, guarda as provas e mostra o que ajustar em cada uma das 13 fases.",
   ["Passo 1: marque o checklist. O botão de subir de fase só libera com tudo marcado. Registre cada prova em Minhas provas.","Passo 2: responda as 5 perguntas do diagnóstico. Depois abra a fase em que você se reconhece, leia os sinais de que funcionou e, se não bater, aplique um único ajuste por 2 semanas."]]
 ];
 const GROUT2=[
- ["Antes da sessão, 1 minuto","Abra Início e siga o cartão verde. Ele leva para Jogar."],
+ ["Antes da sessão, 1 minuto","Abra Início e siga o cartão azul. Ele leva para Jogar."],
  ["Durante, 30 a 45 minutos","Tela Jogar aberta no celular. Passo 1 para escolher, passo 2 para as instruções, o áudio e o placar."],
  ["No fim, 20 segundos","Passo 3 da tela Jogar: registrar a sessão."],
  ["Quando chegar uma caixa","Tela Comprar: mude a situação para Tenho."],
@@ -1173,7 +1250,7 @@ function _populateVoiceSelects(){
 }
 function track(){
   const p=PH[S.phase-1];
-  $("#track").innerHTML=PH.map(x=>`<button class="sq ${x.n<S.phase?"done":""} ${x.n===S.phase?"cur":""}" data-act="tab" data-v="evoluir" aria-label="Fase ${x.n}, ${x.t}, ${x.lv}${x.n===S.phase?", fase atual":""}">${x.n===S.phase?'<svg class="pawn" viewBox="0 0 20 26" aria-hidden="true"><circle cx="10" cy="6" r="5" fill="#f2b705"/><path d="M3 25c0-8 3-12 7-12s7 4 7 12z" fill="#f2b705"/></svg>':""}<div class="n">${x.n}</div><div class="t">${x.t}</div><div class="lv">${x.lv}</div></button>`).join("");
+  $("#track").innerHTML=PH.map(x=>`<button class="sq ${x.n<S.phase?"done":""} ${x.n===S.phase?"cur":""}" data-act="tab" data-v="evoluir" aria-label="Fase ${x.n}, ${x.t}, ${x.lv}${x.n===S.phase?", fase atual":""}">${x.n===S.phase?'<svg class="pawn" viewBox="0 0 20 26" aria-hidden="true"><circle cx="10" cy="6" r="5" fill="#B31942"/><path d="M3 25c0-8 3-12 7-12s7 4 7 12z" fill="#B31942"/></svg>':""}<div class="n">${x.n}</div><div class="t">${x.t}</div><div class="lv">${x.lv}</div></button>`).join("");
   $("#trackcap").textContent=`Você está na fase ${p.n} de 5: ${p.t} (${p.lv}). Toque na trilha para ver quando subir.`;
 }
 function tabs(){
@@ -1343,7 +1420,7 @@ function vPlacar(){
     <label style="margin-top:.7rem">O que aparece na carta e o que se responde</label>
     <div class="chips">${(KMODES[d.kind]||KMODES.img).map(m=>`<button class="chip" aria-pressed="${c.mode===m}" data-act="mode" data-v="${m}">${MODES[m][0]}</button>`).join("")}</div>
     <p class="small muted">${MODES[c.mode][1]}</p>
-    ${started?`<div style="margin-top:.6rem;padding:.6rem .8rem;background:#fff3e0;border:1px solid #e6a817;border-radius:var(--r);display:flex;align-items:center;gap:.6rem;flex-wrap:wrap"><span style="font-size:.9rem;color:#7a5600">🔒 Rodada em andamento (carta ${n} de ${len}). Baralho travado.</span><button class="btn ghost" data-act="zero" style="font-size:.8rem;padding:.25rem .7rem">Descartar rodada</button></div>`:""}
+    ${started?`<div style="margin-top:.6rem;padding:.6rem .8rem;background:var(--tint);border:1px solid var(--red);border-radius:var(--r);display:flex;align-items:center;gap:.6rem;flex-wrap:wrap"><span style="font-size:.9rem;color:#7a5600">🔒 Rodada em andamento (carta ${n} de ${len}). Baralho travado.</span><button class="btn ghost" data-act="zero" style="font-size:.8rem;padding:.25rem .7rem">Descartar rodada</button></div>`:""}
   </section>
   <section class="panel" style="margin-top:1rem" id="roundbox"><h3>Rodada</h3>${ui.rmsg?`<p class="okmsg" role="status">${esc(ui.rmsg)}</p>`:""}
     <div class="sline"><div class="${!over&&turn===0?"on":""}"><span>${esc(S.players[0])}</span><b class="num">${P[0]}</b></div><i>x</i><div class="${!over&&turn===1?"on":""}"><b class="num">${P[1]}</b><span>${esc(S.players[1])}</span></div></div>
@@ -1570,7 +1647,7 @@ function drawCharts(){
     const xOf=i=>pad.l+i/(labels.length-1||1)*cw;
     const yOf=v=>pad.t+ch-v/yMax*ch;
     // grid
-    ctx.strokeStyle="#d6e6dc";ctx.lineWidth=1;ctx.font="11px system-ui";ctx.fillStyle="#5b6b63";ctx.textAlign="right";ctx.textBaseline="middle";
+    ctx.strokeStyle="#E3E8F0";ctx.lineWidth=1;ctx.font="11px system-ui";ctx.fillStyle="#5B6B82";ctx.textAlign="right";ctx.textBaseline="middle";
     const steps=5;for(let i=0;i<=steps;i++){const v=Math.round(yMax/steps*i),y=yOf(v);
       ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillText(v,pad.l-6,y)}
     // x labels
@@ -1590,18 +1667,18 @@ function drawCharts(){
   if(tests.length){
     const tByP=[[],[]];tests.forEach(t=>{const pi=t.p!=null?t.p:0;tByP[pi].push(t)});
     const parseR=s=>{const m=s.match(/[\d]+/);return m?+m[0]:0};
-    const ds=tByP.map((arr,i)=>({color:i===0?"#0f7b4f":"#f2b705",data:arr.map(t=>({x:t.d,y:parseR(t.r)}))}));
+    const ds=tByP.map((arr,i)=>({color:i===0?"#0A3161":"#B31942",data:arr.map(t=>({x:t.d,y:parseR(t.r)}))}));
     lineChart("chProvas",ds,"Resultado");
   }
   // chart 2: points per day
   if(rounds.length){
     const aggByDate=(pi)=>{const m={};rounds.forEach(r=>{if(!m[r.d])m[r.d]={d:r.d,v:0};m[r.d].v+=r.pts[pi]});return Object.values(m).map(x=>({x:x.d,y:x.v}))};
-    lineChart("chPontos",[{color:"#0f7b4f",data:aggByDate(0)},{color:"#f2b705",data:aggByDate(1)}],"Pontos");
+    lineChart("chPontos",[{color:"#0A3161",data:aggByDate(0)},{color:"#B31942",data:aggByDate(1)}],"Pontos");
   }
   // chart 3: accuracy per day
   if(rounds.length){
     const aggPct=(pi)=>{const m={};rounds.forEach(r=>{if(!m[r.d])m[r.d]={d:r.d,h:0,t:0};m[r.d].h+=r.hit[pi];m[r.d].t+=r.hit[pi]+r.miss[pi]});return Object.values(m).map(x=>({x:x.d,y:x.t?Math.round(x.h/x.t*100):0}))};
-    lineChart("chAcerto",[{color:"#0f7b4f",data:aggPct(0)},{color:"#f2b705",data:aggPct(1)}],"% Acerto");
+    lineChart("chAcerto",[{color:"#0A3161",data:aggPct(0)},{color:"#B31942",data:aggPct(1)}],"% Acerto");
   }
 }
 

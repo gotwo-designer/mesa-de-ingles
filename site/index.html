@@ -463,6 +463,50 @@ input:focus,select:focus{border-color:var(--felt)}
 .help-panel-head{background:var(--felt)}
 .help-item-icon svg{stroke:var(--felt)}
 @media(max-width:640px){.help-fab{bottom:calc(76px + env(safe-area-inset-bottom,0px));right:1rem}}
+
+/* ---- Resultados (modelo app) ---- */
+.res-seg{grid-template-columns:repeat(3,1fr);max-width:none;margin-bottom:1rem}
+.res-card{margin-bottom:.8rem;padding:1rem 1.1rem}
+.res-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}
+.res-lbl{display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.res-hl{font-size:.82rem;font-weight:700;color:var(--muted)}
+.res-hl.ok{color:var(--red)}
+.res-bars{display:grid;gap:6px;align-items:end;height:110px;margin-top:.8rem}
+.res-bars .rb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:100%}
+.res-bars .rb i{display:block;width:100%;border-radius:7px;background:var(--felt);transition:height .3s}
+.res-bars .rb i.off{background:var(--line)}
+.res-bars .rb.now i:not(.off){background:var(--red)}
+.res-bars .rb span{font-size:.7rem;font-weight:600;color:var(--muted)}
+.res-bars .rb.now span{color:var(--red);font-weight:700}
+.res-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.8rem}
+.res-tile{display:flex;flex-direction:column;gap:.25rem;padding:.95rem 1rem;margin:0}
+.res-tile.dark{background:var(--felt);border-color:var(--felt);color:#fff}
+.res-tile.dark .res-lbl{color:#9DB4D6}
+.res-tile.dark .res-sub{color:#C9D6E8}
+.res-num{font-family:"Bricolage Grotesque",sans-serif;font-size:2.2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.res-num.red{color:var(--red)}
+.res-sub{font-size:.78rem;color:var(--muted)}
+.res-score{display:flex;flex-direction:column;gap:.6rem;margin-top:.7rem}
+.rs{display:grid;grid-template-columns:64px 1fr 52px;align-items:center;gap:.6rem}
+.rs b{font-size:.9rem}
+.rs-bar{height:14px;border-radius:99px;background:var(--wash);overflow:hidden}
+.rs-bar i{display:block;height:100%;border-radius:99px}
+.rs-bar i.red,.rl-ico.red{background:var(--red)}
+.rs-bar i.blue,.rl-ico.blue{background:var(--felt)}
+.rs span{font-size:.86rem;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.rs span.red{color:var(--red)}.rs span.blue{color:var(--felt)}
+.res-list{display:flex;flex-direction:column;margin-top:.5rem}
+.rl{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-top:1px solid var(--line)}
+.rl:first-child{border-top:0}
+.rl-ico{flex:none;width:42px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:.68rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;text-align:center;line-height:1.05;padding:0 3px}
+.rl-ico.red{background:var(--tint);color:var(--red)}
+.rl-ico.blue{background:var(--wash);color:var(--felt)}
+.rl-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.rl-txt b{font-size:.92rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rl-txt span{font-size:.78rem;color:var(--muted)}
+.rl .link{color:var(--muted);text-decoration:none;font-size:1rem;padding:.3rem .4rem}
+button.link.blue{color:var(--felt);font-weight:600;text-decoration:none}
+@media(min-width:760px){.res-bars{height:140px}.res-bars .rb i{max-width:64px}.res-seg{max-width:480px}}
 </style>
 </head>
 <body>
@@ -1577,53 +1621,80 @@ function buildAnalysis(){
   </div>`;
 }
 function vResultados(){
-  const tests=S.tests.slice().sort((a,b)=>a.d.localeCompare(b.d));
-  const rounds=S.rounds.slice().sort((a,b)=>a.d.localeCompare(b.d));
-  const rByP=[[],[]];rounds.forEach(r=>{[0,1].forEach(i=>{rByP[i].push({d:r.d,pts:r.pts[i],hit:r.hit[i],miss:r.miss[i]})})});
-  const tByP=[[],[]];tests.forEach(t=>{const pi=t.p!=null?t.p:0;tByP[pi].push(t)});
-  // aggregate stats
-  const totalRounds=rounds.length;
-  const totalTests=tests.length;
-  const pStats=[0,1].map(i=>{
-    const h=S.hits[i]||0,m=S.miss[i]||0,t=h+m;
-    return{pts:S.score[i]||0,wins:S.wins[i]||0,pct:t?Math.round(h/t*100):0,tests:tByP[i].length,rounds:rByP[i].length};
-  });
-  // for chart: get last N rounds aggregated by date
-  const aggByDate=(arr)=>{const m={};arr.forEach(r=>{if(!m[r.d])m[r.d]={d:r.d,pts:0,hit:0,miss:0,n:0};m[r.d].pts+=r.pts;m[r.d].hit+=r.hit;m[r.d].miss+=r.miss;m[r.d].n++});return Object.values(m).sort((a,b)=>a.d.localeCompare(b.d))};
-  const agg0=aggByDate(rByP[0]),agg1=aggByDate(rByP[1]);
+  const rg=ui.resRange||"w";
+  const t0=today();
+  const d0=new Date(t0+"T12:00:00");
+  const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+  // janela atual e janela anterior (para a seta de comparação)
+  let from,prevFrom,label;
+  if(rg==="w"){const wk=weekDays();from=iso(wk[0]);prevFrom=iso(addD(wk[0],-7));label="na semana"}
+  else if(rg==="m"){from=iso(addD(d0,-29));prevFrom=iso(addD(d0,-59));label="nos últimos 30 dias"}
+  else{from="0000-00-00";prevFrom="0000-00-00";label="no total"}
+  const inR=x=>x.d>=from&&x.d<=t0, inPrev=x=>x.d>=prevFrom&&x.d<from;
+  const sess=S.sessions.filter(inR),rounds=S.rounds.filter(inR);
+  const sessPrev=S.sessions.filter(inPrev),roundsPrev=S.rounds.filter(inPrev);
+  const tests=S.tests.slice().sort((a,b)=>b.d.localeCompare(a.d));
+  const fmt=d=>d.split("-").reverse().join("/").slice(0,5);
+  const fmtFull=d=>d.split("-").reverse().join("/");
 
-  return `${buildAnalysis()}
-  <div class="grid g2" style="margin-bottom:1rem">
-    ${[0,1].map(i=>`<section class="panel soft evo-card"><h2>${esc(S.players[i])}</h2>
-      <div class="grid g3" style="gap:.5rem;margin-top:.6rem">
-        <div><span class="big num">${pStats[i].pts}</span><div class="lbl">pontos</div></div>
-        <div><span class="big num">${pStats[i].wins}</span><div class="lbl">vitórias</div></div>
-        <div><span class="big num">${pStats[i].pct}%</span><div class="lbl">acerto</div></div>
-      </div>
-      <div class="grid g2" style="gap:.5rem;margin-top:.5rem">
-        <div><span class="big num" style="font-size:1.5rem">${pStats[i].rounds}</span><div class="lbl">rodadas</div></div>
-        <div><span class="big num" style="font-size:1.5rem">${pStats[i].tests}</span><div class="lbl">provas</div></div>
-      </div>
-    </section>`).join("")}
+  // ---- barras de sessões ----
+  let bars=[];
+  if(rg==="w"){const wk=weekDays();bars=wk.map(d=>{const k=iso(d);return{l:"STQQSSD"[(d.getDay()+6)%7],n:sess.filter(x=>x.d===k).length,now:k===t0}})}
+  else if(rg==="m"){for(let i=3;i>=0;i--){const a=iso(addD(d0,-7*i-6)),b=iso(addD(d0,-7*i));bars.push({l:i===0?"esta":fmt(a),n:S.sessions.filter(x=>x.d>=a&&x.d<=b).length,now:i===0})}}
+  else{for(let i=5;i>=0;i--){const m=new Date(d0.getFullYear(),d0.getMonth()-i,1);const k=iso(m).slice(0,7);bars.push({l:["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][m.getMonth()],n:S.sessions.filter(x=>x.d.slice(0,7)===k).length,now:i===0})}}
+  const bmax=Math.max(1,...bars.map(b=>b.n));
+  const goal=+S.goal||4;
+  const headRight=rg==="w"?(sess.length>=goal?`${sess.length} de ${goal} · meta batida`:`${sess.length} de ${goal} sessões`):`${sess.length} sessões`;
+
+  // ---- tiles ----
+  const totalCards=BASE.reduce((a,b)=>a+(dd(b[0]).total||0),0);
+  const retNow=retiredAll(),retR=rounds.reduce((a,r)=>a+(+r.ret||0),0);
+  const pct=arr=>{let h=0,m=0;arr.forEach(r=>{h+=r.hit[0]+r.hit[1];m+=r.miss[0]+r.miss[1]});return h+m?Math.round(h/(h+m)*100):null};
+  const acc=pct(rounds),accPrev=pct(roundsPrev);
+  const delta=acc!=null&&accPrev!=null?acc-accPrev:null;
+
+  // ---- placar da dupla ----
+  const wins=[0,0];sess.forEach(x=>{if(x.win===0||x.win===1)wins[x.win]++});rounds.forEach(r=>{if(r.pts[0]!==r.pts[1])wins[r.pts[0]>r.pts[1]?0:1]++});
+  const wmax=Math.max(1,wins[0],wins[1]);
+
+  // ---- histórico recente ----
+  const recent=[].concat(sess.map(x=>({d:x.d,k:x.k,kind:"s",t:(x.g||[]).map(id=>{const g=all().find(y=>y.id===id);return g?g.name.split(":")[0].split("(")[0].trim():id}).join(" + ")||"Sessão",sub:`${x.win===0||x.win===1?S.players[x.win]+" venceu · ":""}${x.min||0} min`})),
+    rounds.map(r=>({d:r.d,k:r.k,kind:"r",t:dname(r.deck),sub:`${r.hit[0]+r.hit[1]+r.miss[0]+r.miss[1]} cartas · ${r.hit[0]+r.hit[1]} acertos · ${S.players[0]} ${r.pts[0]} × ${r.pts[1]} ${S.players[1]}${r.ret?` · ${r.ret} aposentadas`:""}`})))
+    .sort((a,b)=>b.d.localeCompare(a.d)||(b.k||"").localeCompare(a.k||"")).slice(0,8);
+
+  return `
+  <div class="seg res-seg" role="group" aria-label="Período">${[["w","Semana"],["m","Mês"],["all","Tudo"]].map(([k,l])=>`<button aria-pressed="${rg===k}" data-act="resrange" data-v="${k}">${l}</button>`).join("")}</div>
+
+  <section class="panel res-card">
+    <div class="res-head"><span class="res-lbl">Sessões ${label}</span><span class="res-hl ${rg==="w"&&sess.length>=goal?"ok":""}">${headRight}</span></div>
+    <div class="res-bars" style="grid-template-columns:repeat(${bars.length},minmax(0,1fr))">${bars.map(b=>`<div class="rb ${b.now?"now":""}"><i style="height:${b.n?Math.max(14,Math.round(b.n/bmax*100)):8}%" class="${b.n?"":"off"}" title="${b.n} sessões"></i><span>${b.l}</span></div>`).join("")}</div>
+  </section>
+
+  <div class="res-tiles">
+    <section class="panel res-tile dark"><span class="res-lbl">Cartas aposentadas</span><span class="res-num">${retNow}</span><span class="res-sub">${totalCards?`de ${totalCards.toLocaleString("pt-BR")}`:""}${retR?` · +${retR} ${label}`:""}</span></section>
+    <section class="panel res-tile"><span class="res-lbl">Acerto médio</span><span class="res-num red">${acc!=null?acc+"%":"—"}</span><span class="res-sub">${acc!=null?`nos flashcards${delta!=null?` · ${delta>=0?"↑":"↓"} ${Math.abs(delta)} pts`:""}`:"sem rodadas no período"}</span></section>
   </div>
-  <section class="panel" style="margin-bottom:1rem"><h2>Evolução nas provas</h2>
-    ${totalTests?`<div class="chart-box"><canvas id="chProvas"></canvas></div>
-    <div class="legend"><span><i style="background:var(--felt)"></i>${esc(S.players[0])}</span><span><i style="background:var(--token)"></i>${esc(S.players[1])}</span></div>`
-    :`<p class="muted small">Registre provas na aba Evoluir para ver o gráfico aqui.</p>`}
-    <h3 style="margin-top:.8rem">Histórico de provas</h3>
-    ${tests.length?`<ul class="test-tl">${tests.slice().reverse().map(t=>`<li class="${(t.p||0)===1?"p1":""}"><b>${esc(S.players[t.p!=null?t.p:0])}</b> — ${esc(t.d.split("-").reverse().join("/"))}<br>${esc(t.n)}: <b>${esc(t.r)}</b></li>`).join("")}</ul>`
-    :`<p class="muted small">Nenhuma prova registrada ainda.</p>`}
+
+  <section class="panel res-card">
+    <span class="res-lbl">Placar da dupla</span>
+    <div class="res-score">${[0,1].map(i=>`<div class="rs"><b>${esc(S.players[i])}</b><div class="rs-bar"><i class="${i?"blue":"red"}" style="width:${Math.round(wins[i]/wmax*100)}%"></i></div><span class="${i?"blue":"red"}">${wins[i]} vit.</span></div>`).join("")}</div>
   </section>
-  <section class="panel" style="margin-bottom:1rem"><h2>Pontos por dia (flashcards)</h2>
-    ${totalRounds?`<div class="chart-box"><canvas id="chPontos"></canvas></div>
-    <div class="legend"><span><i style="background:var(--felt)"></i>${esc(S.players[0])}</span><span><i style="background:var(--token)"></i>${esc(S.players[1])}</span></div>`
-    :`<p class="muted small">Jogue rodadas de flashcards para ver o gráfico.</p>`}
+
+  <section class="panel res-card">
+    <div class="res-head"><span class="res-lbl">Histórico das provas</span><button class="link blue" data-act="tab" data-v="evoluir">registrar prova</button></div>
+    ${tests.length>=2?`<div class="chart-box" style="height:170px;margin:.4rem 0 .2rem"><canvas id="chProvas"></canvas></div>
+    <div class="legend"><span><i style="background:var(--red)"></i>${esc(S.players[0])}</span><span><i style="background:var(--felt)"></i>${esc(S.players[1])}</span></div>`:""}
+    ${tests.length?`<div class="res-list">${tests.map(t=>{const pi=t.p!=null?t.p:0;return`<div class="rl"><div class="rl-ico ${pi?"blue":"red"}">${esc((t.r.match(/\d+/)||[t.r.slice(0,4)])[0])}</div><div class="rl-txt"><b>${esc(t.n)}</b><span>${esc(S.players[pi])} · ${fmtFull(t.d)}</span></div><button class="link" data-act="deltest" data-v="${esc(t.k)}" aria-label="Apagar prova">✕</button></div>`}).join("")}</div>`
+    :`<p class="muted small" style="margin:.4rem 0 0">Nenhuma prova ainda. Faça a EF SET a cada 3 meses e registre o resultado na aba Evoluir: a primeira nota é o seu ponto de partida.</p>`}
   </section>
-  <section class="panel"><h2>Acerto por dia (flashcards)</h2>
-    ${totalRounds?`<div class="chart-box"><canvas id="chAcerto"></canvas></div>
-    <div class="legend"><span><i style="background:var(--felt)"></i>${esc(S.players[0])}</span><span><i style="background:var(--token)"></i>${esc(S.players[1])}</span></div>`
-    :`<p class="muted small">Jogue rodadas de flashcards para ver o gráfico.</p>`}
-  </section>`;
+
+  <section class="panel res-card">
+    <span class="res-lbl">Últimas partidas</span>
+    ${recent.length?`<div class="res-list">${recent.map(x=>`<div class="rl"><div class="rl-ico ${x.kind==="s"?"red":"blue"}">${fmt(x.d)}</div><div class="rl-txt"><b>${esc(x.t)}</b><span>${esc(x.sub)}</span></div></div>`).join("")}</div>`
+    :`<p class="muted small" style="margin:.4rem 0 0">Nada registrado ${label}.</p>`}
+  </section>
+
+  ${buildAnalysis()}`;
 }
 
 function drawCharts(){
@@ -1667,7 +1738,7 @@ function drawCharts(){
   if(tests.length){
     const tByP=[[],[]];tests.forEach(t=>{const pi=t.p!=null?t.p:0;tByP[pi].push(t)});
     const parseR=s=>{const m=s.match(/[\d]+/);return m?+m[0]:0};
-    const ds=tByP.map((arr,i)=>({color:i===0?"#0A3161":"#B31942",data:arr.map(t=>({x:t.d,y:parseR(t.r)}))}));
+    const ds=tByP.map((arr,i)=>({color:i===0?"#B31942":"#0A3161",data:arr.map(t=>({x:t.d,y:parseR(t.r)}))}));
     lineChart("chProvas",ds,"Resultado");
   }
   // chart 2: points per day
@@ -1733,6 +1804,7 @@ document.addEventListener("click",e=>{
   else if(a==="down"){if(S.phase>1)S.phase--}
   else if(a==="addtest"){const r=$("#tr").value.trim();if(!r)return;S.tests.push({k:"t"+Date.now(),p:+$("#tp").value,d:$("#td").value||today(),n:$("#tn").value,r:r.slice(0,40)})}
   else if(a==="deltest"){S.tests=S.tests.filter(t=>t.k!==v)}
+  else if(a==="resrange"){ui.resRange=v}
   if(persist)save();render();
   if(ui.jump){ui.jump=false;try{window.scrollTo(0,0)}catch(e){}}
   if(ui.jumpTo){const q=ui.jumpTo;ui.jumpTo="";try{const n=$(q);if(n)window.scrollTo(0,n.getBoundingClientRect().top+window.scrollY-90)}catch(e){}}
